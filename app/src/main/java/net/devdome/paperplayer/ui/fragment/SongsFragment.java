@@ -17,13 +17,12 @@ import net.devdome.paperplayer.data.Mood;
 import net.devdome.paperplayer.data.model.Song;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class SongsFragment extends Fragment {
 
-    Cursor musicCursor;
-    View view;
-    SongsAdapter adapter;
-    RecyclerView rv;
+    private View view;
+    private RecyclerView rv;
 
 
     @Override
@@ -35,20 +34,19 @@ public class SongsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
-
         new GetSongs().execute();
 
         return v;
     }
 
 
-    public class GetSongs extends AsyncTask<Void, Void, ArrayList> {
+    private class GetSongs extends AsyncTask<Void, Void, ArrayList> {
 
         @Override
         protected void onPostExecute(ArrayList songList) {
             super.onPostExecute(songList);
             if (songList != null) {
-                adapter = new SongsAdapter(view.getContext(), songList);
+                SongsAdapter adapter = new SongsAdapter(view.getContext(), songList);
                 rv.setAdapter(adapter);
             }
         }
@@ -59,7 +57,7 @@ public class SongsFragment extends Fragment {
 
             final String where = MediaStore.Audio.Media.IS_MUSIC + "=1";
             final String orderBy = MediaStore.Audio.Media.TITLE;
-            musicCursor = getActivity().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+            Cursor musicCursor = getActivity().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     null, where, null, orderBy);
             if (musicCursor != null && musicCursor.moveToFirst()) {
                 int titleColumn = musicCursor.getColumnIndex
@@ -85,6 +83,7 @@ public class SongsFragment extends Fragment {
                     i++;
                 }
                 while (musicCursor.moveToNext());
+                musicCursor.close();
                 return songList;
             }
             return null;

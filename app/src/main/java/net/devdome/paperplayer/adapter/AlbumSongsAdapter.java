@@ -38,7 +38,7 @@ public class AlbumSongsAdapter extends RecyclerView.Adapter<AlbumSongsAdapter.So
     public void onBindViewHolder(SongsViewHolder holder, final int position) {
         holder.title.setText(songs.get(position).getName());
         holder.artist.setText(songs.get(position).getArtist());
-        holder.count.setText(String.valueOf(songs.get(position).getCount()));
+        holder.track.setText(String.valueOf(songs.get(position).getTrackNumber()));
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +47,7 @@ public class AlbumSongsAdapter extends RecyclerView.Adapter<AlbumSongsAdapter.So
                 Intent a = new Intent();
                 a.setAction(PlayerService.ACTION_PLAY_ALBUM);
                 a.putExtra(PlayerService.SONG_ALBUM_ID, songs.get(position).getAlbumId());
-                a.putExtra(PlayerService.PLAY_START_WITH, position);
+                a.putExtra(PlayerService.PLAY_START_WITH, songs.get(position).getId());
                 context.sendBroadcast(a);
 
             }
@@ -66,12 +66,12 @@ public class AlbumSongsAdapter extends RecyclerView.Adapter<AlbumSongsAdapter.So
         TextView artist;
         ImageView menu;
         View view;
-        TextView count;
+        TextView track;
 
         public SongsViewHolder(View itemView) {
             super(itemView);
             view = itemView;
-            count = (TextView) itemView.findViewById(R.id.album_song_itemcount);
+            track = (TextView) itemView.findViewById(R.id.album_song_track);
             title = (TextView) itemView.findViewById(R.id.album_song_item_name);
             artist = (TextView) itemView.findViewById(R.id.album_song_item_artist);
             menu = (ImageView) itemView.findViewById(R.id.album_song_item_menu);

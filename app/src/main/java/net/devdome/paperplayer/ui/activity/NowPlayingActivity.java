@@ -10,18 +10,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -30,7 +32,9 @@ import android.widget.TextView;
 import com.annimon.paperstyle.PaperSeekBar;
 
 import net.devdome.paperplayer.R;
-import net.devdome.paperplayer.playback.PlayerService;
+import net.devdome.paperplayer.playback.PlayerServiceOld;
+import net.devdome.paperplayer.ui.fragment.PlaylistFragment;
+import net.devdome.paperplayer.utils.ViewUtils;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,24 +46,24 @@ public class NowPlayingActivity extends AppCompatActivity {
     public static final String ACTION_GET_PLAYING_LIST = "get_playing_list";
     public static final String ACTION_GET_PLAYING_DETAIL = "get_playing_detail";
     private static final String TAG = "NowPlayingActivity";
-    public static int mainColor;
-    PaperSeekBar seekBar;
-    ImageView albumArt;
-    Timer timer;
-    boolean musicPlaying;
-    ImageButton playButton, nextButton;
-    String strDuration;
+    private static int mainColor;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private PaperSeekBar seekBar;
+    private ImageView albumArt;
+    private Timer timer;
+    private boolean musicPlaying;
+    private ImageView playButton, nextButton, previousButton;
     private TextView tvSongName, tvSongAlbumArtist, tvCurrentTimeHolder, tvDuration;
     private int duration, currentDuration;
     private String songPath, songName, songArtist, albumName, songArtPath;
     private long albumId;
-    BroadcastReceiver receiver = new BroadcastReceiver() {
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(ACTION_GET_SEEK_VALUE)) {
-                seekBar.setProgress(intent.getIntExtra(PlayerService.SONG_SEEK_VALUE, 0));
-                currentDuration = intent.getIntExtra(PlayerService.SONG_SEEK_VALUE, 0);
-                if (intent.getBooleanExtra(PlayerService.IS_PLAYING, false)) {
+                seekBar.setProgress(intent.getIntExtra(PlayerServiceOld.SONG_SEEK_VALUE, 0));
+                currentDuration = intent.getIntExtra(PlayerServiceOld.SONG_SEEK_VALUE, 0);
+                if (intent.getBooleanExtra(PlayerServiceOld.IS_PLAYING, false)) {
                     playButton.setImageResource(R.drawable.ic_pause_24dp);
                     musicPlaying = true;
 
@@ -68,7 +72,7 @@ public class NowPlayingActivity extends AppCompatActivity {
                     musicPlaying = false;
                 }
             } else if (intent.getAction().equals(ACTION_GET_PLAY_STATE)) {
-                if (intent.getBooleanExtra(PlayerService.IS_PLAYING, false)) {
+                if (intent.getBooleanExtra(PlayerServiceOld.IS_PLAYING, false)) {
                     playButton.setImageResource(R.drawable.ic_pause_24dp);
                     musicPlaying = true;
                 } else {
@@ -76,18 +80,19 @@ public class NowPlayingActivity extends AppCompatActivity {
                     musicPlaying = false;
                 }
             } else if (intent.getAction().equals(ACTION_GET_PLAYING_DETAIL)) {
-                songPath = intent.getStringExtra(PlayerService.SONG_PATH);
-                songName = intent.getStringExtra(PlayerService.SONG_NAME);
-                songArtist = intent.getStringExtra(PlayerService.SONG_ARTIST);
-                albumId = intent.getLongExtra(PlayerService.SONG_ALBUM_ID, 0);
-                albumName = intent.getStringExtra(PlayerService.SONG_ALBUM_NAME);
-                duration = intent.getIntExtra(PlayerService.SONG_DURATION, 0);
+                songPath = intent.getStringExtra(PlayerServiceOld.SONG_PATH);
+                songName = intent.getStringExtra(PlayerServiceOld.SONG_NAME);
+                songArtist = intent.getStringExtra(PlayerServiceOld.SONG_ARTIST);
+                albumId = intent.getLongExtra(PlayerServiceOld.SONG_ALBUM_ID, 0);
+                albumName = intent.getStringExtra(PlayerServiceOld.SONG_ALBUM_NAME);
+                duration = intent.getIntExtra(PlayerServiceOld.SONG_DURATION, 0);
                 currentDuration = 0;
                 musicPlaying = true;
                 updateView();
             }
         }
     };
+    private View bottomSheet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,34 +113,41 @@ public class NowPlayingActivity extends AppCompatActivity {
         filter.addAction(ACTION_GET_PLAYING_DETAIL);
         registerReceiver(receiver, filter);
 
-
         seekBar = (PaperSeekBar) findViewById(R.id.player_seekbar);
         tvSongName = (TextView) findViewById(R.id.song_name);
         tvSongAlbumArtist = (TextView) findViewById(R.id.album_artist);
         albumArt = (ImageView) findViewById(R.id.album_art);
-        playButton = (ImageButton) findViewById(R.id.btn_play_pause);
-        nextButton = (ImageButton) findViewById(R.id.btn_next);
+        playButton = (ImageView) findViewById(R.id.play_pause);
+        nextButton = (ImageView) findViewById(R.id.btn_next);
+        previousButton = (ImageView) findViewById(R.id.btn_previous);
         tvCurrentTimeHolder = (TextView) findViewById(R.id.current_time);
         tvDuration = (TextView) findViewById(R.id.duration);
 
-        songPath = getIntent().getStringExtra(PlayerService.SONG_PATH);
-        songName = getIntent().getStringExtra(PlayerService.SONG_NAME);
-        songArtist = getIntent().getStringExtra(PlayerService.SONG_ARTIST);
-        albumId = getIntent().getLongExtra(PlayerService.SONG_ALBUM_ID, 0);
-        albumName = getIntent().getStringExtra(PlayerService.SONG_ALBUM_NAME);
-        duration = getIntent().getIntExtra(PlayerService.SONG_DURATION, 0);
-        currentDuration = getIntent().getIntExtra(PlayerService.SONG_CURRENT_TIME, 0);
+        songPath = getIntent().getStringExtra(PlayerServiceOld.SONG_PATH);
+        songName = getIntent().getStringExtra(PlayerServiceOld.SONG_NAME);
+        songArtist = getIntent().getStringExtra(PlayerServiceOld.SONG_ARTIST);
+        albumId = getIntent().getLongExtra(PlayerServiceOld.SONG_ALBUM_ID, 0);
+        albumName = getIntent().getStringExtra(PlayerServiceOld.SONG_ALBUM_NAME);
+        duration = getIntent().getIntExtra(PlayerServiceOld.SONG_DURATION, 0);
+        currentDuration = getIntent().getIntExtra(PlayerServiceOld.SONG_CURRENT_TIME, 0);
         setupUI();
 
         updateView();
 
     }
 
+    private void setUpBottomSheet() {
+        bottomSheet = findViewById(R.id.bottom_sheet_playlist);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setPeekHeight(200);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         Intent i = new Intent();
-        i.setAction(PlayerService.ACTION_SEEK_GET);
+        i.setAction(PlayerServiceOld.ACTION_SEEK_GET);
         sendBroadcast(i);
     }
 
@@ -164,7 +176,7 @@ public class NowPlayingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent stopMusic = new Intent();
-                stopMusic.setAction(PlayerService.ACTION_PAUSE);
+                stopMusic.setAction(PlayerServiceOld.ACTION_PAUSE);
                 sendBroadcast(stopMusic);
             }
         });
@@ -173,16 +185,25 @@ public class NowPlayingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent nextSong = new Intent();
-                nextSong.setAction(PlayerService.ACTION_NEXT);
+                nextSong.setAction(PlayerServiceOld.ACTION_NEXT);
                 sendBroadcast(nextSong);
+            }
+        });
+
+        previousButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent previousSong = new Intent();
+                previousSong.setAction(PlayerServiceOld.ACTION_PREVIOUS);
+                sendBroadcast(previousSong);
             }
         });
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
-                    Intent i = new Intent(PlayerService.ACTION_SEEK_TO);
-                    i.putExtra(PlayerService.SEEK_CHANGE, progress);
+                    Intent i = new Intent(PlayerServiceOld.ACTION_SEEK_TO);
+                    i.putExtra(PlayerServiceOld.SEEK_CHANGE, progress);
                     sendBroadcast(i);
                     musicPlaying = true;
                 } else {
@@ -210,7 +231,7 @@ public class NowPlayingActivity extends AppCompatActivity {
         Log.e(TAG, "Duration: " + duration);
         seekBar.setMax(duration);
         seekBar.setProgress(currentDuration);
-        strDuration = String.format("%s:%s", String.format("%02d", ((duration / 1000) / 60)), String.format("%02d", ((duration / 1000) % 60)));
+        String strDuration = String.format("%s:%s", String.format("%02d", ((duration / 1000) / 60)), String.format("%02d", ((duration / 1000) % 60)));
         tvDuration.setText(strDuration);
         musicPlaying = true;
         if (timer != null) timer.cancel();
@@ -243,8 +264,8 @@ public class NowPlayingActivity extends AppCompatActivity {
 
         updateSeeker();
 
-//        loadArt();
-//        setTheme();
+        loadArt();
+        setTheme();
     }
 
     private void setTheme() {
@@ -253,8 +274,6 @@ public class NowPlayingActivity extends AppCompatActivity {
                 new Palette.Builder(((BitmapDrawable) albumArt.getDrawable()).getBitmap()).generate(new Palette.PaletteAsyncListener() {
                     @Override
                     public void onGenerated(Palette palette) {
-                        Palette.Swatch darkVibrantSwatch = palette.getDarkVibrantSwatch();
-                        LinearLayout detailsLayout = (LinearLayout) findViewById(R.id.song_details);
 
                         Palette.Swatch secondarySwatch = palette.getLightVibrantSwatch();
                         if (secondarySwatch == null) {
@@ -263,9 +282,12 @@ public class NowPlayingActivity extends AppCompatActivity {
                         if (secondarySwatch != null) {
                             seekBar.setColor(secondarySwatch.getRgb());
                         }
+
+                        Palette.Swatch darkVibrantSwatch = palette.getDarkVibrantSwatch();
+                        LinearLayout detailsLayout = (LinearLayout) findViewById(R.id.song_details);
+
                         if (darkVibrantSwatch != null) {
                             mainColor = darkVibrantSwatch.getRgb();
-                            detailsLayout.setBackgroundColor(mainColor);
                             if (Build.VERSION.SDK_INT >= 21) {
                                 ActivityManager.TaskDescription taskDescription = new
                                         ActivityManager.TaskDescription(getResources().getString(R.string.app_name),
@@ -275,8 +297,12 @@ public class NowPlayingActivity extends AppCompatActivity {
                             }
 
                         } else {
-                            mainColor = Color.parseColor("#37474f");
+                            mainColor = Color.parseColor("#000000");
                         }
+                        ColorDrawable colorDrawable = ((ColorDrawable) detailsLayout.getBackground());
+                        int oldColor = colorDrawable.getColor();
+                        ViewUtils.crossColors(detailsLayout, oldColor, mainColor);
+//                        detailsLayout.setBackgroundColor(mainColor);
                     }
                 });
             } catch (Exception e) {
@@ -304,15 +330,26 @@ public class NowPlayingActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_player, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
-            return true;
+        } else if (item.getItemId() == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+        } else if (item.getItemId() == R.id.action_playlist) {
+            PlaylistFragment playlistFragment = new PlaylistFragment();
+            Bundle args = new Bundle();
+            playlistFragment.setArguments(args);
+            playlistFragment.show(getSupportFragmentManager(), playlistFragment.getTag());
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 
     private class ChangeSeekDetailUpdater extends AsyncTask<Void, Void, Void> {
 

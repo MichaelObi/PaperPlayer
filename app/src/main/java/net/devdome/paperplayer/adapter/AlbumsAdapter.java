@@ -25,7 +25,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewHolder> {
+public class AlbumsAdapter<A> extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewHolder> {
 
     public static final String EXTRA_ALBUM_ID = "album_id";
     public static final String EXTRA_ALBUM_NAME = "album_name";

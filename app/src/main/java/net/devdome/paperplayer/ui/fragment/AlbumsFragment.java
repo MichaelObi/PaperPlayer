@@ -20,18 +20,16 @@ import java.util.ArrayList;
 
 public class AlbumsFragment extends Fragment {
 
-    Cursor musicCursor;
-    View view;
-    AlbumsAdapter adapter;
-    RecyclerView rv;
+    private View view;
+    private RecyclerView rv;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_albums, container, false);
+        View v = inflater.inflate(R.layout.fragment_albums_artists, container, false);
         view = v;
 
-        rv = (RecyclerView) v.findViewById(R.id.rv_albums);
+        rv = (RecyclerView) v.findViewById(R.id.rv_albums_artists_grid);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
@@ -42,23 +40,23 @@ public class AlbumsFragment extends Fragment {
     }
 
 
-    private class GetAlbums extends AsyncTask<Void, Void, ArrayList> {
+    private class GetAlbums extends AsyncTask<Void, Void, ArrayList<Album>> {
 
         @Override
-        protected void onPostExecute(ArrayList albumList) {
+        protected void onPostExecute(ArrayList<Album> albumList) {
             super.onPostExecute(albumList);
             if (albumList != null) {
-                adapter = new AlbumsAdapter(view.getContext(), albumList);
+                AlbumsAdapter<Album> adapter = new AlbumsAdapter<>(view.getContext(), albumList);
                 rv.setAdapter(adapter);
             }
         }
 
         @Override
-        protected ArrayList doInBackground(Void... params) {
+        protected ArrayList<Album> doInBackground(Void... params) {
             final ArrayList<Album> albums = new ArrayList<>();
 
             final String orderBy = MediaStore.Audio.Albums.ALBUM;
-            musicCursor = getActivity().getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+            Cursor musicCursor = getActivity().getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
                     null, null, null, orderBy);
             if (musicCursor != null && musicCursor.moveToFirst()) {
                 int titleColumn = musicCursor.getColumnIndex
@@ -80,6 +78,7 @@ public class AlbumsFragment extends Fragment {
                             musicCursor.getInt(numOfSongsColumn)));
                 }
                 while (musicCursor.moveToNext());
+                musicCursor.close();
                 return albums;
             }
             return null;

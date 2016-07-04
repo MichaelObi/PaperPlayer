@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground">
 
     <TextView
-        android:id="@+id/album_song_itemcount"
+        android:id="@+id/album_song_track"
         android:layout_width="20dp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/album_song_item_artist"
@@ -24,7 +25,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/album_song_item_menu"
-        android:layout_toRightOf="@id/album_song_itemcount"
+        android:layout_toRightOf="@id/album_song_track"
         android:singleLine="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:text="Love Yourz" />
@@ -37,7 +38,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_toLeftOf="@+id/album_song_item_menu"
-        android:layout_toRightOf="@id/album_song_itemcount"
+        android:layout_toRightOf="@id/album_song_track"
         android:singleLine="true"
         tools:text="J. Cole" />
 
@@ -52,5 +53,5 @@
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:padding="10dp"
-        android:src="@drawable/ic_more_vert_24dp" />
+        app:srcCompat="@drawable/ic_more_vert_24dp" />
 </RelativeLayout>

@@ -16,15 +16,16 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <TextView
+            android:id="@+id/year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
-            android:text="Released 2014" />
+            tools:text="Released 2014" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_songs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             tools:listitem="@layout/list_item_album_songs" />
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

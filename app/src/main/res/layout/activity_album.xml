@@ -22,11 +22,10 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-
             <ImageView
                 android:id="@+id/album_art"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="296dp"
                 android:adjustViewBounds="true"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"

@@ -2,6 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:drawSelectorOnTop="true"
     android:foreground="?android:attr/selectableItemBackground">
 
@@ -31,17 +32,19 @@
                 android:id="@+id/album_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="2014 Forest Hills Drive"
+                android:maxLines="1"
+                tools:text="2014 Forest Hills Drive"
+                android:textColor="@color/colorPrimaryTextInverse"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
 
             <TextView
                 android:id="@+id/album_artist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="J. Cole"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse" />
+                android:maxLines="1"
+                tools:text="J. Cole"
+                android:textColor="@color/colorSecondaryTextInverse"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
         </LinearLayout>
     </RelativeLayout>
 

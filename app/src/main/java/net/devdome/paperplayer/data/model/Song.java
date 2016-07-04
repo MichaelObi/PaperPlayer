@@ -2,21 +2,21 @@ package net.devdome.paperplayer.data.model;
 
 import android.graphics.Bitmap;
 
-
 import java.util.ArrayList;
 
 public class Song {
 
-    long id;
-    long albumId;
-    String name;
-    String artist;
-    String path;
-    String albumName;
-    String mood;
-    Boolean fav;
-    Bitmap art;
-    int count;
+    private long id;
+    private long albumId;
+    private String name;
+    private String artist;
+    private String path;
+    private String albumName;
+    private String mood;
+    private Boolean fav;
+    private Bitmap art;
+    private int count;
+    private long trackNumber;
 
     public Song(long id, String name, String artist, String path,
                 Boolean fav, long albumId, String albumName, int count, String mood) {
@@ -32,6 +32,13 @@ public class Song {
         this.mood = mood;
     }
 
+    public Song() {
+
+    }
+
+    private static void returnSongs(ArrayList<Song> songList) {
+
+    }
 //    public static Song fromRealmObject(PlaylistItem playlistItem) {
 //        return new Song(playlistItem.getSongRealId(),
 //                playlistItem.getSongName(), playlistItem.getSongArtist(),
@@ -39,11 +46,6 @@ public class Song {
 //                playlistItem.getSongAlbumId(), playlistItem.getSongAlbumName(), playlistItem.getSongCount(),
 //                playlistItem.getSongMood());
 //    }
-
-
-    private static void returnSongs(ArrayList<Song> songList) {
-
-    }
 
     public long getId() {
         return id;
@@ -124,4 +126,14 @@ public class Song {
     public void setCount(int count) {
         this.count = count;
     }
+
+    public long getTrackNumber() {
+        return trackNumber;
+    }
+
+    public void setTrackNumber(long trackNumber) {
+        this.trackNumber = trackNumber;
+    }
+
+
 }

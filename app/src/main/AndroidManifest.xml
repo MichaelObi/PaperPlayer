@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="net.devdome.paperplayer"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.devdome.paperplayer">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -37,7 +36,11 @@
         <activity
             android:name=".ui.activity.AlbumActivity"
             android:label="@string/title_activity_album"
-            android:theme="@style/Player"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/Player" />
+        <activity
+            android:name=".ui.activity.SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>
