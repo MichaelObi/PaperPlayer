@@ -46,7 +46,7 @@
 
 
     <TextView
-        android:id="@+id/song_item_name"
+        android:id="@+id/song_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
@@ -63,10 +63,10 @@
         tools:text="6pm in New York" />
 
     <TextView
-        android:id="@+id/song_item_desc"
+        android:id="@+id/song_item_artist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/song_item_name"
+        android:layout_below="@id/song_item_title"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"

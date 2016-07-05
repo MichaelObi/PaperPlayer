@@ -75,7 +75,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
 
     public PlayerService() {
         super();
-        playlistManager = new PlaylistManager();
+        playlistManager = PlaylistManager.getInstance();
         actions.put(ACTION_PLAY_ALL, new PlayAllAction());
         actions.put(ACTION_VIEW_NOW_PLAYING, new ViewNowPlayingAction());
         actions.put(ACTION_SEEK_GET, new SeekGetAction());

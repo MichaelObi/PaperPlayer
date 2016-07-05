@@ -5,9 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import net.devdome.paperplayer.R;
+import net.devdome.paperplayer.adapter.PlaylistAdapter;
 
 /**
  * Created by Michael on 7/4/2016.
@@ -44,5 +47,13 @@ public class PlaylistFragment extends BottomSheetDialogFragment {
             ((BottomSheetBehavior) behavior).setState(BottomSheetBehavior.STATE_EXPANDED);
             ((BottomSheetBehavior) behavior).setPeekHeight(250);
         }
+
+        setUpPlaylist();
+    }
+
+    private void setUpPlaylist() {
+        RecyclerView rvPlaylist = (RecyclerView) contentView.findViewById(R.id.rv_playlist);
+        rvPlaylist.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvPlaylist.setAdapter(new PlaylistAdapter());
     }
 }

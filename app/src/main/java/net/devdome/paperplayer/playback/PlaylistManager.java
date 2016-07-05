@@ -4,11 +4,21 @@ import net.devdome.paperplayer.data.model.Song;
 
 import java.util.ArrayList;
 
-class PlaylistManager {
+public class PlaylistManager {
 
-
+    private static PlaylistManager playlistManager = null;
     private ArrayList<PlaylistItem> playlist = new ArrayList<>();
     private int startIndex = 0;
+
+    private PlaylistManager() {
+    }
+
+    public static PlaylistManager getInstance() {
+        if (playlistManager == null)
+            playlistManager = new PlaylistManager();
+
+        return playlistManager;
+    }
 
     public int getStartIndex() {
         return startIndex;
@@ -20,7 +30,7 @@ class PlaylistManager {
      * @param songs {@link ArrayList<PlaylistItem>} of {@link Song}
      * @return {@link ArrayList<PlaylistItem>}
      */
-    ArrayList<PlaylistItem> generatePlaylist(ArrayList<Song> songs) {
+    public ArrayList<PlaylistItem> generatePlaylist(ArrayList<Song> songs) {
         return generatePlaylist(songs, 0);
     }
 
@@ -31,11 +41,11 @@ class PlaylistManager {
      * @param playbackInitSongId song id of track that should be played first
      * @return {@link ArrayList<PlaylistItem>}
      */
-    synchronized ArrayList<PlaylistItem> generatePlaylist(ArrayList<Song> songs, long playbackInitSongId) {
+    public ArrayList<PlaylistItem> generatePlaylist(ArrayList<Song> songs, long playbackInitSongId) {
         if (playbackInitSongId == 0) {
             playbackInitSongId = songs.get(0).getId();
         }
-
+        clearPlaylist();
         for (Song song : songs) {
             PlaylistItem item = new PlaylistItem(song, song.getId() == playbackInitSongId);
             playlist.add(item);
@@ -44,6 +54,13 @@ class PlaylistManager {
             }
         }
         return playlist;
+    }
+
+    /**
+     * Removes all items from playlist
+     */
+    protected void clearPlaylist() {
+        playlist.clear();
     }
 
     /**
@@ -58,7 +75,7 @@ class PlaylistManager {
     /**
      * A song in a playlist to improve SoC
      */
-    class PlaylistItem {
+    public class PlaylistItem {
         private Song song;
         private boolean isPlaying = false;
 

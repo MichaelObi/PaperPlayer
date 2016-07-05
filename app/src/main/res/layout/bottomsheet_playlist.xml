@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_sheet_playlist"
@@ -9,9 +9,10 @@
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
@@ -22,6 +23,7 @@
             android:layout_marginTop="4dp"
             android:text="@string/up_next"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_playlist"
             android:layout_width="match_parent"
@@ -29,4 +31,4 @@
             android:scrollbars="vertical"
             tools:listitem="@layout/card_playlist_item" />
     </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+</FrameLayout>
