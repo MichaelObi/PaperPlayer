@@ -5,18 +5,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -30,12 +32,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.annimon.paperstyle.PaperSeekBar;
+import com.squareup.picasso.Picasso;
 
+import net.devdome.paperplayer.Constants;
 import net.devdome.paperplayer.R;
-import net.devdome.paperplayer.playback.PlayerServiceOld;
 import net.devdome.paperplayer.ui.fragment.PlaylistFragment;
 import net.devdome.paperplayer.utils.ViewUtils;
 
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -47,12 +51,13 @@ public class NowPlayingActivity extends AppCompatActivity {
     public static final String ACTION_GET_PLAYING_DETAIL = "get_playing_detail";
     private static final String TAG = "NowPlayingActivity";
     private static int mainColor;
+    SharedPreferences preferences;
     private BottomSheetBehavior bottomSheetBehavior;
     private PaperSeekBar seekBar;
     private ImageView albumArt;
     private Timer timer;
     private boolean musicPlaying;
-    private ImageView playButton, nextButton, previousButton;
+    private ImageView playButton, nextButton, previousButton, repeatButton, shuffleButton;
     private TextView tvSongName, tvSongAlbumArtist, tvCurrentTimeHolder, tvDuration;
     private int duration, currentDuration;
     private String songPath, songName, songArtist, albumName, songArtPath;
@@ -61,9 +66,9 @@ public class NowPlayingActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(ACTION_GET_SEEK_VALUE)) {
-                seekBar.setProgress(intent.getIntExtra(PlayerServiceOld.SONG_SEEK_VALUE, 0));
-                currentDuration = intent.getIntExtra(PlayerServiceOld.SONG_SEEK_VALUE, 0);
-                if (intent.getBooleanExtra(PlayerServiceOld.IS_PLAYING, false)) {
+                seekBar.setProgress(intent.getIntExtra(Constants.KEY_SONG_SEEK_VALUE, 0));
+                currentDuration = intent.getIntExtra(Constants.KEY_SONG_SEEK_VALUE, 0);
+                if (intent.getBooleanExtra(Constants.KEY_IS_PLAYING, false)) {
                     playButton.setImageResource(R.drawable.ic_pause_24dp);
                     musicPlaying = true;
 
@@ -72,7 +77,7 @@ public class NowPlayingActivity extends AppCompatActivity {
                     musicPlaying = false;
                 }
             } else if (intent.getAction().equals(ACTION_GET_PLAY_STATE)) {
-                if (intent.getBooleanExtra(PlayerServiceOld.IS_PLAYING, false)) {
+                if (intent.getBooleanExtra(Constants.KEY_IS_PLAYING, false)) {
                     playButton.setImageResource(R.drawable.ic_pause_24dp);
                     musicPlaying = true;
                 } else {
@@ -80,12 +85,12 @@ public class NowPlayingActivity extends AppCompatActivity {
                     musicPlaying = false;
                 }
             } else if (intent.getAction().equals(ACTION_GET_PLAYING_DETAIL)) {
-                songPath = intent.getStringExtra(PlayerServiceOld.SONG_PATH);
-                songName = intent.getStringExtra(PlayerServiceOld.SONG_NAME);
-                songArtist = intent.getStringExtra(PlayerServiceOld.SONG_ARTIST);
-                albumId = intent.getLongExtra(PlayerServiceOld.SONG_ALBUM_ID, 0);
-                albumName = intent.getStringExtra(PlayerServiceOld.SONG_ALBUM_NAME);
-                duration = intent.getIntExtra(PlayerServiceOld.SONG_DURATION, 0);
+                songPath = intent.getStringExtra(Constants.SONG_PATH);
+                songName = intent.getStringExtra(Constants.SONG_NAME);
+                songArtist = intent.getStringExtra(Constants.SONG_ARTIST);
+                albumId = intent.getLongExtra(Constants.SONG_ALBUM_ID, 0);
+                albumName = intent.getStringExtra(Constants.SONG_ALBUM_NAME);
+                duration = intent.getIntExtra(Constants.SONG_DURATION, 0);
                 currentDuration = 0;
                 musicPlaying = true;
                 updateView();
@@ -122,14 +127,18 @@ public class NowPlayingActivity extends AppCompatActivity {
         previousButton = (ImageView) findViewById(R.id.btn_previous);
         tvCurrentTimeHolder = (TextView) findViewById(R.id.current_time);
         tvDuration = (TextView) findViewById(R.id.duration);
+        shuffleButton = (ImageView) findViewById(R.id.btn_shuffle);
 
-        songPath = getIntent().getStringExtra(PlayerServiceOld.SONG_PATH);
-        songName = getIntent().getStringExtra(PlayerServiceOld.SONG_NAME);
-        songArtist = getIntent().getStringExtra(PlayerServiceOld.SONG_ARTIST);
-        albumId = getIntent().getLongExtra(PlayerServiceOld.SONG_ALBUM_ID, 0);
-        albumName = getIntent().getStringExtra(PlayerServiceOld.SONG_ALBUM_NAME);
-        duration = getIntent().getIntExtra(PlayerServiceOld.SONG_DURATION, 0);
-        currentDuration = getIntent().getIntExtra(PlayerServiceOld.SONG_CURRENT_TIME, 0);
+        songPath = getIntent().getStringExtra(Constants.SONG_PATH);
+        songName = getIntent().getStringExtra(Constants.SONG_NAME);
+        songArtist = getIntent().getStringExtra(Constants.SONG_ARTIST);
+        albumId = getIntent().getLongExtra(Constants.SONG_ALBUM_ID, 0);
+        albumName = getIntent().getStringExtra(Constants.SONG_ALBUM_NAME);
+        duration = getIntent().getIntExtra(Constants.SONG_DURATION, 0);
+        currentDuration = getIntent().getIntExtra(Constants.SONG_CURRENT_TIME, 0);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         setupUI();
 
         updateView();
@@ -147,7 +156,7 @@ public class NowPlayingActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Intent i = new Intent();
-        i.setAction(PlayerServiceOld.ACTION_SEEK_GET);
+        i.setAction(Constants.ACTION_SEEK_GET);
         sendBroadcast(i);
     }
 
@@ -161,14 +170,17 @@ public class NowPlayingActivity extends AppCompatActivity {
         if (cursor.moveToFirst()) {
             songArtPath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
         }
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = false;
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        options.inDither = true;
-        Drawable artWork = new BitmapDrawable(getResources(), BitmapFactory.decodeFile(songArtPath, options));
-        ((ImageView) findViewById(R.id.album_art)).setImageDrawable(artWork);
-        cursor.close();
 
+        try {
+            Picasso.with(this).load(new File(songArtPath))
+                    .error(R.drawable.default_artwork_dark)
+                    .config(Bitmap.Config.ARGB_8888)
+                    .into(albumArt);
+        } catch (Exception e) {
+            e.printStackTrace();
+            albumArt.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_artwork_dark));
+        }
+        cursor.close();
     }
 
     private void setupUI() {
@@ -176,7 +188,7 @@ public class NowPlayingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent stopMusic = new Intent();
-                stopMusic.setAction(PlayerServiceOld.ACTION_PAUSE);
+                stopMusic.setAction(Constants.ACTION_PAUSE);
                 sendBroadcast(stopMusic);
             }
         });
@@ -185,7 +197,7 @@ public class NowPlayingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent nextSong = new Intent();
-                nextSong.setAction(PlayerServiceOld.ACTION_NEXT);
+                nextSong.setAction(Constants.ACTION_NEXT);
                 sendBroadcast(nextSong);
             }
         });
@@ -194,18 +206,26 @@ public class NowPlayingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent previousSong = new Intent();
-                previousSong.setAction(PlayerServiceOld.ACTION_PREVIOUS);
+                previousSong.setAction(Constants.ACTION_PREVIOUS);
                 sendBroadcast(previousSong);
             }
         });
+
+        shuffleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Constants.ACTION_SHUFFLE);
+                sendBroadcast(intent);
+            }
+        });
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
-                    Intent i = new Intent(PlayerServiceOld.ACTION_SEEK_TO);
-                    i.putExtra(PlayerServiceOld.SEEK_CHANGE, progress);
+                    Intent i = new Intent(Constants.ACTION_SEEK_TO);
+                    i.putExtra(Constants.KEY_SEEK_CHANGE, progress);
                     sendBroadcast(i);
-                    musicPlaying = true;
                 } else {
                     if (progress == duration) {
                         seekBar.setProgress(100);
@@ -269,12 +289,15 @@ public class NowPlayingActivity extends AppCompatActivity {
     }
 
     private void setTheme() {
+        if (!preferences.getBoolean(getString(R.string.key_dynamic_theme), false)) {
+            return;
+        }
+
         if (songArtPath != null) {
             try {
                 new Palette.Builder(((BitmapDrawable) albumArt.getDrawable()).getBitmap()).generate(new Palette.PaletteAsyncListener() {
                     @Override
                     public void onGenerated(Palette palette) {
-
                         Palette.Swatch secondarySwatch = palette.getLightVibrantSwatch();
                         if (secondarySwatch == null) {
                             secondarySwatch = palette.getMutedSwatch();
@@ -283,21 +306,33 @@ public class NowPlayingActivity extends AppCompatActivity {
                             seekBar.setColor(secondarySwatch.getRgb());
                         }
 
-                        Palette.Swatch darkVibrantSwatch = palette.getDarkVibrantSwatch();
+                        Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+                        if (swatch == null) {
+                            swatch = palette.getDarkMutedSwatch();
+                        }
                         LinearLayout detailsLayout = (LinearLayout) findViewById(R.id.song_details);
 
-                        if (darkVibrantSwatch != null) {
-                            mainColor = darkVibrantSwatch.getRgb();
+                        if (swatch != null) {
+                            mainColor = swatch.getRgb();
                             if (Build.VERSION.SDK_INT >= 21) {
                                 ActivityManager.TaskDescription taskDescription = new
                                         ActivityManager.TaskDescription(getResources().getString(R.string.app_name),
                                         BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher),
-                                        darkVibrantSwatch.getRgb());
+                                        swatch.getRgb());
                                 setTaskDescription(taskDescription);
+
+                                float[] hsv = new float[3];
+                                Color.colorToHSV(mainColor, hsv);
+                                hsv[2] = hsv[2] - 0.1f;
+
+                                getWindow().setNavigationBarColor(Color.HSVToColor(hsv));
                             }
 
                         } else {
-                            mainColor = Color.parseColor("#000000");
+                            if (Build.VERSION.SDK_INT >= 21) {
+                                mainColor = Color.parseColor("#000000");
+                                getWindow().setNavigationBarColor(mainColor);
+                            }
                         }
                         ColorDrawable colorDrawable = ((ColorDrawable) detailsLayout.getBackground());
                         int oldColor = colorDrawable.getColor();
@@ -309,6 +344,7 @@ public class NowPlayingActivity extends AppCompatActivity {
                 Log.e(TAG, e.getMessage());
                 mainColor = Color.parseColor("#37474f");
                 albumArt.setImageResource(R.drawable.default_artwork_dark);
+
             }
         } else {
             mainColor = Color.parseColor("#37474f");

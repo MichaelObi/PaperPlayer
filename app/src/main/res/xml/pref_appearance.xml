@@ -1,9 +1,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
+        android:defaultValue="false"
+        android:key="@string/key_dynamic_theme"
+        android:summary="@string/pref_description_dynamic_theme"
+        android:title="@string/pref_title_dynamic_theme" />
+
+    <SwitchPreference
         android:defaultValue="true"
         android:key="dark_theme"
         android:summary="@string/pref_description_dark_theme"
         android:title="@string/pref_title_dark_theme" />
+
 
 </PreferenceScreen>

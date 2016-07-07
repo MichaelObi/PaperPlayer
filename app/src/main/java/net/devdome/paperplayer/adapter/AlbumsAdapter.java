@@ -52,7 +52,7 @@ public class AlbumsAdapter<A> extends RecyclerView.Adapter<AlbumsAdapter.AlbumVi
         try {
             Picasso.with(context).load(new File(albums.get(position).getArtString()))
                     .error(R.drawable.default_artwork_dark)
-                    .config(Bitmap.Config.RGB_565)
+                    .config(Bitmap.Config.ARGB_8888)
                     .resize(200, 200)
                     .into(holder.albumArt);
         } catch (Exception e) {
@@ -81,7 +81,7 @@ public class AlbumsAdapter<A> extends RecyclerView.Adapter<AlbumsAdapter.AlbumVi
         TextView name;
         TextView artist;
         ImageView albumArt;
-        View view;
+        View view, details;
 
         public AlbumViewHolder(View itemView) {
             super(itemView);
@@ -89,6 +89,7 @@ public class AlbumsAdapter<A> extends RecyclerView.Adapter<AlbumsAdapter.AlbumVi
             albumArt = (ImageView) itemView.findViewById(R.id.album_art);
             name = (TextView) itemView.findViewById(R.id.album_name);
             artist = (TextView) itemView.findViewById(R.id.album_artist);
+            details = itemView.findViewById(R.id.details_holder);
 //            menu = (ImageView) itemView.findViewById(R.id.album_menu);
 
         }

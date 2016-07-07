@@ -1,106 +1,79 @@
 package net.devdome.paperplayer.playback;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat.Action;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+import net.devdome.paperplayer.Constants;
+import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Song;
 import net.devdome.paperplayer.ui.activity.NowPlayingActivity;
+import net.devdome.paperplayer.utils.MediaUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerService extends Service implements MediaPlayer.OnErrorListener, AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
 
-    public static final int NOTIFICATION_ID = 107;
-    // Song Properties Keys
-    public static final String SONG_ID = "song_id";
-    public static final String SONG_PATH = "song_path";
-    public static final String SONG_NAME = "song_name";
-    public static final String SONG_ALBUM_NAME = "song_album_name";
-    public static final String SONG_ART = "song_art";
-    public static final String SONG_ALBUM_ID = "song_album_id";
-    public static final String SONG_ARTIST = "song_artist";
-    public static final String SONG_DURATION = "song_duration";
-    public static final String SONG_CURRENT_TIME = "song_current_time";
-    // Action Keys
-    public static final String ACTION_PAUSE = "pause";
-    public static final String ACTION_NEXT = "next_song";
-    public static final String ACTION_SEEK_TO = "player_seek_to_song";
-    public static final String ACTION_PLAY_ALL = "play_all";
-    public static final String ACTION_VIEW_NOW_PLAYING = "view_now_playing";
-    public static final String ACTION_SEEK_GET = "action_get_seek";
-    public static final String ACTION_PLAY_ALBUM = "play_album";
-    public static final String ACTION_REQUEST_PLAY_STATE = "request_play_state";
-    public static final String ACTION_PREVIOUS = "previous_song";
-    // Song ID of track to start with
-    public static final String PLAY_START_WITH = "start_with";
+    private static final String TAG = "PlayerService";
 
-    // Property Keys
-    public static final String SEEK_CHANGE = "change_seek";
-    public static final String SONG_SEEK_VALUE = "song_seek_value";
-    public static final String IS_PLAYING = "is_playing";
-    public static final String EXTRA_IS_PLAYING = "is_playing";
-    public static final String KEY_SHUFFLE = "shuffle";
-    private static final String TAG = "PlayerServiceOld";
+    private MediaSessionCompat session;
+
+    private boolean init = true;
+
     private MediaPlayer player;
-    private ArrayList<PlaylistManager.PlaylistItem> playlist = new ArrayList<>();
-    private int currentPlaylistPosition;
-    private int pausedSongSeek = 0;
-    private LibraryManager libraryManager;
-    private PlaylistManager playlistManager;
-    private Map<String, ActionListenerContract> actions = new HashMap<>();
 
-    private BroadcastReceiver playerReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            libraryManager = new LibraryManager(context);
-            ActionListenerContract action = actions.get(intent.getAction());
-            if (action == null) {
-                throw new IllegalStateException("Unknown callback for action: " + intent.getAction());
-            }
-            action.execute(intent, context);
-        }
-    };
+    private int pausedSongSeek = 0;
+
+    private LibraryManager libraryManager;
+
+    private PlaylistManager playlistManager;
+
+    private Map<String, ActionListenerContract> actions = new HashMap<>();
 
     public PlayerService() {
         super();
-        playlistManager = PlaylistManager.getInstance();
-        actions.put(ACTION_PLAY_ALL, new PlayAllAction());
-        actions.put(ACTION_VIEW_NOW_PLAYING, new ViewNowPlayingAction());
-        actions.put(ACTION_SEEK_GET, new SeekGetAction());
-        actions.put(ACTION_SEEK_TO, new SeekToAction());
-        actions.put(ACTION_PAUSE, new PauseAction());
-        actions.put(ACTION_PLAY_ALBUM, new PlayAlbumAction());
-        actions.put(ACTION_NEXT, new NextSongAction());
-        actions.put(ACTION_REQUEST_PLAY_STATE, new RequestStateAction());
-        actions.put(ACTION_PREVIOUS, new PreviousSongAction());
+        actions.put(Constants.ACTION_PLAY_ALL, new PlayAllAction());
+        actions.put(Constants.ACTION_VIEW_NOW_PLAYING, new ViewNowPlayingAction());
+        actions.put(Constants.ACTION_SEEK_GET, new SeekGetAction());
+        actions.put(Constants.ACTION_SEEK_TO, new SeekToAction());
+        actions.put(Constants.ACTION_PAUSE, new PauseAction());
+        actions.put(Constants.ACTION_PLAY_ALBUM, new PlayAlbumAction());
+        actions.put(Constants.ACTION_NEXT, new NextSongAction());
+        actions.put(Constants.ACTION_REQUEST_PLAY_STATE, new RequestStateAction());
+        actions.put(Constants.ACTION_PREVIOUS, new PreviousSongAction());
+        actions.put(Constants.ACTION_SHUFFLE, new ShuffleAction());
     }
-
 
     private void updateCurrentPlaying() {
         Intent sendDetails = new Intent();
         Song song = getCurrentSong();
-        sendDetails.putExtra(SONG_NAME, song.getName());
-        sendDetails.putExtra(SONG_ARTIST, song.getArtist());
-        sendDetails.putExtra(SONG_ALBUM_NAME, song.getAlbumName());
-        sendDetails.putExtra(SONG_ALBUM_ID, song.getAlbumId());
-        sendDetails.putExtra(SONG_PATH, song.getPath());
-        sendDetails.putExtra(SONG_ART, song.getArt());
+        sendDetails.putExtra(Constants.SONG_NAME, song.getName());
+        sendDetails.putExtra(Constants.SONG_ARTIST, song.getArtist());
+        sendDetails.putExtra(Constants.SONG_ALBUM_NAME, song.getAlbumName());
+        sendDetails.putExtra(Constants.SONG_ALBUM_ID, song.getAlbumId());
+        sendDetails.putExtra(Constants.SONG_PATH, song.getPath());
+        sendDetails.putExtra(Constants.SONG_ART, song.getArt());
 
         try {
-            sendDetails.putExtra(SONG_DURATION, player.getDuration());
-            sendDetails.putExtra(SONG_CURRENT_TIME, player.getCurrentPosition());
+            sendDetails.putExtra(Constants.SONG_DURATION, player.getDuration());
+            sendDetails.putExtra(Constants.SONG_CURRENT_TIME, player.getCurrentPosition());
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -113,47 +86,48 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
             if (player.isPlaying()) {
                 pausedSongSeek = player.getCurrentPosition();
                 player.pause();
+                abandonAudioFocus();
             } else {
-                if (playlist.size() > 0) {
+                if (playlistManager.getCurrentPlaylist().size() > 0) {
                     player.start();
                     player.seekTo(pausedSongSeek);
+                    setUpNotification();
                 }
             }
             new RequestStateAction().execute(new Intent(), this);
         }
+
     }
 
     private void playMusic() {
         if (player == null) initPlayer();
 
         player.reset();
+        setPlayerDataSource();
+        player.prepareAsync();
+    }
+
+    private void setPlayerDataSource() {
         Uri uri = Uri.parse(getCurrentSong().getPath());
         try {
             player.setDataSource(getApplicationContext(), uri);
         } catch (Exception e) {
             Log.e(TAG, "playMusic: Cannot set song Uri", e);
         }
-        player.prepareAsync();
     }
 
     private Song getCurrentSong() {
-        return playlist.get(currentPlaylistPosition).getSong();
+        return playlistManager.getCurrentSong();
     }
 
     private void playNext() {
-        currentPlaylistPosition++;
-        if (currentPlaylistPosition >= playlist.size()) {
-            currentPlaylistPosition = 0;
-        }
+        playlistManager.next();
         pausedSongSeek = 0;
         playMusic();
     }
 
     private void playPrevious() {
-        currentPlaylistPosition--;
-        if (currentPlaylistPosition < 0) {
-            currentPlaylistPosition = 0;
-        }
+        playlistManager.previous();
         pausedSongSeek = 0;
         playMusic();
     }
@@ -168,16 +142,17 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_PLAY_ALL);
-        filter.addAction(ACTION_PLAY_ALBUM);
-        filter.addAction(ACTION_VIEW_NOW_PLAYING);
-        filter.addAction(ACTION_PAUSE);
-        filter.addAction(ACTION_SEEK_GET);
-        filter.addAction(ACTION_SEEK_TO);
-        filter.addAction(ACTION_NEXT);
-        filter.addAction(ACTION_PREVIOUS);
-        filter.addAction(ACTION_REQUEST_PLAY_STATE);
-        registerReceiver(playerReceiver, filter);
+        filter.addAction(Constants.ACTION_PLAY_ALL);
+        filter.addAction(Constants.ACTION_PLAY_ALBUM);
+        filter.addAction(Constants.ACTION_VIEW_NOW_PLAYING);
+        filter.addAction(Constants.ACTION_PAUSE);
+        filter.addAction(Constants.ACTION_SEEK_GET);
+        filter.addAction(Constants.ACTION_SEEK_TO);
+        filter.addAction(Constants.ACTION_NEXT);
+        filter.addAction(Constants.ACTION_PREVIOUS);
+        filter.addAction(Constants.ACTION_REQUEST_PLAY_STATE);
+        filter.addAction(Constants.ACTION_SHUFFLE);
+        registerReceiver(new PlayerReceiver(), filter);
         return START_STICKY;
     }
 
@@ -191,18 +166,28 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
     public void onDestroy() {
         super.onDestroy();
         release();
+        session.release();
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         initPlayer();
+        libraryManager = new LibraryManager(this);
+        playlistManager = PlaylistManager.getInstance();
+
+        // Hack
+        new PlayAllAction().execute(new Intent(), this);
+        init = false;
+        //End Hack
+
+        session = new MediaSessionCompat(getApplicationContext(), Constants.MEDIA_SESSION_TAG);
     }
 
     private void initPlayer() {
         player = new MediaPlayer();
-        player.setOnCompletionListener(this);
         player.setOnPreparedListener(this);
+        player.setOnCompletionListener(this);
         player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
     }
@@ -228,11 +213,19 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
                 break;
             case AudioManager.AUDIOFOCUS_LOSS:
                 pause();
+                setUpNotification();
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 if (player.isPlaying()) player.setVolume(0.1f, 0.1f);
                 break;
         }
+    }
+
+    private void abandonAudioFocus() {
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audioManager.abandonAudioFocus(this);
+        setUpNotification();
+        stopForeground(false);
     }
 
     @Override
@@ -247,14 +240,74 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
         if (requestAudioFocus()) {
             mp.start();
             mp.seekTo(pausedSongSeek);
+            if (!init) {
+                pause();
+                init = true;
+            }
             updateCurrentPlaying();
             new RequestStateAction().execute(new Intent(), this);
+            setUpNotification();
         }
+    }
+
+    private void setUpNotification() {
+        Intent intent = new Intent(Constants.ACTION_VIEW_NOW_PLAYING);
+        PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Bitmap art = MediaUtils.getSongArt(this, playlistManager.getCurrentPlaylist().get(playlistManager.getCurrentIndex()).getSong().getAlbumId());
+
+        MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
+                .putBitmap(MediaMetadataCompat.METADATA_KEY_ART, art)
+                .build();
+        session.setMetadata(metadata);
+
+        // Previous Button
+        PendingIntent piPrevous = PendingIntent.getBroadcast(this, 70022, new Intent(Constants.ACTION_PREVIOUS), 0);
+        Action actionPrevious = new Action(R.drawable.ic_skip_previous_24dp, getString(R.string.previous), piPrevous);
+
+        int icon = R.drawable.ic_play_arrow_24dp;
+        if (player.isPlaying()) {
+            icon = R.drawable.ic_pause_24dp;
+        }
+        PendingIntent piPlayPause = PendingIntent.getBroadcast(this, 70022, new Intent(Constants.ACTION_PAUSE), 0);
+        Action actionPlayPause = new Action(icon, getString(R.string.pause), piPlayPause);
+
+        PendingIntent piNext = PendingIntent.getBroadcast(this, 70022, new Intent(Constants.ACTION_NEXT), 0);
+        Action actionNext = new Action(R.drawable.ic_skip_next_24dp, getString(R.string.next), piNext);
+
+        Notification notification = new NotificationCompat.Builder(getApplicationContext())
+                .setSmallIcon(player.isPlaying() ? R.drawable.ic_play_arrow_24dp : R.drawable.ic_pause_24dp)
+                .setContentTitle(playlistManager.getCurrentPlaylist().get(playlistManager.getCurrentIndex()).getSong().getName())
+                .setContentText(String.format("%s", playlistManager.getCurrentPlaylist().get(playlistManager.getCurrentIndex()).getSong().getArtist()))
+                .setSubText(playlistManager.getCurrentPlaylist().get(playlistManager.getCurrentIndex()).getSong().getAlbumName())
+                .setStyle(
+                        new NotificationCompat.MediaStyle().setMediaSession(session.getSessionToken())
+                )
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .addAction(actionPrevious).addAction(actionPlayPause).addAction(actionNext)
+                .setContentIntent(pi)
+                .setLargeIcon(art)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setOngoing(player.isPlaying())
+                .build();
+        startForeground(Constants.NOTIFICATION_ID, notification);
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         return false;
+    }
+
+    private class PlayerReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ActionListenerContract action = actions.get(intent.getAction());
+            if (action == null) {
+                throw new IllegalStateException("Unknown callback for action: " + intent.getAction());
+            }
+            action.execute(intent, context);
+        }
     }
 
     private class PlayAllAction implements ActionListenerContract {
@@ -263,9 +316,9 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    playlist = playlistManager.generatePlaylist(libraryManager.getAllSongs(), intent.getLongExtra(PLAY_START_WITH, 0));
-                    currentPlaylistPosition = playlistManager.getStartIndex();
+                    playlistManager.generatePlaylist(libraryManager.getAllSongs(), intent.getLongExtra(Constants.KEY_PLAY_START_WITH, 0));
                     pausedSongSeek = 0;
+
                     playMusic();
                 }
             }).run();
@@ -285,9 +338,8 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    playlist = playlistManager.generatePlaylist(libraryManager.getAlbumSongs(intent.getLongExtra(PlayerService.SONG_ALBUM_ID, 0)), intent.getLongExtra(PLAY_START_WITH, 0));
+                    playlistManager.generatePlaylist(libraryManager.getAlbumSongs(intent.getLongExtra(Constants.SONG_ALBUM_ID, 0)), intent.getLongExtra(Constants.KEY_PLAY_START_WITH, 0));
                     pausedSongSeek = 0;
-                    currentPlaylistPosition = playlistManager.getStartIndex();
                     playMusic();
                 }
             }).run();
@@ -298,10 +350,13 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
         @Override
         public void execute(Intent intent, Context context) {
             try {
-                player.seekTo(intent.getIntExtra(SEEK_CHANGE, 0));
+                if (!player.isPlaying()) {
+                    pausedSongSeek = intent.getIntExtra(Constants.KEY_SEEK_CHANGE, 0);
+                }
+                player.seekTo(intent.getIntExtra(Constants.KEY_SEEK_CHANGE, 0));
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                pausedSongSeek = intent.getIntExtra(SEEK_CHANGE, 0);
+                pausedSongSeek = intent.getIntExtra(Constants.KEY_SEEK_CHANGE, 0);
                 playMusic();
                 pausedSongSeek = 0;
             }
@@ -314,13 +369,12 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
             Intent sIntent = new Intent();
             sIntent.setAction(NowPlayingActivity.ACTION_GET_SEEK_VALUE);
             if (player != null && player.isPlaying()) {
-                sIntent.putExtra(IS_PLAYING, true);
+                sIntent.putExtra(Constants.KEY_IS_PLAYING, true);
             }
             if (player != null) {
-                sIntent.putExtra(SONG_SEEK_VALUE, player.getCurrentPosition());
+                sIntent.putExtra(Constants.KEY_SONG_SEEK_VALUE, player.getCurrentPosition());
             }
             sendBroadcast(sIntent);
-            //TODO: updatePlaylist();
         }
     }
 
@@ -341,18 +395,18 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
     private class ViewNowPlayingAction implements ActionListenerContract {
         @Override
         public void execute(Intent intent, final Context context) {
-            if (playlist.size() > 0) {
+            if (playlistManager.getCurrentPlaylist().size() > 0) {
                 Intent i = new Intent(PlayerService.this, NowPlayingActivity.class);
                 Song song = getCurrentSong();
-                i.putExtra(SONG_NAME, song.getName());
-                i.putExtra(SONG_ARTIST, song.getArtist());
-                i.putExtra(SONG_ALBUM_NAME, song.getAlbumName());
-                i.putExtra(SONG_ALBUM_ID, song.getAlbumId());
-                i.putExtra(SONG_PATH, song.getPath());
-                i.putExtra(SONG_ART, song.getArt());
-                i.putExtra(SONG_ID, song.getId());
-                i.putExtra(SONG_CURRENT_TIME, player.getCurrentPosition());
-                i.putExtra(SONG_DURATION, player.getDuration());
+                i.putExtra(Constants.SONG_NAME, song.getName());
+                i.putExtra(Constants.SONG_ARTIST, song.getArtist());
+                i.putExtra(Constants.SONG_ALBUM_NAME, song.getAlbumName());
+                i.putExtra(Constants.SONG_ALBUM_ID, song.getAlbumId());
+                i.putExtra(Constants.SONG_PATH, song.getPath());
+                i.putExtra(Constants.SONG_ART, song.getArt());
+                i.putExtra(Constants.SONG_ID, song.getId());
+                i.putExtra(Constants.SONG_CURRENT_TIME, player.getCurrentPosition());
+                i.putExtra(Constants.SONG_DURATION, player.getDuration());
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
             }
@@ -364,25 +418,32 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
         public void execute(Intent intent, Context context) {
             intent = new Intent(NowPlayingActivity.ACTION_GET_PLAY_STATE);
             if (player != null && player.isPlaying()) {
-                intent.putExtra(IS_PLAYING, true);
+                intent.putExtra(Constants.KEY_IS_PLAYING, true);
             }
-            if (playlist.size() > 0) {
+            if (playlistManager.getCurrentPlaylist().size() > 0) {
                 Song song = getCurrentSong();
-                intent.putExtra(SONG_NAME, song.getName());
-                intent.putExtra(SONG_ARTIST, song.getArtist());
-                intent.putExtra(SONG_ALBUM_NAME, song.getAlbumName());
-                intent.putExtra(SONG_ALBUM_ID, song.getAlbumId());
-                intent.putExtra(SONG_PATH, song.getPath());
-                intent.putExtra(SONG_ART, song.getArt());
+                intent.putExtra(Constants.SONG_NAME, song.getName());
+                intent.putExtra(Constants.SONG_ARTIST, song.getArtist());
+                intent.putExtra(Constants.SONG_ALBUM_NAME, song.getAlbumName());
+                intent.putExtra(Constants.SONG_ALBUM_ID, song.getAlbumId());
+                intent.putExtra(Constants.SONG_PATH, song.getPath());
+                intent.putExtra(Constants.SONG_ART, song.getArt());
 
                 try {
-                    intent.putExtra(SONG_DURATION, player.getDuration());
-                    intent.putExtra(SONG_CURRENT_TIME, player.getCurrentPosition());
+                    intent.putExtra(Constants.SONG_DURATION, player.getDuration());
+                    intent.putExtra(Constants.SONG_CURRENT_TIME, player.getCurrentPosition());
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }
             sendBroadcast(intent);
+        }
+    }
+
+    private class ShuffleAction implements ActionListenerContract {
+        @Override
+        public void execute(Intent intent, Context context) {
+            playlistManager.shufflePlaylist();
         }
     }
 }

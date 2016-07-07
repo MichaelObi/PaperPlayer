@@ -1,6 +1,8 @@
 package net.devdome.paperplayer.ui.fragment;
 
+import android.animation.ObjectAnimator;
 import android.database.Cursor;
+import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -8,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,7 +20,6 @@ import net.devdome.paperplayer.data.Mood;
 import net.devdome.paperplayer.data.model.Song;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class SongsFragment extends Fragment {
 

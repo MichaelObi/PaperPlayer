@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import net.devdome.paperplayer.Constants;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Song;
-import net.devdome.paperplayer.playback.PlayerService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +45,9 @@ public class AlbumSongsAdapter extends RecyclerView.Adapter<AlbumSongsAdapter.So
             public void onClick(View v) {
 
                 Intent a = new Intent();
-                a.setAction(PlayerService.ACTION_PLAY_ALBUM);
-                a.putExtra(PlayerService.SONG_ALBUM_ID, songs.get(position).getAlbumId());
-                a.putExtra(PlayerService.PLAY_START_WITH, songs.get(position).getId());
+                a.setAction(Constants.ACTION_PLAY_ALBUM);
+                a.putExtra(Constants.SONG_ALBUM_ID, songs.get(position).getAlbumId());
+                a.putExtra(Constants.KEY_PLAY_START_WITH, songs.get(position).getId());
                 context.sendBroadcast(a);
 
             }

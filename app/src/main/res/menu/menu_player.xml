@@ -5,9 +5,16 @@
 
     <item
         android:id="@+id/action_playlist"
+        android:icon="@drawable/ic_queue_music_24dp"
         android:orderInCategory="100"
         android:title="@string/playlist"
-        android:icon="@drawable/ic_playlist_play_black_24dp"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_timer"
+        android:icon="@drawable/ic_schedule_24dp"
+        android:orderInCategory="100"
+        android:title="@string/schedule"
         app:showAsAction="ifRoom" />
 
     <item

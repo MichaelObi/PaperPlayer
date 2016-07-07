@@ -1,4 +1,4 @@
-package net.devdome.paperplayer;
+package net.devdome.paperplayer.ui.component;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

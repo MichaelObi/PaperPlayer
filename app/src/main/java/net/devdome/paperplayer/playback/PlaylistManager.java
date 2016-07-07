@@ -3,12 +3,19 @@ package net.devdome.paperplayer.playback;
 import net.devdome.paperplayer.data.model.Song;
 
 import java.util.ArrayList;
+import java.util.Random;
 
-public class PlaylistManager {
+public final class PlaylistManager {
+
+    private static final String TAG = "PlaylistManager";
 
     private static PlaylistManager playlistManager = null;
+
     private ArrayList<PlaylistItem> playlist = new ArrayList<>();
-    private int startIndex = 0;
+
+    private int currentIndex = 0;
+
+    private boolean shuffled;
 
     private PlaylistManager() {
     }
@@ -20,8 +27,12 @@ public class PlaylistManager {
         return playlistManager;
     }
 
-    public int getStartIndex() {
-        return startIndex;
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
+
+    public void setCurrentIndex(int index) {
+        currentIndex = index;
     }
 
     /**
@@ -30,8 +41,8 @@ public class PlaylistManager {
      * @param songs {@link ArrayList<PlaylistItem>} of {@link Song}
      * @return {@link ArrayList<PlaylistItem>}
      */
-    public ArrayList<PlaylistItem> generatePlaylist(ArrayList<Song> songs) {
-        return generatePlaylist(songs, 0);
+    public void generatePlaylist(ArrayList<Song> songs) {
+        generatePlaylist(songs, 0);
     }
 
     /**
@@ -41,7 +52,7 @@ public class PlaylistManager {
      * @param playbackInitSongId song id of track that should be played first
      * @return {@link ArrayList<PlaylistItem>}
      */
-    public ArrayList<PlaylistItem> generatePlaylist(ArrayList<Song> songs, long playbackInitSongId) {
+    public void generatePlaylist(ArrayList<Song> songs, long playbackInitSongId) {
         if (playbackInitSongId == 0) {
             playbackInitSongId = songs.get(0).getId();
         }
@@ -50,10 +61,9 @@ public class PlaylistManager {
             PlaylistItem item = new PlaylistItem(song, song.getId() == playbackInitSongId);
             playlist.add(item);
             if (song.getId() == playbackInitSongId) {
-                startIndex = playlist.lastIndexOf(item);
+                currentIndex = playlist.lastIndexOf(item);
             }
         }
-        return playlist;
     }
 
     /**
@@ -70,6 +80,60 @@ public class PlaylistManager {
      */
     public ArrayList<PlaylistItem> getCurrentPlaylist() {
         return this.playlist;
+    }
+
+
+    public Song getCurrentSong() {
+        return playlist.get(getCurrentIndex()).getSong();
+    }
+
+    public void shufflePlaylist() {
+        if (!isShuffled()) {
+            Random random = new Random();
+            for (int i = playlist.size() - 1; i > 0; i--) {
+
+                // Get Pseudo-random number
+                int index = random.nextInt(i + 1);
+
+                // Dont swap playing track
+                if (playlist.get(i).isPlaying() || playlist.get(index).isPlaying()) {
+                    continue;
+                }
+                // Swap out the tracks for one another
+                playlist.set(index, playlist.set(i, playlist.get(index)));
+            }
+            setShuffled(true);
+        } else {
+            setShuffled(false);
+        }
+    }
+
+    public boolean isShuffled() {
+        return shuffled;
+    }
+
+    public void setShuffled(boolean shuffled) {
+        this.shuffled = shuffled;
+    }
+
+    /**
+     * Move Current Index to next {@link PlaylistItem}
+     */
+    public void next() {
+        currentIndex++;
+        if (currentIndex >= playlist.size()) {
+            currentIndex = 0;
+        }
+    }
+
+    /**
+     * Move Current Index to previous {@link PlaylistItem}
+     */
+    public void previous() {
+        currentIndex--;
+        if (currentIndex < 0) {
+            currentIndex = 0;
+        }
     }
 
     /**

@@ -1,4 +1,4 @@
-package net.devdome.paperplayer.ui;
+package net.devdome.paperplayer.ui.component;
 
 
 import android.animation.ObjectAnimator;

@@ -2,6 +2,7 @@ package net.devdome.paperplayer.adapter;
 
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,12 @@ import java.util.ArrayList;
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> {
 
     private ArrayList<PlaylistManager.PlaylistItem> playlist;
+    ItemTouchHelper itemTouchHelper;
 
     public PlaylistAdapter() {
         PlaylistManager playlistManager = PlaylistManager.getInstance();
         playlist = playlistManager.getCurrentPlaylist();
     }
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_playlist_item, parent, false);
@@ -31,7 +32,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.title.setText(playlist.get(position).getSong().getName());
         holder.artist.setText(playlist.get(position).getSong().getArtist());
-
     }
 
     @Override

@@ -1,32 +1,40 @@
 package net.devdome.paperplayer.ui.activity;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import net.devdome.paperplayer.Constants;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.adapter.ViewPagerAdapter;
-import net.devdome.paperplayer.playback.PlayerService;
-import net.devdome.paperplayer.playback.PlayerServiceOld;
 import net.devdome.paperplayer.ui.fragment.AlbumsFragment;
 import net.devdome.paperplayer.ui.fragment.ArtistsFragment;
 import net.devdome.paperplayer.ui.fragment.SongsFragment;
@@ -49,19 +57,19 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(NowPlayingActivity.ACTION_GET_PLAY_STATE)) {
-                Boolean isPlaying = intent.getBooleanExtra(PlayerServiceOld.IS_PLAYING, false);
-                loadArt(intent.getLongExtra(PlayerServiceOld.SONG_ALBUM_ID, 0));
+                Boolean isPlaying = intent.getBooleanExtra(Constants.KEY_IS_PLAYING, false);
+                loadArt(intent.getLongExtra(Constants.SONG_ALBUM_ID, 0));
                 if (isPlaying) {
                     fab.setVisibility(View.GONE);
-                    miniPlayerSongName.setText(intent.getStringExtra(PlayerServiceOld.SONG_NAME));
-                    miniPlayerSongArtist.setText(intent.getStringExtra(PlayerServiceOld.SONG_ARTIST));
+                    miniPlayerSongName.setText(intent.getStringExtra(Constants.SONG_NAME));
+                    miniPlayerSongArtist.setText(intent.getStringExtra(Constants.SONG_ARTIST));
                     playPauseButton.pause();
                 } else {
                     playPauseButton.play();
-                    miniPlayerSongName.setText(intent.getStringExtra(PlayerServiceOld.SONG_NAME));
-                    miniPlayerSongArtist.setText(intent.getStringExtra(PlayerServiceOld.SONG_ARTIST));
+                    miniPlayerSongName.setText(intent.getStringExtra(Constants.SONG_NAME));
+                    miniPlayerSongArtist.setText(intent.getStringExtra(Constants.SONG_ARTIST));
                 }
-                if (intent.getStringExtra(PlayerService.SONG_NAME) == null) {
+                if (intent.getStringExtra(Constants.SONG_NAME) == null) {
                     fab.setVisibility(View.VISIBLE);
                 }
             }
@@ -86,13 +94,53 @@ public class MainActivity extends AppCompatActivity {
         ((ImageView) findViewById(R.id.album_art_mini)).setImageDrawable(artWork);
         cursor.close();
 
+        changeColorScheme(miniAlbumArt);
+    }
+
+    private void changeColorScheme(ImageView imgView) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!preferences.getBoolean(getString(R.string.key_dynamic_theme), false)) {
+            return;
+        }
+
+        try {
+            Bitmap bitmap = ((BitmapDrawable) imgView.getDrawable()).getBitmap();
+            new Palette.Builder(bitmap).generate(new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+
+                    int bgColor = ContextCompat.getColor(MainActivity.this, R.color.colorPrimary);
+                    if (swatch == null) {
+                        swatch = palette.getDarkMutedSwatch();
+                    }
+                    if (swatch != null) {
+                        bgColor = swatch.getRgb();
+                    }
+
+                    ((RelativeLayout) findViewById(R.id.layout_mini_player)).setBackgroundColor(bgColor);
+                    if (Build.VERSION.SDK_INT >= 21) {
+                        ActivityManager.TaskDescription taskDescription = new
+                                ActivityManager.TaskDescription(null, null, bgColor);
+                        setTaskDescription(taskDescription);
+                        getWindow().setStatusBarColor(bgColor);
+                    }
+
+                    ((AppBarLayout) findViewById(R.id.app_bar)).setBackgroundColor(bgColor);
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            int bgColor = ContextCompat.getColor(MainActivity.this, R.color.colorPrimary);
+            ((RelativeLayout) findViewById(R.id.layout_mini_player)).setBackgroundColor(bgColor);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         registerReceiver(playerStateReceiver, new IntentFilter(NowPlayingActivity.ACTION_GET_PLAY_STATE));
-        Intent i = new Intent(PlayerServiceOld.ACTION_REQUEST_PLAY_STATE);
+        Intent i = new Intent(Constants.ACTION_REQUEST_PLAY_STATE);
         sendBroadcast(i);
     }
 
@@ -114,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent();
-                i.setAction(PlayerServiceOld.ACTION_PLAY_ALL);
+                i.setAction(Constants.ACTION_PLAY_ALL);
                 sendBroadcast(i);
             }
         });
@@ -128,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent stopMusic = new Intent();
-                stopMusic.setAction(PlayerServiceOld.ACTION_PAUSE);
+                stopMusic.setAction(Constants.ACTION_PAUSE);
                 sendBroadcast(stopMusic);
             }
         });
@@ -136,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent();
-                i.setAction(PlayerServiceOld.ACTION_VIEW_NOW_PLAYING);
+                i.setAction(Constants.ACTION_VIEW_NOW_PLAYING);
                 sendBroadcast(i);
             }
         });

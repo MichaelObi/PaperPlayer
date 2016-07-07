@@ -21,12 +21,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import net.devdome.paperplayer.Constants;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.adapter.AlbumSongsAdapter;
 import net.devdome.paperplayer.adapter.AlbumsAdapter;
 import net.devdome.paperplayer.data.Mood;
 import net.devdome.paperplayer.data.model.Song;
-import net.devdome.paperplayer.playback.PlayerServiceOld;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -74,9 +74,9 @@ public class AlbumActivity extends AppCompatActivity {
     }
 
     private void playAlbum(long albumId, long startWith) {
-        Intent i = new Intent(PlayerServiceOld.ACTION_PLAY_ALBUM);
-        i.putExtra(PlayerServiceOld.SONG_ALBUM_ID, albumId);
-        i.putExtra(PlayerServiceOld.PLAY_START_WITH, startWith);
+        Intent i = new Intent(Constants.ACTION_PLAY_ALBUM);
+        i.putExtra(Constants.SONG_ALBUM_ID, albumId);
+        i.putExtra(Constants.KEY_PLAY_START_WITH, startWith);
         sendBroadcast(i);
     }
 
@@ -109,35 +109,6 @@ public class AlbumActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setExitTransition(new Fade());
 
-            getWindow().getExitTransition().addListener(new Transition.TransitionListener() {
-                @Override
-                public void onTransitionStart(Transition transition) {
-                    fab.hide();
-                }
-
-                @Override
-                public void onTransitionEnd(Transition transition) {
-
-                }
-
-                @Override
-                public void onTransitionCancel(Transition transition) {
-
-                }
-
-                @Override
-                public void onTransitionPause(Transition transition) {
-
-                }
-
-                @Override
-                public void onTransitionResume(Transition transition) {
-
-                }
-            });
-
-        } else {
-            fab.hide();
         }
     }
 
@@ -215,7 +186,6 @@ public class AlbumActivity extends AppCompatActivity {
         @Override
         protected ArrayList<Song> doInBackground(Void... params) {
             final ArrayList<Song> songList = new ArrayList<>();
-
             final String where = MediaStore.Audio.Media.ALBUM_ID + "=?";
             final String orderBy = MediaStore.Audio.Media._ID;
             musicCursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,

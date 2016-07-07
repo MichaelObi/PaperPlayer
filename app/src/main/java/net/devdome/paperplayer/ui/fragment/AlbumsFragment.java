@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.devdome.paperplayer.R;
-import net.devdome.paperplayer.SpacesItemDecoration;
+import net.devdome.paperplayer.ui.component.SpacesItemDecoration;
 import net.devdome.paperplayer.adapter.AlbumsAdapter;
 import net.devdome.paperplayer.data.model.Album;
 
