@@ -39,7 +39,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
     private MediaPlayer player;
     private int pausedSongSeek = 0;
     private LibraryManager libraryManager;
-    private PlaylistManager playlistManager;
+    private QueueManager queueManager;
     private Map<String, ActionListenerContract> actions = new HashMap<>();
 
     public PlayerService() {
@@ -84,7 +84,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
                 player.pause();
                 abandonAudioFocus();
             } else {
-                if (playlistManager.getCurrentPlaylist().size() > 0) {
+                if (queueManager.getCurrentQueue().size() > 0) {
                     player.start();
                     player.seekTo(pausedSongSeek);
                     setUpNotification();
@@ -113,7 +113,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
     }
 
     private Song getCurrentSong() {
-        return playlistManager.getCurrentSong();
+        return queueManager.getCurrentSong();
     }
 
     private void playNext() {
@@ -122,13 +122,13 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
 
     private void playNext(boolean userInvoked) {
         pausedSongSeek = 0;
-        if (playlistManager.next(userInvoked)) { // If playback should continue
+        if (queueManager.next(userInvoked)) { // If playback should continue
             playMusic();
         }
     }
 
     private void playPrevious() {
-        playlistManager.previous();
+        queueManager.previous();
         pausedSongSeek = 0;
         playMusic();
     }
@@ -179,9 +179,9 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
 
         libraryManager = new LibraryManager(this);
 
-        playlistManager = PlaylistManager.getInstance();
+        queueManager = QueueManager.getInstance();
 
-        playlistManager.generatePlaylist(libraryManager.getAllSongs());
+        queueManager.generateQueue(libraryManager.getAllSongs());
 
         session = new MediaSessionCompat(getApplicationContext(), Constants.MEDIA_SESSION_TAG);
     }
@@ -255,8 +255,8 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
         PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Bitmap art = MediaUtils.getSongArt(this, playlistManager.getCurrentPlaylist().get
-                (playlistManager.getCurrentIndex()).getSong().getAlbumId());
+        Bitmap art = MediaUtils.getSongArt(this, queueManager.getCurrentQueue().get
+                (queueManager.getCurrentIndex()).getSong().getAlbumId());
 
         MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
                 .putBitmap(MediaMetadataCompat.METADATA_KEY_ART, art)
@@ -285,11 +285,11 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
         Notification notification = new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(player.isPlaying() ? R.drawable.ic_play_arrow_24dp : R.drawable
                         .ic_pause_24dp)
-                .setContentTitle(playlistManager.getCurrentPlaylist().get(playlistManager
+                .setContentTitle(queueManager.getCurrentQueue().get(queueManager
                         .getCurrentIndex()).getSong().getName())
-                .setContentText(String.format("%s", playlistManager.getCurrentPlaylist().get
-                        (playlistManager.getCurrentIndex()).getSong().getArtist()))
-                .setSubText(playlistManager.getCurrentPlaylist().get(playlistManager
+                .setContentText(String.format("%s", queueManager.getCurrentQueue().get
+                        (queueManager.getCurrentIndex()).getSong().getArtist()))
+                .setSubText(queueManager.getCurrentQueue().get(queueManager
                         .getCurrentIndex()).getSong().getAlbumName())
                 .setStyle(
                         new NotificationCompat.MediaStyle().setMediaSession(session
@@ -313,7 +313,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
     private class RepeatAction implements ActionListenerContract {
         @Override
         public void execute(Intent intent, Context context) {
-            playlistManager.setRepeatState(intent.getStringExtra(Constants.KEY_REPEAT_STATE_EXTRA));
+            queueManager.setRepeatState(intent.getStringExtra(Constants.KEY_REPEAT_STATE_EXTRA));
         }
     }
 
@@ -335,7 +335,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    playlistManager.generatePlaylist(libraryManager.getAllSongs(), intent
+                    queueManager.generateQueue(libraryManager.getAllSongs(), intent
                             .getLongExtra(Constants.KEY_PLAY_START_WITH, 0));
                     pausedSongSeek = 0;
                     playMusic();
@@ -357,7 +357,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    playlistManager.generatePlaylist(libraryManager.getAlbumSongs(intent
+                    queueManager.generateQueue(libraryManager.getAlbumSongs(intent
                             .getLongExtra(Constants.SONG_ALBUM_ID, 0)), intent.getLongExtra
                             (Constants.KEY_PLAY_START_WITH, 0));
                     pausedSongSeek = 0;
@@ -416,7 +416,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
     private class ViewNowPlayingAction implements ActionListenerContract {
         @Override
         public void execute(Intent intent, final Context context) {
-            if (playlistManager.getCurrentPlaylist().size() > 0) {
+            if (queueManager.getCurrentQueue().size() > 0) {
                 Intent i = new Intent(PlayerService.this, NowPlayingActivity.class);
                 Song song = getCurrentSong();
                 i.putExtra(Constants.SONG_NAME, song.getName());
@@ -438,7 +438,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
         @Override
         public void execute(@Nullable Intent intent, Context context) {
             intent = new Intent(NowPlayingActivity.ACTION_GET_PLAY_STATE);
-            if (playlistManager.getCurrentPlaylist().size() > 0) {
+            if (queueManager.getCurrentQueue().size() > 0) {
                 Song song = getCurrentSong();
                 intent.putExtra(Constants.SONG_NAME, song.getName());
                 intent.putExtra(Constants.SONG_ARTIST, song.getArtist());
@@ -462,7 +462,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
     private class ShuffleAction implements ActionListenerContract {
         @Override
         public void execute(Intent intent, Context context) {
-            playlistManager.shufflePlaylist();
+            queueManager.shuffleQueue();
         }
     }
 }

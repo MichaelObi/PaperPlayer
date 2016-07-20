@@ -9,19 +9,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.devdome.paperplayer.R;
-import net.devdome.paperplayer.playback.PlaylistManager;
+import net.devdome.paperplayer.playback.QueueManager;
 
 import java.util.ArrayList;
 
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> {
 
-    private ArrayList<PlaylistManager.PlaylistItem> playlist;
     ItemTouchHelper itemTouchHelper;
+    private ArrayList<QueueManager.QueueItem> queue;
 
     public PlaylistAdapter() {
-        PlaylistManager playlistManager = PlaylistManager.getInstance();
-        playlist = playlistManager.getCurrentPlaylist();
+        QueueManager queueManager = QueueManager.getInstance();
+        queue = queueManager.getCurrentQueue();
     }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_playlist_item, parent, false);
@@ -30,13 +31,13 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.title.setText(playlist.get(position).getSong().getName());
-        holder.artist.setText(playlist.get(position).getSong().getArtist());
+        holder.title.setText(queue.get(position).getSong().getName());
+        holder.artist.setText(queue.get(position).getSong().getArtist());
     }
 
     @Override
     public int getItemCount() {
-        return playlist.size();
+        return queue.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

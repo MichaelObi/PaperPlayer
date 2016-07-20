@@ -8,12 +8,11 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.adapter.PlaylistAdapter;
-import net.devdome.paperplayer.playback.PlaylistManager;
+import net.devdome.paperplayer.playback.QueueManager;
 
 /**
  * Created by Michael on 7/4/2016.
@@ -66,7 +65,7 @@ public class PlaylistFragment extends BottomSheetDialogFragment {
     private void setUpPlaylist() {
         RecyclerView rvPlaylist = (RecyclerView) contentView.findViewById(R.id.rv_playlist);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        int currentPlayingIndex = PlaylistManager.getInstance().getCurrentIndex();
+        int currentPlayingIndex = QueueManager.getInstance().getCurrentIndex();
         layoutManager.scrollToPositionWithOffset(currentPlayingIndex, 20);
         layoutManager.supportsPredictiveItemAnimations();
         rvPlaylist.setLayoutManager(layoutManager);

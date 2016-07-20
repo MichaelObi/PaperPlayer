@@ -17,7 +17,7 @@ import android.widget.Toast;
 import net.devdome.paperplayer.Constants;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Song;
-import net.devdome.paperplayer.playback.PlaylistManager;
+import net.devdome.paperplayer.playback.QueueManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +62,8 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHol
                         switch (menuItem.getItemId()) {
                             case R.id.action_play_next:
                                 Song song = songs.get(holder.getAdapterPosition());
-                                PlaylistManager playlistManager = PlaylistManager.getInstance();
-                                playlistManager.setUpNext(song);
+                                QueueManager queueManager = QueueManager.getInstance();
+                                queueManager.setUpNext(song);
                                 break;
                             default:
                                 Toast.makeText(context, "Not yet implemented.", Toast.LENGTH_SHORT).show();
