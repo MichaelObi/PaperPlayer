@@ -35,7 +35,7 @@ public class AlbumSongsAdapter extends RecyclerView.Adapter<AlbumSongsAdapter.So
     }
 
     @Override
-    public void onBindViewHolder(SongsViewHolder holder, final int position) {
+    public void onBindViewHolder(final SongsViewHolder holder, int position) {
         holder.title.setText(songs.get(position).getName());
         holder.artist.setText(songs.get(position).getArtist());
         holder.track.setText(String.valueOf(songs.get(position).getTrackNumber()));
@@ -46,8 +46,8 @@ public class AlbumSongsAdapter extends RecyclerView.Adapter<AlbumSongsAdapter.So
 
                 Intent a = new Intent();
                 a.setAction(Constants.ACTION_PLAY_ALBUM);
-                a.putExtra(Constants.SONG_ALBUM_ID, songs.get(position).getAlbumId());
-                a.putExtra(Constants.KEY_PLAY_START_WITH, songs.get(position).getId());
+                a.putExtra(Constants.SONG_ALBUM_ID, songs.get(holder.getAdapterPosition()).getAlbumId());
+                a.putExtra(Constants.KEY_PLAY_START_WITH, songs.get(holder.getAdapterPosition()).getId());
                 context.sendBroadcast(a);
 
             }

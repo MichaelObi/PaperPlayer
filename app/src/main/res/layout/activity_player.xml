@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.activity.NowPlayingActivity">
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 tools:context=".ui.activity.NowPlayingActivity">
 
     <LinearLayout
         android:id="@+id/song_details"
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:contentDescription="@string/album_art"
-            android:src="@drawable/default_artwork_dark" />
+            android:src="@drawable/default_artwork_dark"/>
 
         <com.annimon.paperstyle.PaperSeekBar
             android:id="@+id/player_seekbar"
@@ -30,14 +30,14 @@
             android:layout_marginRight="-4dp"
             android:layout_marginTop="8dp"
             app:elevation="8dp"
-            app:pw_color="@color/colorAccent" />
+            app:pw_color="@color/colorAccent"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:layout_marginBottom="4dp">
+            android:paddingRight="8dp">
 
             <TextView
                 android:id="@+id/current_time"
@@ -46,7 +46,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
-                tools:text="0:00" />
+                tools:text="0:00"/>
 
             <TextView
                 android:id="@+id/duration"
@@ -55,7 +55,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
-                tools:text="5:44" />
+                tools:text="5:44"/>
         </RelativeLayout>
 
         <TextView
@@ -76,7 +76,7 @@
             android:scrollHorizontally="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
             android:textStyle="bold"
-            tools:text="Love Yourz" />
+            tools:text="Love Yourz"/>
 
         <TextView
             android:id="@+id/album_artist"
@@ -88,18 +88,18 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
-            tools:text="J. Cole – 2014 Forest Hills Drive" />
+            tools:text="J. Cole – 2014 Forest Hills Drive"/>
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            tools:showIn="@layout/activity_player">
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        xmlns:tools="http://schemas.android.com/tools"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        tools:showIn="@layout/activity_player">
 
             <ImageView
                 android:id="@+id/play_pause"
@@ -112,7 +112,7 @@
                 android:layout_marginStart="32dp"
                 android:elevation="4dp"
                 android:tint="@android:color/white"
-                app:srcCompat="@drawable/ic_play_arrow_24dp" />
+                app:srcCompat="@drawable/ic_play_arrow_24dp"/>
 
             <ImageView
                 android:id="@+id/btn_previous"
@@ -124,9 +124,9 @@
                 android:layout_toLeftOf="@id/play_pause"
                 android:layout_toStartOf="@id/play_pause"
                 android:tint="@android:color/white"
-                app:srcCompat="@drawable/ic_skip_previous_24dp" />
+                app:srcCompat="@drawable/ic_skip_previous_24dp"/>
 
-            <ImageView
+            <xyz.michaelobi.toggleton.ToggleableImageView
                 android:id="@+id/btn_repeat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -135,8 +135,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/activity_vertical_margin"
                 android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:tint="@android:color/white"
-                app:srcCompat="@drawable/ic_repeat_24dp" />
+                android:tint="@android:color/white"/>
 
             <ImageView
                 android:id="@+id/btn_next"
@@ -148,7 +147,7 @@
                 android:layout_toEndOf="@id/play_pause"
                 android:layout_toRightOf="@id/play_pause"
                 android:tint="@android:color/white"
-                app:srcCompat="@drawable/ic_skip_next_24dp" />
+                app:srcCompat="@drawable/ic_skip_next_24dp"/>
 
             <ImageView
                 android:id="@+id/btn_shuffle"
@@ -160,7 +159,7 @@
                 android:layout_marginEnd="@dimen/activity_vertical_margin"
                 android:layout_marginRight="@dimen/activity_vertical_margin"
                 android:tint="@android:color/white"
-                app:srcCompat="@drawable/ic_shuffle_white_24dp" />
+                app:srcCompat="@drawable/ic_shuffle_white_24dp"/>
         </RelativeLayout>
     </LinearLayout>
 
@@ -177,7 +176,7 @@
             app:layout_collapseMode="pin"
             app:navigationIcon="@drawable/ic_close_24dp"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark" />
+            app:theme="@style/ThemeOverlay.AppCompat.Dark"/>
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

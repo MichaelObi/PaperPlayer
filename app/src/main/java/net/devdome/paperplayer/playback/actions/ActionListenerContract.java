@@ -1,8 +1,8 @@
-package net.devdome.paperplayer.playback;
+package net.devdome.paperplayer.playback.actions;
 
 import android.content.Context;
 import android.content.Intent;
 
-interface ActionListenerContract {
+public interface ActionListenerContract {
     void execute(Intent intent, Context context);
 }

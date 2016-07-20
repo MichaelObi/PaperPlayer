@@ -1,5 +1,6 @@
 package net.devdome.paperplayer.playback;
 
+import net.devdome.paperplayer.Constants;
 import net.devdome.paperplayer.data.model.Song;
 
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ public final class PlaylistManager {
     private int currentIndex = 0;
 
     private boolean shuffled;
+
+    private String repeatState;
 
     private PlaylistManager() {
     }
@@ -118,12 +121,25 @@ public final class PlaylistManager {
 
     /**
      * Move Current Index to next {@link PlaylistItem}
+     *
+     * @return true if playback should continue and false if not
      */
-    public void next() {
+    public boolean next(boolean invokedByUser) {
         currentIndex++;
+
+        // Handle Repeat One
+        if (!invokedByUser && repeatState.equals(Constants.REPEAT_ONE)) {
+            currentIndex--;
+        }
+
+        // If the end of the playlist has been reached
         if (currentIndex >= playlist.size()) {
             currentIndex = 0;
+            // Handle Repeat All
+            return repeatState.equals(Constants.REPEAT_ALL); // should playback continue?
         }
+
+        return true;
     }
 
     /**
@@ -134,6 +150,21 @@ public final class PlaylistManager {
         if (currentIndex < 0) {
             currentIndex = 0;
         }
+    }
+
+    public String getRepeatState() {
+        return repeatState;
+    }
+
+    public void setRepeatState(String repeatState) {
+        this.repeatState = repeatState;
+    }
+
+    /**
+     * Set the song to play after the currently playing song
+     */
+    public void setUpNext(Song song) {
+        playlist.add(currentIndex + 1, new PlaylistItem(song));
     }
 
     /**

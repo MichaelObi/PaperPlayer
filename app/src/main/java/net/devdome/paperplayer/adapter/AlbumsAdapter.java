@@ -46,7 +46,7 @@ public class AlbumsAdapter<A> extends RecyclerView.Adapter<AlbumsAdapter.AlbumVi
     }
 
     @Override
-    public void onBindViewHolder(final AlbumViewHolder holder, final int position) {
+    public void onBindViewHolder(final AlbumViewHolder holder, int position) {
         holder.name.setText(albums.get(position).getName());
         holder.artist.setText(albums.get(position).getArtist());
         try {
@@ -63,9 +63,9 @@ public class AlbumsAdapter<A> extends RecyclerView.Adapter<AlbumsAdapter.AlbumVi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, AlbumActivity.class);
-                intent.putExtra(EXTRA_ALBUM_ID, albums.get(position).getId());
-                intent.putExtra(EXTRA_ALBUM_NAME, albums.get(position).getName());
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, new Pair<View, String>(holder.view, context.getString(R.string.album_art)));
+                intent.putExtra(EXTRA_ALBUM_ID, albums.get(holder.getAdapterPosition()).getId());
+                intent.putExtra(EXTRA_ALBUM_NAME, albums.get(holder.getAdapterPosition()).getName());
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, new Pair<>(holder.view, context.getString(R.string.album_art)));
                 ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
             }
         });

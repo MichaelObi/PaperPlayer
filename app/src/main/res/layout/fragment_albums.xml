@@ -5,13 +5,12 @@
     tools:context=".ui.activity.MainActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_albums_artists_grid"
+        android:id="@+id/rv_albums_grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
         android:horizontalSpacing="4dp"
         android:numColumns="auto_fit"
-        android:stretchMode="columnWidth"
+        android:scrollbars="vertical"
         android:verticalSpacing="4dp"
         tools:listitem="@layout/card_album_grid" />
 </RelativeLayout>

@@ -40,10 +40,16 @@ import net.devdome.paperplayer.ui.fragment.PlaylistFragment;
 import net.devdome.paperplayer.utils.ViewUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class NowPlayingActivity extends AppCompatActivity {
+import xyz.michaelobi.toggleton.ToggleableImageView;
+import xyz.michaelobi.toggleton.ToggleableWidget;
+import xyz.michaelobi.toggleton.togglestate.DrawableToggleState;
+import xyz.michaelobi.toggleton.togglestate.ToggleState;
+
+public class NowPlayingActivity extends AppCompatActivity implements ToggleableWidget.ToggleListener {
 
     public static final String ACTION_GET_PLAY_STATE = "get_play_state";
     public static final String ACTION_GET_SEEK_VALUE = "get_seek_value";
@@ -57,10 +63,11 @@ public class NowPlayingActivity extends AppCompatActivity {
     private ImageView albumArt;
     private Timer timer;
     private boolean musicPlaying;
-    private ImageView playButton, nextButton, previousButton, repeatButton, shuffleButton;
+    private ToggleableImageView repeatButton;
+    private ImageView playButton, nextButton, previousButton, shuffleButton;
     private TextView tvSongName, tvSongAlbumArtist, tvCurrentTimeHolder, tvDuration;
     private int duration, currentDuration;
-    private String songPath, songName, songArtist, albumName, songArtPath;
+    private String songPath, songName, songArtist, albumName, songArtPath, repeatState;
     private long albumId;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -128,6 +135,9 @@ public class NowPlayingActivity extends AppCompatActivity {
         tvCurrentTimeHolder = (TextView) findViewById(R.id.current_time);
         tvDuration = (TextView) findViewById(R.id.duration);
         shuffleButton = (ImageView) findViewById(R.id.btn_shuffle);
+        repeatButton = (ToggleableImageView) findViewById(R.id.btn_repeat);
+
+        setupRepeatButton();
 
         songPath = getIntent().getStringExtra(Constants.SONG_PATH);
         songName = getIntent().getStringExtra(Constants.SONG_NAME);
@@ -136,6 +146,7 @@ public class NowPlayingActivity extends AppCompatActivity {
         albumName = getIntent().getStringExtra(Constants.SONG_ALBUM_NAME);
         duration = getIntent().getIntExtra(Constants.SONG_DURATION, 0);
         currentDuration = getIntent().getIntExtra(Constants.SONG_CURRENT_TIME, 0);
+        repeatState = getIntent().getStringExtra(Constants.KEY_REPEAT_STATE_EXTRA);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -143,6 +154,18 @@ public class NowPlayingActivity extends AppCompatActivity {
 
         updateView();
 
+    }
+
+    private void setupRepeatButton() {
+        ArrayList<DrawableToggleState> toggleStates = new ArrayList<>();
+        toggleStates.add(new DrawableToggleState(Constants.REPEAT_ONE, ContextCompat.getDrawable(this, R.drawable
+                .ic_repeat_one_24dp)));
+        toggleStates.add(new DrawableToggleState(Constants.REPEAT_ALL, ContextCompat.getDrawable(this, R.drawable
+                .ic_repeat_24dp)));
+        toggleStates.add(new DrawableToggleState(Constants.REPEAT_NONE, ContextCompat.getDrawable(this, R.drawable
+                .ic_repeat_none_24dp)));
+        repeatButton.setToggleStates(toggleStates);
+        repeatButton.setToggleListener(this);
     }
 
     private void setUpBottomSheet() {
@@ -251,7 +274,8 @@ public class NowPlayingActivity extends AppCompatActivity {
         Log.e(TAG, "Duration: " + duration);
         seekBar.setMax(duration);
         seekBar.setProgress(currentDuration);
-        String strDuration = String.format("%s:%s", String.format("%02d", ((duration / 1000) / 60)), String.format("%02d", ((duration / 1000) % 60)));
+        String strDuration = String.format("%s:%s", String.format("%02d", ((duration / 1000) / 60)), String
+                .format("%02d", ((duration / 1000) % 60)));
         tvDuration.setText(strDuration);
         musicPlaying = true;
         if (timer != null) timer.cancel();
@@ -295,7 +319,8 @@ public class NowPlayingActivity extends AppCompatActivity {
 
         if (songArtPath != null) {
             try {
-                new Palette.Builder(((BitmapDrawable) albumArt.getDrawable()).getBitmap()).generate(new Palette.PaletteAsyncListener() {
+                new Palette.Builder(((BitmapDrawable) albumArt.getDrawable()).getBitmap()).generate(new Palette
+                        .PaletteAsyncListener() {
                     @Override
                     public void onGenerated(Palette palette) {
                         Palette.Swatch secondarySwatch = palette.getLightVibrantSwatch();
@@ -316,7 +341,8 @@ public class NowPlayingActivity extends AppCompatActivity {
                             mainColor = swatch.getRgb();
                             if (Build.VERSION.SDK_INT >= 21) {
                                 ActivityManager.TaskDescription taskDescription = new
-                                        ActivityManager.TaskDescription(getResources().getString(R.string.app_name),
+                                        ActivityManager.TaskDescription(getResources().getString(R.string
+                                        .app_name),
                                         BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher),
                                         swatch.getRgb());
                                 setTaskDescription(taskDescription);
@@ -385,6 +411,13 @@ public class NowPlayingActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onToggle(ToggleState oldState, ToggleState newState) {
+        Intent iRepeat = new Intent(Constants.ACTION_REPEAT);
+        iRepeat.putExtra(Constants.KEY_REPEAT_STATE_EXTRA, newState.getKey());
+        sendBroadcast(iRepeat);
     }
 
     private class ChangeSeekDetailUpdater extends AsyncTask<Void, Void, Void> {

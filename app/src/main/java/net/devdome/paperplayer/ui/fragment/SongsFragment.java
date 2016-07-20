@@ -31,7 +31,6 @@ public class SongsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_songs, container, false);
         view = v;
-
         rv = (RecyclerView) v.findViewById(R.id.rv_songs);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(layoutManager);
@@ -43,7 +42,6 @@ public class SongsFragment extends Fragment {
 
 
     private class GetSongs extends AsyncTask<Void, Void, ArrayList> {
-
         @Override
         protected void onPostExecute(ArrayList songList) {
             super.onPostExecute(songList);

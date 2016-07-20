@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.devdome.paperplayer">
+          package="net.devdome.paperplayer">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
     <application
         android:name=".PaperPlayer"
         android:allowBackup="true"
@@ -13,34 +14,36 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activity.SplashActivity"
+            android:launchMode="singleTask"
             android:theme="@style/SplashTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.CATEGORY_APP_MUSIC" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.CATEGORY_APP_MUSIC"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.activity.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:screenOrientation="portrait"
             android:name=".ui.activity.NowPlayingActivity"
-            android:theme="@style/Player" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Player"/>
 
         <service
             android:name=".playback.PlayerService"
-            android:enabled="true" />
+            android:enabled="true"/>
 
         <activity
             android:name=".ui.activity.AlbumActivity"
             android:label="@string/title_activity_album"
             android:screenOrientation="portrait"
-            android:theme="@style/Player" />
+            android:theme="@style/Player"/>
         <activity
             android:name=".ui.activity.SettingsActivity"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/title_activity_settings"/>
     </application>
 
 </manifest>

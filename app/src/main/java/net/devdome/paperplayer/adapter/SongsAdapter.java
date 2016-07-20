@@ -12,15 +12,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.devdome.paperplayer.Constants;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Song;
+import net.devdome.paperplayer.playback.PlaylistManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHolder> implements PopupMenu.OnMenuItemClickListener {
+public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHolder> {
 
     private static final String TAG = ".SongsAdapter";
     private final List<Song> songs;
@@ -44,7 +46,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHol
     }
 
     @Override
-    public void onBindViewHolder(SongsViewHolder holder, final int position) {
+    public void onBindViewHolder(final SongsViewHolder holder, final int position) {
         holder.title.setText(songs.get(position).getName());
         holder.artist.setText(songs.get(position).getArtist());
         holder.menu.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +56,21 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHol
                 MenuInflater inflater = popup.getMenuInflater();
                 inflater.inflate(R.menu.song_actions, popup.getMenu());
                 popup.show();
-                popup.setOnMenuItemClickListener(SongsAdapter.this);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.action_play_next:
+                                Song song = songs.get(holder.getAdapterPosition());
+                                PlaylistManager playlistManager = PlaylistManager.getInstance();
+                                playlistManager.setUpNext(song);
+                                break;
+                            default:
+                                Toast.makeText(context, "Not yet implemented.", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    }
+                });
             }
         });
         holder.view.setOnClickListener(new View.OnClickListener() {
@@ -62,8 +78,8 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHol
             public void onClick(View v) {
                 Intent a = new Intent();
                 a.setAction(Constants.ACTION_PLAY_ALL);
-                Log.e(TAG, "Song Id: " + songs.get(position).getId());
-                a.putExtra(Constants.KEY_PLAY_START_WITH, songs.get(position).getId());
+                Log.e(TAG, "Song Id: " + songs.get(holder.getAdapterPosition()).getId());
+                a.putExtra(Constants.KEY_PLAY_START_WITH, songs.get(holder.getAdapterPosition()).getId());
                 context.sendBroadcast(a);
             }
         });
@@ -74,10 +90,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHol
         return songs.size();
     }
 
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        return true;
-    }
 
     public interface SongActionSelectedListener {
         void onActionSelected();

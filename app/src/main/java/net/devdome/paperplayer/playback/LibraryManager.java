@@ -62,10 +62,10 @@ public class LibraryManager {
      * Pulls all songs in an album
      */
     public ArrayList<Song> getAlbumSongs(long albumId) {
-        Cursor musicCursor;
-
+        final Cursor musicCursor;
+        final ArrayList<Song> songList = new ArrayList<>();
         final String where = MediaStore.Audio.Media.ALBUM_ID + "=?";
-        final String orderBy = MediaStore.Audio.Media._ID;
+        final String orderBy = MediaStore.Audio.Media.TRACK;
         musicCursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 null, where, new String[]{String.valueOf(albumId)}, orderBy);
         if (musicCursor != null && musicCursor.moveToFirst()) {
@@ -81,14 +81,19 @@ public class LibraryManager {
                     (MediaStore.Audio.Media.ALBUM_ID);
             int albumColumn = musicCursor.getColumnIndex
                     (MediaStore.Audio.Media.ALBUM);
+            int trackNumberColumn = musicCursor.getColumnIndex
+                    (MediaStore.Audio.Media.TRACK);
             int i = 1;
+
             do {
-                songList.add(new net.devdome.paperplayer.data.model.Song(musicCursor.getLong(idColumn),
+                Song song = new Song(musicCursor.getLong(idColumn),
                         musicCursor.getString(titleColumn),
                         musicCursor.getString(artistColumn),
                         musicCursor.getString(pathColumn), false,
                         musicCursor.getLong(albumIdColumn),
-                        musicCursor.getString(albumColumn), i, Mood.UNKNOWN));
+                        musicCursor.getString(albumColumn), i, Mood.UNKNOWN);
+                song.setTrackNumber(musicCursor.getLong(trackNumberColumn));
+                songList.add(song);
                 i++;
             }
             while (musicCursor.moveToNext());

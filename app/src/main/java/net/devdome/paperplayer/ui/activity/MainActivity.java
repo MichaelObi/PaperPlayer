@@ -24,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ import android.widget.TextView;
 import net.devdome.paperplayer.Constants;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.adapter.ViewPagerAdapter;
+import net.devdome.paperplayer.playback.PlayerService;
 import net.devdome.paperplayer.ui.fragment.AlbumsFragment;
 import net.devdome.paperplayer.ui.fragment.ArtistsFragment;
 import net.devdome.paperplayer.ui.fragment.SongsFragment;
@@ -154,9 +156,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startService(new Intent(this, PlayerService.class));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         initViewPager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setExitTransition(new Explode());
+        }
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
             mViewPager.setAdapter(viewPagerAdapter);
             mViewPager.setCurrentItem(0);
         }
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tablayout);
         if (tabLayout != null) {
             tabLayout.setTabMode(TabLayout.MODE_FIXED);

@@ -23,28 +23,23 @@ import android.util.Log;
 import net.devdome.paperplayer.Constants;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Song;
+import net.devdome.paperplayer.playback.actions.ActionListenerContract;
 import net.devdome.paperplayer.ui.activity.NowPlayingActivity;
 import net.devdome.paperplayer.utils.MediaUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerService extends Service implements MediaPlayer.OnErrorListener, AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
+public class PlayerService extends Service implements MediaPlayer.OnErrorListener, AudioManager
+        .OnAudioFocusChangeListener, MediaPlayer.OnCompletionListener, MediaPlayer
+        .OnPreparedListener {
 
     private static final String TAG = "PlayerService";
-
     private MediaSessionCompat session;
-
-    private boolean init = true;
-
     private MediaPlayer player;
-
     private int pausedSongSeek = 0;
-
     private LibraryManager libraryManager;
-
     private PlaylistManager playlistManager;
-
     private Map<String, ActionListenerContract> actions = new HashMap<>();
 
     public PlayerService() {
@@ -59,6 +54,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
         actions.put(Constants.ACTION_REQUEST_PLAY_STATE, new RequestStateAction());
         actions.put(Constants.ACTION_PREVIOUS, new PreviousSongAction());
         actions.put(Constants.ACTION_SHUFFLE, new ShuffleAction());
+        actions.put(Constants.ACTION_REPEAT, new RepeatAction());
     }
 
     private void updateCurrentPlaying() {
@@ -100,8 +96,8 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
     }
 
     private void playMusic() {
+        Log.d(TAG, "playMusic() called");
         if (player == null) initPlayer();
-
         player.reset();
         setPlayerDataSource();
         player.prepareAsync();
@@ -121,9 +117,14 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
     }
 
     private void playNext() {
-        playlistManager.next();
+        playNext(false);
+    }
+
+    private void playNext(boolean userInvoked) {
         pausedSongSeek = 0;
-        playMusic();
+        if (playlistManager.next(userInvoked)) { // If playback should continue
+            playMusic();
+        }
     }
 
     private void playPrevious() {
@@ -152,7 +153,10 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
         filter.addAction(Constants.ACTION_PREVIOUS);
         filter.addAction(Constants.ACTION_REQUEST_PLAY_STATE);
         filter.addAction(Constants.ACTION_SHUFFLE);
+        filter.addAction(Constants.ACTION_REPEAT);
         registerReceiver(new PlayerReceiver(), filter);
+
+        new RequestStateAction().execute(null, this);
         return START_STICKY;
     }
 
@@ -172,14 +176,12 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
     @Override
     public void onCreate() {
         super.onCreate();
-        initPlayer();
+
         libraryManager = new LibraryManager(this);
+
         playlistManager = PlaylistManager.getInstance();
 
-        // Hack
-        new PlayAllAction().execute(new Intent(), this);
-        init = false;
-        //End Hack
+        playlistManager.generatePlaylist(libraryManager.getAllSongs());
 
         session = new MediaSessionCompat(getApplicationContext(), Constants.MEDIA_SESSION_TAG);
     }
@@ -193,6 +195,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
     }
 
     private boolean requestAudioFocus() {
+//        return true;
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);
@@ -201,7 +204,8 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
 
     @Override
     public void onAudioFocusChange(int focusChange) {
-        switch (focusChange) {
+        return;
+        /*switch (focusChange) {
             case AudioManager.AUDIOFOCUS_GAIN:
                 if (!player.isPlaying()) {
                     playMusic();
@@ -218,7 +222,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 if (player.isPlaying()) player.setVolume(0.1f, 0.1f);
                 break;
-        }
+        }*/
     }
 
     private void abandonAudioFocus() {
@@ -240,10 +244,6 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
         if (requestAudioFocus()) {
             mp.start();
             mp.seekTo(pausedSongSeek);
-            if (!init) {
-                pause();
-                init = true;
-            }
             updateCurrentPlaying();
             new RequestStateAction().execute(new Intent(), this);
             setUpNotification();
@@ -255,7 +255,8 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
         PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Bitmap art = MediaUtils.getSongArt(this, playlistManager.getCurrentPlaylist().get(playlistManager.getCurrentIndex()).getSong().getAlbumId());
+        Bitmap art = MediaUtils.getSongArt(this, playlistManager.getCurrentPlaylist().get
+                (playlistManager.getCurrentIndex()).getSong().getAlbumId());
 
         MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
                 .putBitmap(MediaMetadataCompat.METADATA_KEY_ART, art)
@@ -263,26 +264,36 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
         session.setMetadata(metadata);
 
         // Previous Button
-        PendingIntent piPrevous = PendingIntent.getBroadcast(this, 70022, new Intent(Constants.ACTION_PREVIOUS), 0);
-        Action actionPrevious = new Action(R.drawable.ic_skip_previous_24dp, getString(R.string.previous), piPrevous);
+        PendingIntent piPrevous = PendingIntent.getBroadcast(this, 70022, new Intent(Constants
+                .ACTION_PREVIOUS), 0);
+        Action actionPrevious = new Action(R.drawable.ic_skip_previous_24dp, getString(R.string
+                .previous), piPrevous);
 
         int icon = R.drawable.ic_play_arrow_24dp;
         if (player.isPlaying()) {
             icon = R.drawable.ic_pause_24dp;
         }
-        PendingIntent piPlayPause = PendingIntent.getBroadcast(this, 70022, new Intent(Constants.ACTION_PAUSE), 0);
+        PendingIntent piPlayPause = PendingIntent.getBroadcast(this, 70022, new Intent(Constants
+                .ACTION_PAUSE), 0);
         Action actionPlayPause = new Action(icon, getString(R.string.pause), piPlayPause);
 
-        PendingIntent piNext = PendingIntent.getBroadcast(this, 70022, new Intent(Constants.ACTION_NEXT), 0);
-        Action actionNext = new Action(R.drawable.ic_skip_next_24dp, getString(R.string.next), piNext);
+        PendingIntent piNext = PendingIntent.getBroadcast(this, 70022, new Intent(Constants
+                .ACTION_NEXT), 0);
+        Action actionNext = new Action(R.drawable.ic_skip_next_24dp, getString(R.string.next),
+                piNext);
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(player.isPlaying() ? R.drawable.ic_play_arrow_24dp : R.drawable.ic_pause_24dp)
-                .setContentTitle(playlistManager.getCurrentPlaylist().get(playlistManager.getCurrentIndex()).getSong().getName())
-                .setContentText(String.format("%s", playlistManager.getCurrentPlaylist().get(playlistManager.getCurrentIndex()).getSong().getArtist()))
-                .setSubText(playlistManager.getCurrentPlaylist().get(playlistManager.getCurrentIndex()).getSong().getAlbumName())
+                .setSmallIcon(player.isPlaying() ? R.drawable.ic_play_arrow_24dp : R.drawable
+                        .ic_pause_24dp)
+                .setContentTitle(playlistManager.getCurrentPlaylist().get(playlistManager
+                        .getCurrentIndex()).getSong().getName())
+                .setContentText(String.format("%s", playlistManager.getCurrentPlaylist().get
+                        (playlistManager.getCurrentIndex()).getSong().getArtist()))
+                .setSubText(playlistManager.getCurrentPlaylist().get(playlistManager
+                        .getCurrentIndex()).getSong().getAlbumName())
                 .setStyle(
-                        new NotificationCompat.MediaStyle().setMediaSession(session.getSessionToken())
+                        new NotificationCompat.MediaStyle().setMediaSession(session
+                                .getSessionToken())
                 )
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .addAction(actionPrevious).addAction(actionPlayPause).addAction(actionNext)
@@ -299,12 +310,20 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
         return false;
     }
 
+    private class RepeatAction implements ActionListenerContract {
+        @Override
+        public void execute(Intent intent, Context context) {
+            playlistManager.setRepeatState(intent.getStringExtra(Constants.KEY_REPEAT_STATE_EXTRA));
+        }
+    }
+
     private class PlayerReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             ActionListenerContract action = actions.get(intent.getAction());
             if (action == null) {
-                throw new IllegalStateException("Unknown callback for action: " + intent.getAction());
+                throw new IllegalStateException("Unknown callback for action: " + intent
+                        .getAction());
             }
             action.execute(intent, context);
         }
@@ -316,9 +335,9 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    playlistManager.generatePlaylist(libraryManager.getAllSongs(), intent.getLongExtra(Constants.KEY_PLAY_START_WITH, 0));
+                    playlistManager.generatePlaylist(libraryManager.getAllSongs(), intent
+                            .getLongExtra(Constants.KEY_PLAY_START_WITH, 0));
                     pausedSongSeek = 0;
-
                     playMusic();
                 }
             }).run();
@@ -338,7 +357,9 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    playlistManager.generatePlaylist(libraryManager.getAlbumSongs(intent.getLongExtra(Constants.SONG_ALBUM_ID, 0)), intent.getLongExtra(Constants.KEY_PLAY_START_WITH, 0));
+                    playlistManager.generatePlaylist(libraryManager.getAlbumSongs(intent
+                            .getLongExtra(Constants.SONG_ALBUM_ID, 0)), intent.getLongExtra
+                            (Constants.KEY_PLAY_START_WITH, 0));
                     pausedSongSeek = 0;
                     playMusic();
                 }
@@ -381,7 +402,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
     private class NextSongAction implements ActionListenerContract {
         @Override
         public void execute(Intent intent, Context context) {
-            playNext();
+            playNext(true);
         }
     }
 
@@ -415,11 +436,8 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
 
     private class RequestStateAction implements ActionListenerContract {
         @Override
-        public void execute(Intent intent, Context context) {
+        public void execute(@Nullable Intent intent, Context context) {
             intent = new Intent(NowPlayingActivity.ACTION_GET_PLAY_STATE);
-            if (player != null && player.isPlaying()) {
-                intent.putExtra(Constants.KEY_IS_PLAYING, true);
-            }
             if (playlistManager.getCurrentPlaylist().size() > 0) {
                 Song song = getCurrentSong();
                 intent.putExtra(Constants.SONG_NAME, song.getName());
@@ -430,6 +448,7 @@ public class PlayerService extends Service implements MediaPlayer.OnErrorListene
                 intent.putExtra(Constants.SONG_ART, song.getArt());
 
                 try {
+                    intent.putExtra(Constants.KEY_IS_PLAYING, player.isPlaying());
                     intent.putExtra(Constants.SONG_DURATION, player.getDuration());
                     intent.putExtra(Constants.SONG_CURRENT_TIME, player.getCurrentPosition());
                 } catch (NullPointerException e) {

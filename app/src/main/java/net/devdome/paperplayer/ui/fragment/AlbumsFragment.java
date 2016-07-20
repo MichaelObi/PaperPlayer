@@ -12,9 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.devdome.paperplayer.R;
-import net.devdome.paperplayer.ui.component.SpacesItemDecoration;
 import net.devdome.paperplayer.adapter.AlbumsAdapter;
 import net.devdome.paperplayer.data.model.Album;
+import net.devdome.paperplayer.ui.component.SpacesItemDecoration;
 
 import java.util.ArrayList;
 
@@ -26,15 +26,16 @@ public class AlbumsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_albums_artists, container, false);
+        View v = inflater.inflate(R.layout.fragment_albums, container, false);
         view = v;
 
-        rv = (RecyclerView) v.findViewById(R.id.rv_albums_artists_grid);
+        rv = (RecyclerView) v.findViewById(R.id.rv_albums_grid);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
         rv.addItemDecoration(new SpacesItemDecoration(2, 2));
         new GetAlbums().execute();
+
 
         return v;
     }

@@ -3,10 +3,10 @@
 
     <item android:drawable="@android:color/white" />
     <item>
-
         <bitmap
+            android:tileMode="clamp"
             android:gravity="center"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_player" />
     </item>
 
 </layer-list>

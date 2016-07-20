@@ -5,14 +5,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import net.devdome.paperplayer.R;
-import net.devdome.paperplayer.ui.component.SpacesItemDecoration;
 import net.devdome.paperplayer.adapter.ArtistsAdapter;
 import net.devdome.paperplayer.data.model.Artist;
 
@@ -26,14 +25,13 @@ public class ArtistsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_albums_artists, container, false);
+        View v = inflater.inflate(R.layout.fragment_artists, container, false);
         view = v;
 
-        rv = (RecyclerView) v.findViewById(R.id.rv_albums_artists_grid);
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+        rv = (RecyclerView) v.findViewById(R.id.rv_artists);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
-        rv.addItemDecoration(new SpacesItemDecoration(2, 2));
         new GetArtists().execute();
 
         return v;

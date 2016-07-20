@@ -25,8 +25,8 @@ import net.devdome.paperplayer.Constants;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.adapter.AlbumSongsAdapter;
 import net.devdome.paperplayer.adapter.AlbumsAdapter;
-import net.devdome.paperplayer.data.Mood;
 import net.devdome.paperplayer.data.model.Song;
+import net.devdome.paperplayer.playback.LibraryManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -114,11 +114,9 @@ public class AlbumActivity extends AppCompatActivity {
 
     private void controlEnterAnimation() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setAllowEnterTransitionOverlap(false);
             getWindow().setEnterTransition(new Fade());
-        }
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getEnterTransition().addListener(new Transition.TransitionListener() {
                 @Override
                 public void onTransitionStart(Transition transition) {
@@ -185,44 +183,8 @@ public class AlbumActivity extends AppCompatActivity {
 
         @Override
         protected ArrayList<Song> doInBackground(Void... params) {
-            final ArrayList<Song> songList = new ArrayList<>();
-            final String where = MediaStore.Audio.Media.ALBUM_ID + "=?";
-            final String orderBy = MediaStore.Audio.Media._ID;
-            musicCursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    null, where, new String[]{String.valueOf(albumId)}, orderBy);
-            if (musicCursor != null && musicCursor.moveToFirst()) {
-                int titleColumn = musicCursor.getColumnIndex
-                        (android.provider.MediaStore.Audio.Media.TITLE);
-                int idColumn = musicCursor.getColumnIndex
-                        (android.provider.MediaStore.Audio.Media._ID);
-                int artistColumn = musicCursor.getColumnIndex
-                        (android.provider.MediaStore.Audio.Media.ARTIST);
-                int pathColumn = musicCursor.getColumnIndex
-                        (MediaStore.Audio.Media.DATA);
-                int albumIdColumn = musicCursor.getColumnIndex
-                        (MediaStore.Audio.Media.ALBUM_ID);
-                int albumColumn = musicCursor.getColumnIndex
-                        (MediaStore.Audio.Media.ALBUM);
-                int trackNumberColumn = musicCursor.getColumnIndex
-                        (MediaStore.Audio.Media.TRACK);
-                int i = 1;
-
-                do {
-                    Song song = new Song(musicCursor.getLong(idColumn),
-                            musicCursor.getString(titleColumn),
-                            musicCursor.getString(artistColumn),
-                            musicCursor.getString(pathColumn), false,
-                            musicCursor.getLong(albumIdColumn),
-                            musicCursor.getString(albumColumn), i, Mood.UNKNOWN);
-                    song.setTrackNumber(musicCursor.getLong(trackNumberColumn));
-                    songList.add(song);
-                    i++;
-                }
-                while (musicCursor.moveToNext());
-                musicCursor.close();
-                return songList;
-            }
-            return null;
+            LibraryManager libraryManager = new LibraryManager(AlbumActivity.this);
+            return libraryManager.getAlbumSongs(albumId);
         }
     }
 }
