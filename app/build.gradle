@@ -36,7 +36,7 @@ dependencies {
     compile "com.android.support:support-v4:${supportLibVersion}"
     compile "com.android.support:support-vector-drawable:${supportLibVersion}"
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha3'
-    compile 'com.github.michaelobi:toggleton:0.2'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
+    compile 'com.github.michaelobi:toggleton:master-SNAPSHOT'
     compile 'com.facebook.android:facebook-android-sdk:4.14.0'
 }

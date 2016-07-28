@@ -24,8 +24,7 @@ public final class QueueManager {
     }
 
     public static QueueManager getInstance() {
-        if (queueManager == null)
-            queueManager = new QueueManager();
+        if (queueManager == null) queueManager = new QueueManager();
 
         return queueManager;
     }
@@ -128,7 +127,7 @@ public final class QueueManager {
         currentIndex++;
 
         // Handle Repeat One
-        if (!invokedByUser && repeatState.equals(Constants.REPEAT_ONE)) {
+        if (!invokedByUser && getRepeatState().equals(Constants.REPEAT_ONE)) {
             currentIndex--;
         }
 
@@ -136,7 +135,7 @@ public final class QueueManager {
         if (currentIndex >= queue.size()) {
             currentIndex = 0;
             // Handle Repeat All
-            return repeatState.equals(Constants.REPEAT_ALL); // should playback continue?
+            return getRepeatState().equals(Constants.REPEAT_ALL); // should playback continue?
         }
 
         return true;

@@ -36,6 +36,7 @@ import com.squareup.picasso.Picasso;
 
 import net.devdome.paperplayer.Constants;
 import net.devdome.paperplayer.R;
+import net.devdome.paperplayer.playback.QueueManager;
 import net.devdome.paperplayer.ui.fragment.PlaylistFragment;
 import net.devdome.paperplayer.utils.ViewUtils;
 
@@ -166,6 +167,7 @@ public class NowPlayingActivity extends AppCompatActivity implements ToggleableW
                 .ic_repeat_none_24dp)));
         repeatButton.setToggleStates(toggleStates);
         repeatButton.setToggleListener(this);
+        repeatButton.setCurrentToggleState(QueueManager.getInstance().getRepeatState());
     }
 
     private void setUpBottomSheet() {
