@@ -21,7 +21,7 @@ android {
 }
 
 ext {
-    supportLibVersion = "24.1.0"
+    supportLibVersion = "24.2.1"
 }
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
