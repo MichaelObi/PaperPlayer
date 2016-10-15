@@ -23,7 +23,7 @@ android {
 
         }
         mock {
-            applicationId "xyz.michaelobi.paperplayer.mock"
+            applicationId "net.devdome.paperplayer.mock"
         }
     }
 }
