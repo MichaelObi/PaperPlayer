@@ -1,10 +1,11 @@
 package net.devdome.paperplayer.data.local;
 
+import net.devdome.paperplayer.data.MusicLibraryRepoContract;
+import net.devdome.paperplayer.data.model.Song;
+
 import java.util.List;
 
 import rx.Observable;
-import net.devdome.paperplayer.data.MusicLibraryRepoContract;
-import net.devdome.paperplayer.data.local.model.Song;
 
 /**
  * PaperPlayer

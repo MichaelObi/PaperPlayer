@@ -11,10 +11,17 @@ import android.support.v7.app.AppCompatActivity;
  */
 
 public class LibraryActivity extends AppCompatActivity implements MusicLibraryContract.View {
+
     private MusicLibraryContract.Presenter presenter;
+
+//    private LibraryComponent component;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DaggerLibraryComponent.builder()
+                .build()
+                .inject(this);
     }
 }

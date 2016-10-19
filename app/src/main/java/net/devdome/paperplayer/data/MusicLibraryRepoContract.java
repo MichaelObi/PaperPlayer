@@ -1,9 +1,10 @@
 package net.devdome.paperplayer.data;
 
+import net.devdome.paperplayer.data.model.Song;
+
 import java.util.List;
 
 import rx.Observable;
-import net.devdome.paperplayer.data.local.model.Song;
 
 /**
  * PaperPlayer

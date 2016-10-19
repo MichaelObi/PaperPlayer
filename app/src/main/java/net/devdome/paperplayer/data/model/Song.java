@@ -1,4 +1,4 @@
-package net.devdome.paperplayer.data.local.model;
+package net.devdome.paperplayer.data.model;
 
 /**
  * PaperPlayer
