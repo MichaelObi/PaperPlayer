@@ -14,8 +14,9 @@ import rx.Observable;
  */
 
 public class MusicLibraryRepo implements MusicLibraryRepoContract {
+
     @Override
-    public Observable<List<Song>> fetchSongs(String searchTerm) {
+    public Observable<List<Song>> fetchAllSongs() {
         return null;
     }
 }

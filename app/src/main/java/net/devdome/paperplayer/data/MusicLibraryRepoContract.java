@@ -13,5 +13,5 @@ import rx.Observable;
  */
 
 public interface MusicLibraryRepoContract {
-    Observable<List<Song>> fetchSongs(final String searchTerm);
+    Observable<List<Song>> fetchAllSongs();
 }

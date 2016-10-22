@@ -14,10 +14,16 @@ import java.util.List;
 interface SongsContract {
     interface View extends Mvp.View {
         void showSongsList(List<Song> songs);
+
+        void showLoading();
+
+        void hideLoading();
+
+        void showError(String message);
     }
 
     interface Presenter extends Mvp.Presenter<View> {
-        List<Song> getAllSongs();
+        void getAllSongs();
     }
 
 }

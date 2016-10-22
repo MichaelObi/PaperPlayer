@@ -48,6 +48,21 @@ public class SongsFragment extends Fragment implements SongsContract.View {
     }
 
     @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showError(String message) {
+
+    }
+
+    @Override
     public void onDestroyView() {
         songsPresenter.detachView();
         super.onDestroyView();
