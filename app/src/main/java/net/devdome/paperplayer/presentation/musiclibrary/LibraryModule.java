@@ -15,7 +15,7 @@ class LibraryModule {
 
     @Provides
     @Singleton
-    MusicLibraryPresenter provideMusicLibraryPresenter() {
+    MusicLibraryContract.Presenter provideMusicLibraryPresenter() {
         return new MusicLibraryPresenter();
     }
 }

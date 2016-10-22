@@ -14,7 +14,7 @@ import dagger.Component;
 @Component(modules = {LibraryModule.class})
 interface LibraryComponent {
 
-    MusicLibraryPresenter provideMusicLibraryPresenter();
+    MusicLibraryContract.Presenter provideMusicLibraryPresenter();
 
     void inject(LibraryActivity libraryActivity);
 }

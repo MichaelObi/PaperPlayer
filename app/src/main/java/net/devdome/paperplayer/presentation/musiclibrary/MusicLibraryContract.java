@@ -1,7 +1,5 @@
 package net.devdome.paperplayer.presentation.musiclibrary;
 
-import android.support.v4.app.Fragment;
-
 import net.devdome.paperplayer.mvp.Mvp;
 
 /**
@@ -12,13 +10,10 @@ import net.devdome.paperplayer.mvp.Mvp;
 
 interface MusicLibraryContract {
     interface View extends Mvp.View {
-
+        void initializeViewPager();
     }
 
     interface Presenter extends Mvp.Presenter<View> {
-        void attachFragment(Fragment fragment);
-
-        void detachFragment();
+        void initialize();
     }
-
 }

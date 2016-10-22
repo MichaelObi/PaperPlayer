@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.neenbedankt.android-apt'
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.3"
@@ -11,20 +11,31 @@ android {
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        jackOptions {
+            enabled = false
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            testCoverageEnabled = true
+        }
     }
+
     productFlavors {
         prod {
-
         }
         mock {
             applicationId "net.devdome.paperplayer.mock"
         }
+    }
+    compileOptions {
+//        targetCompatibility 1.8
+//        sourceCompatibility 1.8
     }
 }
 
@@ -50,6 +61,13 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
 
+    // apt command comes from the android-apt plugin
+    apt 'com.google.dagger:dagger-compiler:2.7'
+    compile 'com.google.dagger:dagger:2.7'
+    provided 'javax.annotation:jsr250-api:1.0'
+
+//    compile 'com.google.dagger:dagger:2.2'
+//    provided 'com.google.dagger:dagger-compiler:2.2'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
 
@@ -82,5 +100,4 @@ dependencies {
         exclude module: 'support-v4'
 
     }
-
 }
