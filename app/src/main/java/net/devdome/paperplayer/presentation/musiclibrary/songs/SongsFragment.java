@@ -1,8 +1,11 @@
 package net.devdome.paperplayer.presentation.musiclibrary.songs;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,25 +28,34 @@ import rx.schedulers.Schedulers;
 public class SongsFragment extends Fragment implements SongsContract.View {
 
     SongsContract.Presenter songsPresenter;
+    private SongsAdapter songsAdapter;
+    private Context context;
+    private RecyclerView recyclerViewSongs;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         songsPresenter = new SongsPresenter(Schedulers.io(), AndroidSchedulers.mainThread());
+        songsPresenter.attachView(this);
+        context = getActivity();
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_songs, container, false);
-        songsPresenter.attachView(this);
+        recyclerViewSongs = (RecyclerView) v.findViewById(R.id.rv_songs);
+        recyclerViewSongs.setLayoutManager(new LinearLayoutManager(context));
+        songsAdapter = new SongsAdapter(null, context);
+        recyclerViewSongs.setAdapter(songsAdapter);
         songsPresenter.getAllSongs();
         return v;
     }
 
     @Override
     public void showSongsList(List<Song> songs) {
-        Toast.makeText(getContext(), "Showing Library", Toast.LENGTH_SHORT).show();
+        recyclerViewSongs.setVisibility(View.VISIBLE);
+        songsAdapter.setSongs(songs);
     }
 
     @Override
