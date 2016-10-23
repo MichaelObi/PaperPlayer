@@ -11,6 +11,12 @@ import net.devdome.paperplayer.mvp.BasePresenter;
 class MusicLibraryPresenter extends BasePresenter<MusicLibraryContract.View> implements
         MusicLibraryContract.Presenter {
 
+    @Override
+    public void attachView(MusicLibraryContract.View view) {
+        super.attachView(view);
+        initialize();
+    }
+
     public void initialize() {
         checkViewAttached();
         getView().initializeViewPager();

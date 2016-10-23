@@ -13,7 +13,8 @@ import net.devdome.paperplayer.data.model.Song;
 
 import java.util.List;
 
-import javax.inject.Inject;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * PaperPlayer
@@ -23,15 +24,12 @@ import javax.inject.Inject;
 
 public class SongsFragment extends Fragment implements SongsContract.View {
 
-    @Inject
     SongsContract.Presenter songsPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DaggerSongsComponent.builder()
-                .build()
-                .inject(this);
+        songsPresenter = new SongsPresenter(Schedulers.io(), AndroidSchedulers.mainThread());
     }
 
     @Nullable

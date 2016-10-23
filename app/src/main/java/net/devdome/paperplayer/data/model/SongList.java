@@ -11,13 +11,13 @@ import java.util.List;
 
 public class SongList {
 
-    private ArrayList<Song> songs;
+    private List<Song> songs;
 
     public SongList(List<Song> songs) {
         this.songs = songs;
     }
 
-    public ArrayList<Song> getSongs() {
+    public List<Song> getSongs() {
         return songs;
     }
 

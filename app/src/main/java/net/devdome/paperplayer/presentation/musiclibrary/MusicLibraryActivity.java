@@ -9,8 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.presentation.musiclibrary.songs.SongsFragment;
 
-import javax.inject.Inject;
-
 /**
  * PaperPlayer
  * Michael Obi
@@ -19,18 +17,14 @@ import javax.inject.Inject;
 
 public class MusicLibraryActivity extends AppCompatActivity implements MusicLibraryContract.View {
 
-    @Inject
     MusicLibraryContract.Presenter musicLibraryPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        DaggerMusicLibraryComponent.builder()
-                .build()
-                .inject(this);
+        musicLibraryPresenter = new MusicLibraryPresenter();
         musicLibraryPresenter.attachView(this);
-        musicLibraryPresenter.initialize();
     }
 
     @Override

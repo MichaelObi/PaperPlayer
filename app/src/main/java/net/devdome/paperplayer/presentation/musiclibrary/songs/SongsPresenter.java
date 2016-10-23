@@ -3,13 +3,9 @@ package net.devdome.paperplayer.presentation.musiclibrary.songs;
 import android.util.Log;
 
 import net.devdome.paperplayer.data.library.LibraryManager;
-import net.devdome.paperplayer.data.model.Song;
+import net.devdome.paperplayer.data.model.SongList;
+import net.devdome.paperplayer.injection.Injector;
 import net.devdome.paperplayer.mvp.BasePresenter;
-import net.devdome.paperplayer.mvp.Mvp;
-
-import java.util.List;
-
-import javax.inject.Inject;
 
 import rx.Scheduler;
 import rx.Subscriber;
@@ -27,15 +23,13 @@ class SongsPresenter extends BasePresenter<SongsContract.View> implements
     private final Scheduler ioScheduler;
     private final Scheduler mainScheduler;
 
-    @Inject
     LibraryManager libraryManager;
 
     public SongsPresenter(Scheduler ioScheduler, Scheduler mainScheduler) {
         super();
         this.ioScheduler = ioScheduler;
         this.mainScheduler = mainScheduler;
-        libraryManager = DaggerSongsComponent.builder().build()
-                .provideLibraryManager();
+        libraryManager = Injector.provideLibraryManager();
     }
 
     @Override
@@ -46,7 +40,7 @@ class SongsPresenter extends BasePresenter<SongsContract.View> implements
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribe(
-                        new Subscriber<List<Song>>() {
+                        new Subscriber<SongList>() {
                             @Override
                             public void onCompleted() {
 
@@ -59,10 +53,10 @@ class SongsPresenter extends BasePresenter<SongsContract.View> implements
                             }
 
                             @Override
-                            public void onNext(List<Song> songs) {
-                                Log.d(TAG, "Song Count = " + songs.size());
+                            public void onNext(SongList songs) {
+                                Log.d(TAG, "Song Count = " + songs.getSongs().size());
                                 getView().hideLoading();
-                                getView().showSongsList(songs);
+                                getView().showSongsList(songs.getSongs());
                             }
                         }
                 )
