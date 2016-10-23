@@ -1,7 +1,8 @@
 package net.devdome.paperplayer.presentation.musiclibrary.songs;
 
-import net.devdome.paperplayer.data.MusicLibraryRepoContract;
+import net.devdome.paperplayer.data.library.LibraryManager;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -15,11 +16,11 @@ import rx.schedulers.Schedulers;
  * 18 10 2016 5:43 AM
  */
 @Module
-class SongsModule {
+public class SongsModule {
 
     @Provides
     @Singleton
-    SongsContract.Presenter provideSongsPresenter(MusicLibraryRepoContract musicLibraryRepo) {
-        return new SongsPresenter(musicLibraryRepo, Schedulers.io(), AndroidSchedulers.mainThread());
+    SongsContract.Presenter provideSongsPresenter() {
+        return new SongsPresenter(Schedulers.io(), AndroidSchedulers.mainThread());
     }
 }

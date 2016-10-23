@@ -1,6 +1,7 @@
 package net.devdome.paperplayer.data.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * PaperPlayer
@@ -12,7 +13,7 @@ public class SongList {
 
     private ArrayList<Song> songs;
 
-    public SongList(ArrayList<Song> songs) {
+    public SongList(List<Song> songs) {
         this.songs = songs;
     }
 

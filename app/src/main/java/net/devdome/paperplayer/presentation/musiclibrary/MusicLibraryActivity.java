@@ -17,7 +17,7 @@ import javax.inject.Inject;
  * 15 10 2016 3:36 PM
  */
 
-public class LibraryActivity extends AppCompatActivity implements MusicLibraryContract.View {
+public class MusicLibraryActivity extends AppCompatActivity implements MusicLibraryContract.View {
 
     @Inject
     MusicLibraryContract.Presenter musicLibraryPresenter;
@@ -26,7 +26,7 @@ public class LibraryActivity extends AppCompatActivity implements MusicLibraryCo
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        DaggerLibraryComponent.builder()
+        DaggerMusicLibraryComponent.builder()
                 .build()
                 .inject(this);
         musicLibraryPresenter.attachView(this);

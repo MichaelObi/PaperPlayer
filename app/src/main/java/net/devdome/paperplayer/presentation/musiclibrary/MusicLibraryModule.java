@@ -1,8 +1,5 @@
 package net.devdome.paperplayer.presentation.musiclibrary;
 
-import net.devdome.paperplayer.data.MusicLibraryRepoContract;
-import net.devdome.paperplayer.data.local.MusicLibraryRepo;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -14,7 +11,7 @@ import dagger.Provides;
  * 18 10 2016 5:43 AM
  */
 @Module
-public class LibraryModule {
+public class MusicLibraryModule {
 
     @Provides
     @Singleton
@@ -22,9 +19,4 @@ public class LibraryModule {
         return new MusicLibraryPresenter();
     }
 
-    @Provides
-    @Singleton
-    MusicLibraryRepoContract provideMusicLibraryRepository() {
-        return new MusicLibraryRepo();
-    }
 }

@@ -8,7 +8,7 @@ import net.devdome.paperplayer.mvp.Mvp;
  * 15 10 2016 3:39 PM
  */
 
-interface MusicLibraryContract {
+public interface MusicLibraryContract {
     interface View extends Mvp.View {
         void initializeViewPager();
     }

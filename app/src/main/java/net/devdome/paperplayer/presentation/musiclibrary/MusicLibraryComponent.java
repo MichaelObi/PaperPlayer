@@ -1,6 +1,6 @@
 package net.devdome.paperplayer.presentation.musiclibrary;
 
-import net.devdome.paperplayer.data.MusicLibraryRepoContract;
+import net.devdome.paperplayer.data.library.LibraryManagerModule;
 
 import javax.inject.Singleton;
 
@@ -13,12 +13,10 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = {LibraryModule.class})
-interface LibraryComponent {
+@Component(modules = {MusicLibraryModule.class, LibraryManagerModule.class})
+interface MusicLibraryComponent {
 
     MusicLibraryContract.Presenter provideMusicLibraryPresenter();
 
-    MusicLibraryRepoContract provideMusicLibraryRepository();
-
-    void inject(LibraryActivity libraryActivity);
+    void inject(MusicLibraryActivity musicLibraryActivity);
 }

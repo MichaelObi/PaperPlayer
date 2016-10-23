@@ -1,6 +1,8 @@
 package net.devdome.paperplayer.presentation.musiclibrary.songs;
 
-import net.devdome.paperplayer.presentation.musiclibrary.LibraryModule;
+import net.devdome.paperplayer.data.library.LibraryManager;
+import net.devdome.paperplayer.data.library.LibraryManagerModule;
+import net.devdome.paperplayer.presentation.musiclibrary.MusicLibraryModule;
 
 import javax.inject.Singleton;
 
@@ -13,10 +15,12 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = {SongsModule.class, LibraryModule.class})
+@Component(modules = {MusicLibraryModule.class, LibraryManagerModule.class, SongsModule.class})
 interface SongsComponent {
 
     SongsContract.Presenter provideSongPresenter();
+
+    LibraryManager provideLibraryManager();
 
     void inject(SongsFragment songsFragment);
 }
