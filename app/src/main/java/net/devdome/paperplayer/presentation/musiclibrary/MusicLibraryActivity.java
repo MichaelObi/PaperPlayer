@@ -7,7 +7,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import net.devdome.paperplayer.R;
-import net.devdome.paperplayer.presentation.musiclibrary.songs.SongsFragment;
+import net.devdome.paperplayer.presentation.musiclibrary.fragment.albums.AlbumsFragment;
+import net.devdome.paperplayer.presentation.musiclibrary.fragment.songs.SongsFragment;
 
 /**
  * PaperPlayer
@@ -32,6 +33,7 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPagerAdapter.addFragment(new SongsFragment(), getResources().getString(R.string.songs));
+        viewPagerAdapter.addFragment(new AlbumsFragment(), getResources().getString(R.string.albums));
         if (mViewPager != null) {
             mViewPager.setAdapter(viewPagerAdapter);
             mViewPager.setCurrentItem(0);

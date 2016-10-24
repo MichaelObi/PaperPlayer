@@ -1,10 +1,11 @@
 package net.devdome.paperplayer.data.library.local;
 
 import net.devdome.paperplayer.data.library.LibraryManager;
+import net.devdome.paperplayer.data.model.Album;
 import net.devdome.paperplayer.data.model.Song;
-import net.devdome.paperplayer.data.model.SongList;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import rx.Observable;
 
@@ -16,7 +17,7 @@ import rx.Observable;
 
 public class MockLocalLibraryManager implements LibraryManager {
     private static final String TAG = "LocalLibraryManager";
-    private ArrayList<Song> songs = new ArrayList<>();
+    private List<Song> songs = new ArrayList<>();
 
     private Song song1, song2, song3;
 
@@ -32,8 +33,13 @@ public class MockLocalLibraryManager implements LibraryManager {
     }
 
     @Override
-    public Observable<SongList> fetchAllSongs() {
-        return Observable.just(new SongList(songs));
+    public Observable<List<Song>> fetchAllSongs() {
+        return Observable.just(songs);
+    }
+
+    @Override
+    public Observable<List<Album>> fetchAllAlbums() {
+        return null;
     }
 
 }

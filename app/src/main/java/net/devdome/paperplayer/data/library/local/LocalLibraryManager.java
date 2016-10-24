@@ -1,9 +1,11 @@
 package net.devdome.paperplayer.data.library.local;
 
 import net.devdome.paperplayer.data.library.LibraryManager;
+import net.devdome.paperplayer.data.model.Album;
 import net.devdome.paperplayer.data.model.Song;
 import net.devdome.paperplayer.data.model.SongList;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import rx.Observable;
@@ -33,7 +35,12 @@ public class LocalLibraryManager implements LibraryManager {
     }
 
     @Override
-    public Observable<SongList> fetchAllSongs() {
+    public Observable<List<Song>> fetchAllSongs() {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Album>> fetchAllAlbums() {
         return null;
     }
 

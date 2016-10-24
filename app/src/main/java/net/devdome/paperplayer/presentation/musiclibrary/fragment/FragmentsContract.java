@@ -1,4 +1,4 @@
-package net.devdome.paperplayer.presentation.musiclibrary.songs;
+package net.devdome.paperplayer.presentation.musiclibrary.fragment;
 
 import net.devdome.paperplayer.data.model.Song;
 import net.devdome.paperplayer.mvp.Mvp;
@@ -11,9 +11,9 @@ import java.util.List;
  * 15 10 2016 3:39 PM
  */
 
-interface SongsContract {
-    interface View extends Mvp.View {
-        void showSongsList(List<Song> songs);
+public interface FragmentsContract {
+    interface View<T> extends Mvp.View {
+        void showList(List<T> items);
 
         void showLoading();
 
@@ -23,7 +23,7 @@ interface SongsContract {
     }
 
     interface Presenter extends Mvp.Presenter<View> {
-        void getAllSongs();
+        void getAll();
     }
 
 }

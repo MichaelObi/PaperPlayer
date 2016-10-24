@@ -10,7 +10,6 @@ import net.devdome.paperplayer.data.library.local.LocalLibraryManager;
  */
 
 public class Injector {
-
     public static LibraryManager provideLibraryManager() {
         return new LocalLibraryManager();
     }

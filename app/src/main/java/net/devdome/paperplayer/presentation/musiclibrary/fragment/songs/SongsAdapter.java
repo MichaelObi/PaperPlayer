@@ -1,11 +1,16 @@
-package net.devdome.paperplayer.presentation.musiclibrary.songs;
+package net.devdome.paperplayer.presentation.musiclibrary.fragment.songs;
 
 import android.content.Context;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Song;
@@ -41,7 +46,25 @@ class SongsAdapter extends RecyclerView.Adapter<SongViewHolder> {
         Song song = songs.get(position);
         holder.title.setText(song.getTitle());
         holder.artist.setText(song.getArtist());
-
+        holder.menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(context, v);
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.song_actions, popup.getMenu());
+                popup.show();
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            default:
+                                Toast.makeText(context, "Not yet implemented.", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -61,13 +84,13 @@ class SongsAdapter extends RecyclerView.Adapter<SongViewHolder> {
 class SongViewHolder extends RecyclerView.ViewHolder {
     final TextView title;
     final TextView artist;
-//    final ImageView menu;
+    final ImageView menu;
 
     public SongViewHolder(View itemView) {
         super(itemView);
 
         title = (TextView) itemView.findViewById(R.id.song_item_name);
         artist = (TextView) itemView.findViewById(R.id.song_item_desc);
-//        menu = (ImageView) itemView.findViewById(R.id.song_item_menu);
+        menu = (ImageView) itemView.findViewById(R.id.song_item_menu);
     }
 }

@@ -1,11 +1,11 @@
-package net.devdome.paperplayer.presentation.musiclibrary.songs;
-
-import android.util.Log;
+package net.devdome.paperplayer.presentation.musiclibrary.fragment.songs;
 
 import net.devdome.paperplayer.data.library.LibraryManager;
-import net.devdome.paperplayer.data.model.SongList;
-import net.devdome.paperplayer.injection.Injector;
+import net.devdome.paperplayer.data.model.Song;
 import net.devdome.paperplayer.mvp.BasePresenter;
+import net.devdome.paperplayer.presentation.musiclibrary.fragment.FragmentsContract;
+
+import java.util.List;
 
 import rx.Scheduler;
 import rx.Subscriber;
@@ -16,31 +16,32 @@ import rx.Subscriber;
  * 15 10 2016 3:45 PM
  */
 
-class SongsPresenter extends BasePresenter<SongsContract.View> implements
-        SongsContract.Presenter {
+public class SongsPresenter extends BasePresenter<FragmentsContract.View> implements
+        FragmentsContract.Presenter {
 
-    private static final String TAG = "SongsPresenter";
+    private static final String TAG = "AlbumsPresenter";
     private final Scheduler ioScheduler;
     private final Scheduler mainScheduler;
 
     LibraryManager libraryManager;
 
-    public SongsPresenter(Scheduler ioScheduler, Scheduler mainScheduler) {
+    public SongsPresenter(LibraryManager libraryManager, Scheduler ioScheduler, Scheduler
+            mainScheduler) {
         super();
         this.ioScheduler = ioScheduler;
         this.mainScheduler = mainScheduler;
-        libraryManager = Injector.provideLibraryManager();
+        this.libraryManager = libraryManager;
     }
 
     @Override
-    public void getAllSongs() {
+    public void getAll() {
         checkViewAttached();
         getView().showLoading();
         addSubscription(libraryManager.fetchAllSongs()
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribe(
-                        new Subscriber<SongList>() {
+                        new Subscriber<List<Song>>() {
                             @Override
                             public void onCompleted() {
 
@@ -53,10 +54,9 @@ class SongsPresenter extends BasePresenter<SongsContract.View> implements
                             }
 
                             @Override
-                            public void onNext(SongList songs) {
-                                Log.d(TAG, "Song Count = " + songs.getSongs().size());
+                            public void onNext(List<Song> songs) {
                                 getView().hideLoading();
-                                getView().showSongsList(songs.getSongs());
+                                getView().showList(songs);
                             }
                         }
                 )

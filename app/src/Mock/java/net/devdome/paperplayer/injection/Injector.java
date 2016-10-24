@@ -10,7 +10,6 @@ import net.devdome.paperplayer.data.library.local.MockLocalLibraryManager;
  */
 
 public class Injector {
-
     public static LibraryManager provideLibraryManager() {
         return new MockLocalLibraryManager();
     }
