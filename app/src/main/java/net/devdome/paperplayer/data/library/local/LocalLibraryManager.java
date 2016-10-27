@@ -20,20 +20,6 @@ import rx.Subscriber;
 public class LocalLibraryManager implements LibraryManager {
     private static final String TAG = "LocalLibraryManager";
 
-    private static <T> Observable<T> makeObservable(final Callable<T> func) {
-        return Observable.create(
-                new Observable.OnSubscribe<T>() {
-                    @Override
-                    public void call(Subscriber<? super T> subscriber) {
-                        try {
-                            subscriber.onNext(func.call());
-                        } catch (Exception ex) {
-                            subscriber.onError(ex);
-                        }
-                    }
-                });
-    }
-
     @Override
     public Observable<List<Song>> fetchAllSongs() {
         return null;
@@ -41,6 +27,11 @@ public class LocalLibraryManager implements LibraryManager {
 
     @Override
     public Observable<List<Album>> fetchAllAlbums() {
+        return null;
+    }
+
+    @Override
+    public Observable<Song> getSong(long id) {
         return null;
     }
 

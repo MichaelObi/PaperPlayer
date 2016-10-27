@@ -8,15 +8,21 @@ package net.devdome.paperplayer.data.model;
 
 public class Album {
 
-    private final long id;
-    private final String name;
-    private final String artist;
+    private long id;
+    private String name;
+    private String artist;
+    private String artPath;
 
-    public Album(long id, String name, String artist) {
+    public Album() {
+
+    }
+
+    public Album(long id, String name, String artist, String artPath) {
 
         this.id = id;
         this.name = name;
         this.artist = artist;
+        this.artPath = artPath;
     }
 
     public String getArtist() {
@@ -29,5 +35,13 @@ public class Album {
 
     public long getId() {
         return id;
+    }
+
+    public String getArtPath() {
+        return artPath;
+    }
+
+    public void setArtPath(String artPath) {
+        this.artPath = artPath;
     }
 }

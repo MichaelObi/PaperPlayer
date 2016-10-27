@@ -19,4 +19,5 @@ import rx.Observable;
 public interface LibraryManager {
     Observable<List<Song>> fetchAllSongs();
     Observable<List<Album>> fetchAllAlbums();
+    Observable<Song> getSong(long id);
 }

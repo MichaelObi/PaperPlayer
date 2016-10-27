@@ -1,5 +1,6 @@
 package net.devdome.paperplayer.presentation.musiclibrary.fragment.songs;
 
+import net.devdome.paperplayer.data.MusicRepositoryInterface;
 import net.devdome.paperplayer.data.library.LibraryManager;
 import net.devdome.paperplayer.data.model.Song;
 import net.devdome.paperplayer.mvp.BasePresenter;
@@ -23,21 +24,21 @@ public class SongsPresenter extends BasePresenter<FragmentsContract.View> implem
     private final Scheduler ioScheduler;
     private final Scheduler mainScheduler;
 
-    LibraryManager libraryManager;
+    MusicRepositoryInterface musicRepository;
 
-    public SongsPresenter(LibraryManager libraryManager, Scheduler ioScheduler, Scheduler
+    public SongsPresenter(MusicRepositoryInterface musicRepository, Scheduler ioScheduler, Scheduler
             mainScheduler) {
         super();
         this.ioScheduler = ioScheduler;
         this.mainScheduler = mainScheduler;
-        this.libraryManager = libraryManager;
+        this.musicRepository = musicRepository;
     }
 
     @Override
     public void getAll() {
         checkViewAttached();
         getView().showLoading();
-        addSubscription(libraryManager.fetchAllSongs()
+        addSubscription(musicRepository.getAllSongs()
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribe(

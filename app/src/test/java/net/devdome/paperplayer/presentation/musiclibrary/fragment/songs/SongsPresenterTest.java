@@ -1,10 +1,9 @@
 package net.devdome.paperplayer.presentation.musiclibrary.fragment.songs;
 
-import net.devdome.paperplayer.data.library.LibraryManager;
+import net.devdome.paperplayer.data.MusicRepositoryInterface;
 import net.devdome.paperplayer.data.model.Song;
 import net.devdome.paperplayer.data.model.SongList;
 import net.devdome.paperplayer.presentation.musiclibrary.fragment.FragmentsContract;
-import net.devdome.paperplayer.presentation.musiclibrary.fragment.albums.AlbumsPresenter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 public class SongsPresenterTest {
 
     @Mock
-    LibraryManager libraryManager;
+    MusicRepositoryInterface musicRepository;
 
     @Mock
     FragmentsContract.View view;
@@ -39,31 +39,30 @@ public class SongsPresenterTest {
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
-        albumsPresenter = new SongsPresenter(libraryManager, Schedulers.immediate(), Schedulers.immediate());
+        albumsPresenter = new SongsPresenter(musicRepository, Schedulers.immediate(), Schedulers.immediate());
         albumsPresenter.attachView(view);
     }
 
     @Test
     public void getAllSongs_returnSongList() throws Exception {
-        SongList songList = getDummySongList();
-        when(libraryManager.fetchAllSongs()).thenReturn(Observable.just(songList.getSongs
-                ()));
+        List<Song> songList = getDummySongList();
+        when(musicRepository.getAllSongs()).thenReturn(Observable.just(songList));
 
         albumsPresenter.getAll();
         verify(view).showLoading();
         verify(view).hideLoading();
         verify(view, never()).showError(anyString());
-        verify(view).showList(songList.getSongs());
+        verify(view).showList(songList);
 
     }
 
-    public SongList getDummySongList() {
-        ArrayList<Song> songs = new ArrayList<>();
+    public List<Song> getDummySongList() {
+        List<Song> songs = new ArrayList<>();
         songs.add(new Song("I can't let you go", "8701", "Usher", "1998"));
         songs.add(new Song("Grow", "Revenge of the dreamers II", "Cozz", "2016"));
         songs.add(new Song("Folgers crystals", "Revenge of the dreamers II", "J. Cole", "2016"));
 
-        return new SongList(songs);
+        return songs;
     }
 
 }

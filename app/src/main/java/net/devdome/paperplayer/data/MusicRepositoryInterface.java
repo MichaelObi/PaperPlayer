@@ -1,5 +1,12 @@
 package net.devdome.paperplayer.data;
 
+import net.devdome.paperplayer.data.model.Album;
+import net.devdome.paperplayer.data.model.Song;
+
+import java.util.List;
+
+import rx.Observable;
+
 /**
  * PaperPlayer
  * Michael Obi
@@ -7,4 +14,8 @@ package net.devdome.paperplayer.data;
  */
 
 public interface MusicRepositoryInterface {
+
+    public Observable<List<Song>> getAllSongs();
+
+    public Observable<List<Album>> getAllAlbums();
 }

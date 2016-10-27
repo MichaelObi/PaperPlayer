@@ -1,10 +1,17 @@
 package net.devdome.paperplayer.presentation.musiclibrary.fragment.albums;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Album;
 
 import java.util.List;
@@ -17,42 +24,59 @@ import java.util.List;
 
 class AlbumsAdapter extends RecyclerView.Adapter<AlbumsViewHolder> {
     private final Context context;
-    private List<Album> albumList;
+    private List<Album> albums;
 
-    public AlbumsAdapter(List<Album> albumList, Context context) {
+    public AlbumsAdapter(List<Album> albums, Context context) {
 
-        this.albumList = albumList;
+        this.albums = albums;
         this.context = context;
     }
 
     @Override
     public AlbumsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        View v = LayoutInflater.from(context).inflate(R.layout.card_album_grid, parent, false);
+        return new AlbumsViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(AlbumsViewHolder holder, int position) {
-
+        holder.name.setText(albums.get(position).getName());
+        holder.artist.setText(albums.get(position).getArtist());
+        Picasso.with(context).load(albums.get(position).getArtPath())
+                .error(R.drawable.default_artwork_dark)
+                .config(Bitmap.Config.ARGB_8888)
+                .resize(200, 200)
+                .into(holder.albumArt);
     }
 
     @Override
     public int getItemCount() {
-        if (albumList == null) {
+        if (albums == null) {
             return 0;
         }
 
-        return this.albumList.size();
+        return this.albums.size();
     }
 
-    public void setAlbumList(List<Album> albumList) {
-        this.albumList = albumList;
+    public void setAlbums(List<Album> albums) {
+        this.albums = albums;
+        notifyDataSetChanged();
     }
 }
 
 
 class AlbumsViewHolder extends RecyclerView.ViewHolder {
 
+
+    final ImageView albumArt;
+    final TextView name;
+    final TextView artist;
+
     public AlbumsViewHolder(View itemView) {
         super(itemView);
+
+        albumArt = (ImageView) itemView.findViewById(R.id.album_art);
+        name = (TextView) itemView.findViewById(R.id.album_name);
+        artist = (TextView) itemView.findViewById(R.id.album_artist);
     }
 }

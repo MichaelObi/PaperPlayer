@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Album;
@@ -29,53 +30,60 @@ import rx.schedulers.Schedulers;
 
 public class AlbumsFragment extends Fragment implements FragmentsContract.View<Album> {
 
-    FragmentsContract.Presenter songsPresenter;
+    FragmentsContract.Presenter presenter;
     private AlbumsAdapter albumsAdapter;
     private Context context;
-    private RecyclerView recyclerViewSongs;
+    private RecyclerView recyclerViewAlbums;
     private ProgressBar progressBar;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        songsPresenter = new AlbumsPresenter(Injector.provideLibraryManager(), Schedulers.io(),
+        presenter = new AlbumsPresenter(Injector.provideMusicRepository(), Schedulers.io(),
                 AndroidSchedulers.mainThread());
-        songsPresenter.attachView(this);
         context = getActivity();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_albums, container, false);
-        recyclerViewSongs = (RecyclerView) v.findViewById(R.id.rv_albums_grid);
+        recyclerViewAlbums = (RecyclerView) v.findViewById(R.id.rv_albums_grid);
         progressBar = (ProgressBar) v.findViewById(R.id.progressbar_loading);
+        presenter.attachView(this);
 
-        recyclerViewSongs.setLayoutManager(new GridLayoutManager(context, 2));
+        recyclerViewAlbums.setLayoutManager(new GridLayoutManager(context, 2));
         albumsAdapter = new AlbumsAdapter(null, context);
-        recyclerViewSongs.setAdapter(albumsAdapter);
-        songsPresenter.getAll();
+        recyclerViewAlbums.setAdapter(albumsAdapter);
+        presenter.getAll();
         return v;
     }
 
+    @Override
+    public void onDestroyView() {
+        presenter.detachView();
+        super.onDestroyView();
+    }
 
     @Override
     public void showList(List<Album> albums) {
-
+        recyclerViewAlbums.setVisibility(View.VISIBLE);
+        albumsAdapter.setAlbums(albums);
     }
 
     @Override
     public void showLoading() {
-
+        recyclerViewAlbums.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void showError(String message) {
-
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 }

@@ -6,6 +6,5 @@
 /.idea/libraries
 .DS_Store
 /build
-/mvp
 /captures
 togglebutton

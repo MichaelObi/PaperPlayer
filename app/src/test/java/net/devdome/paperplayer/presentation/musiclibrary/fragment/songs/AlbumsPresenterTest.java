@@ -1,6 +1,6 @@
 package net.devdome.paperplayer.presentation.musiclibrary.fragment.songs;
 
-import net.devdome.paperplayer.data.library.LibraryManager;
+import net.devdome.paperplayer.data.MusicRepository;
 import net.devdome.paperplayer.data.model.Album;
 import net.devdome.paperplayer.presentation.musiclibrary.fragment.FragmentsContract;
 import net.devdome.paperplayer.presentation.musiclibrary.fragment.albums.AlbumsPresenter;
@@ -16,7 +16,6 @@ import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -30,7 +29,7 @@ import static org.mockito.Mockito.when;
 public class AlbumsPresenterTest {
 
     @Mock
-    LibraryManager libraryManager;
+    MusicRepository musicRepository;
 
     @Mock
     FragmentsContract.View view;
@@ -40,14 +39,14 @@ public class AlbumsPresenterTest {
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
-        albumsPresenter = new AlbumsPresenter(libraryManager, Schedulers.immediate(), Schedulers.immediate());
+        albumsPresenter = new AlbumsPresenter(musicRepository, Schedulers.immediate(), Schedulers.immediate());
         albumsPresenter.attachView(view);
     }
 
     @Test
     public void getAllAlbums_returnAlbumList() throws Exception {
         List<Album> albums = getDummyAlbumList();
-        when(libraryManager.fetchAllAlbums()).thenReturn(Observable.just(albums));
+        when(musicRepository.getAllAlbums()).thenReturn(Observable.just(albums));
 
         albumsPresenter.getAll();
         verify(view).showLoading();
@@ -58,8 +57,8 @@ public class AlbumsPresenterTest {
 
     private List<Album> getDummyAlbumList() {
         ArrayList<Album> albums = new ArrayList<>();
-        albums.add(new Album(1, "8701", "Usher"));
-        albums.add(new Album(2, "Revenge of the Dreamers II", "Dreamville"));
+        albums.add(new Album(1, "8701", "Usher", null));
+        albums.add(new Album(2, "Revenge of the Dreamers II", "Dreamville", null));
 
         return albums;
     }
