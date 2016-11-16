@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 25
     buildToolsVersion "24.0.3"
 
     defaultConfig {
         applicationId "net.devdome.paperplayer"
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
@@ -40,7 +40,7 @@ android {
 }
 
 final BUTTERKNIFE_VERSION = '8.2.1'
-final SUPPORT_LIB_VERSION = "24.2.1"
+final SUPPORT_LIB_VERSION = "25.0.+"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -52,13 +52,12 @@ dependencies {
     compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:support-vector-drawable:${SUPPORT_LIB_VERSION}"
-    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.annimon:paperstyle:1.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
 //    compile 'com.github.michaelobi:toggleton:master-SNAPSHOT'
 
-    compile "com.jakewharton:butterknife:${BUTTERKNIFE_VERSION}"
-    annotationProcessor "com.jakewharton:butterknife-compiler:${BUTTERKNIFE_VERSION}"
+//    compile "com.jakewharton:butterknife:${BUTTERKNIFE_VERSION}"
+//    annotationProcessor "com.jakewharton:butterknife-compiler:${BUTTERKNIFE_VERSION}"
 
     // RX
     compile 'io.reactivex:rxandroid:1.2.1'

@@ -12,21 +12,21 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
         android:theme="@style/AppTheme.AppBarOverlay">
+        <!--android:background="?attr/colorPrimary"-->
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/main_tablayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabIndicatorColor="#fff" />
+            app:tabIndicatorColor="#fff"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="0dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -48,7 +48,7 @@
         android:visibility="visible"
         app:layout_anchor="@id/container"
         app:layout_anchorGravity="bottom|right"
-        app:srcCompat="@drawable/ic_shuffle_white_24dp" />
+        app:srcCompat="@drawable/ic_shuffle_white_24dp"/>
 
     <!--<include layout="@layout/mini_player" />-->
 </android.support.design.widget.CoordinatorLayout>

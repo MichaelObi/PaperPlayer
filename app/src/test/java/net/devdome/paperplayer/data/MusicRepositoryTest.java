@@ -30,7 +30,7 @@ public class MusicRepositoryTest {
     private final String albumName = "Revenge";
     private final String albumArtist = "Dreamville";
     private final String albumArtPath = "file://hello.jpg";
-
+    private final String songTitle = "Folgers Crystals";
     //TODO: Write Repository Tests to ensure correct data is being produced
     @Mock
     LibraryManager libraryManager;
@@ -52,9 +52,9 @@ public class MusicRepositoryTest {
         musicRepository.getAllSongs().subscribe(subscriber);
 
         List<Song> songs = subscriber.getOnNextEvents().get(0);
-        Assert.assertEquals(albumName, songs.get(0).getTitle());
+        Assert.assertEquals(songTitle, songs.get(0).getTitle());
         Assert.assertEquals(albumArtist, songs.get(0).getArtist());
-        Assert.assertEquals(albumName, songs.get(0).getTitle());
+        Assert.assertEquals(albumName, songs.get(0).getAlbum());
 
         verify(libraryManager).fetchAllSongs();
 
@@ -68,14 +68,14 @@ public class MusicRepositoryTest {
         musicRepository.getAllAlbums().subscribe(subscriber);
 
         List<Album> albums = subscriber.getOnNextEvents().get(0);
-        Assert.assertEquals("Revenge", albums.get(0).getName());
+        Assert.assertEquals(albumName, albums.get(0).getName());
 
         verify(libraryManager).fetchAllAlbums();
 
     }
 
     private List<Song> songList() {
-        Song song = new Song("Folgers Crystals", "Revenge", "J. Cole", "2016");
+        Song song = new Song(songTitle, albumName, albumArtist, "2016");
 
 
         List<Song> songs = new ArrayList<>();
@@ -87,7 +87,6 @@ public class MusicRepositoryTest {
     private List<Album> albumList() {
 
         Album song = new Album(1, albumName, albumArtist, albumArtPath);
-
 
         List<Album> albums = new ArrayList<>();
         albums.add(song);
