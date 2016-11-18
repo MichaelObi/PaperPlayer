@@ -1,5 +1,7 @@
 package net.devdome.paperplayer.data.library.local;
 
+import android.content.Context;
+
 import net.devdome.paperplayer.data.library.LibraryManager;
 import net.devdome.paperplayer.data.model.Album;
 import net.devdome.paperplayer.data.model.Song;
@@ -22,9 +24,9 @@ public class MockLocalLibraryManager implements LibraryManager {
 
     private Song song1, song2, song3;
 
-    private Album album1, album2;
+    private Album album1, album2, album3;
 
-    public MockLocalLibraryManager() {
+    public MockLocalLibraryManager(Context context) {
         setDummySongs();
         setDummyAlbums();
     }
@@ -40,11 +42,13 @@ public class MockLocalLibraryManager implements LibraryManager {
     }
 
     private void setDummyAlbums() {
-        album1 = new Album(1, "8701", "Usher", "https://en.wikipedia.org/wiki/File:Drakeviewsfromthe6.jpg");
-        album2 = new Album(2, "Revenge of the dreamers II", "Dreamville", "https://en.wikipedia.org/wiki/File:Drakeviewsfromthe6.jpg");
+        album1 = new Album(1, "8701", "Usher", "https://upload.wikimedia.org/wikipedia/en/6/62/Usher8701Cover.jpg");
+        album2 = new Album(2, "Revenge of the dreamers II", "Dreamville", "https://upload.wikimedia.org/wikipedia/en/3/3f/DreamvilleROTD2.jpeg");
+        album3 = new Album(3, "Views", "Drake", "https://upload.wikimedia.org/wikipedia/en/6/64/Drakeviewsfromthe6.jpg");
 
         albums.add(album1);
         albums.add(album2);
+        albums.add(album3);
     }
 
     @Override

@@ -1,5 +1,8 @@
 package net.devdome.paperplayer.data.model;
 
+import android.database.Cursor;
+import android.provider.MediaStore;
+
 /**
  * PaperPlayer
  * Michael Obi
@@ -21,6 +24,27 @@ public class Song {
         this.album = album;
         this.artist = artist;
         this.year = year;
+    }
+
+    public static Song from(Cursor cursor) {
+        int titleColumn = cursor.getColumnIndex
+                (android.provider.MediaStore.Audio.Media.TITLE);
+        int idColumn = cursor.getColumnIndex
+                (android.provider.MediaStore.Audio.Media._ID);
+        int artistColumn = cursor.getColumnIndex
+                (android.provider.MediaStore.Audio.Media.ARTIST);
+        int pathColumn = cursor.getColumnIndex
+                (MediaStore.Audio.Media.DATA);
+        int albumIdColumn = cursor.getColumnIndex
+                (MediaStore.Audio.Media.ALBUM_ID);
+        int albumColumn = cursor.getColumnIndex
+                (MediaStore.Audio.Media.ALBUM);
+        return new Song(
+                cursor.getString(titleColumn),
+                cursor.getString(albumColumn),
+                cursor.getString(artistColumn),
+                ""
+        );
     }
 
     public String getTitle() {

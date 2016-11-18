@@ -1,5 +1,7 @@
 package net.devdome.paperplayer.presentation.musiclibrary.fragment.albums;
 
+import android.util.Log;
+
 import net.devdome.paperplayer.data.MusicRepositoryInterface;
 import net.devdome.paperplayer.data.model.Album;
 import net.devdome.paperplayer.mvp.BasePresenter;
@@ -49,6 +51,7 @@ public class AlbumsPresenter extends BasePresenter<FragmentsContract.View> imple
                             @Override
                             public void onError(Throwable e) {
                                 getView().hideLoading();
+                                Log.e(TAG, e.getLocalizedMessage(), e);
                                 getView().showError(e.getMessage());
                             }
 

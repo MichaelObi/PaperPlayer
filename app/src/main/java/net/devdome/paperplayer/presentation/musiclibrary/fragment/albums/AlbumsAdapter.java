@@ -2,7 +2,9 @@ package net.devdome.paperplayer.presentation.musiclibrary.fragment.albums;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.wifi.WifiConfiguration;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Album;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,7 +28,7 @@ import java.util.List;
 class AlbumsAdapter extends RecyclerView.Adapter<AlbumsViewHolder> {
     private final Context context;
     private List<Album> albums;
-
+    private static final String TAG = "AlbumsAdapter";
     public AlbumsAdapter(List<Album> albums, Context context) {
 
         this.albums = albums;
@@ -42,6 +45,7 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsViewHolder> {
     public void onBindViewHolder(AlbumsViewHolder holder, int position) {
         holder.name.setText(albums.get(position).getName());
         holder.artist.setText(albums.get(position).getArtist());
+        Log.i(TAG, albums.get(position).getArtPath());
         Picasso.with(context).load(albums.get(position).getArtPath())
                 .error(R.drawable.default_artwork_dark)
                 .config(Bitmap.Config.ARGB_8888)

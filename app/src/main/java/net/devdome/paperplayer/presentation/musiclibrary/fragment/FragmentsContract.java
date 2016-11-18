@@ -1,6 +1,5 @@
 package net.devdome.paperplayer.presentation.musiclibrary.fragment;
 
-import net.devdome.paperplayer.data.model.Song;
 import net.devdome.paperplayer.mvp.Mvp;
 
 import java.util.List;

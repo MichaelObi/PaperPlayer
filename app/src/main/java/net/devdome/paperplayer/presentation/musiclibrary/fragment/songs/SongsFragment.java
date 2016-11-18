@@ -40,7 +40,7 @@ public class SongsFragment extends Fragment implements FragmentsContract.View<So
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new SongsPresenter(Injector.provideMusicRepository(), Schedulers.io(),
+        presenter = new SongsPresenter(Injector.provideMusicRepository(getContext()), Schedulers.io(),
                 AndroidSchedulers.mainThread());
         presenter.attachView(this);
         context = getActivity();

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.presentation.musiclibrary.fragment.albums.AlbumsFragment;
@@ -26,6 +27,9 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
         setContentView(R.layout.activity_main);
         musicLibraryPresenter = new MusicLibraryPresenter();
         musicLibraryPresenter.attachView(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     @Override

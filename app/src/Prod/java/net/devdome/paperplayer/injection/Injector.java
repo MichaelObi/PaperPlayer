@@ -1,5 +1,9 @@
 package net.devdome.paperplayer.injection;
 
+import android.content.Context;
+
+import net.devdome.paperplayer.data.MusicRepository;
+import net.devdome.paperplayer.data.MusicRepositoryInterface;
 import net.devdome.paperplayer.data.library.LibraryManager;
 import net.devdome.paperplayer.data.library.local.LocalLibraryManager;
 
@@ -10,7 +14,11 @@ import net.devdome.paperplayer.data.library.local.LocalLibraryManager;
  */
 
 public class Injector {
-    public static LibraryManager provideLibraryManager() {
-        return new LocalLibraryManager();
+    public static MusicRepositoryInterface provideMusicRepository(Context context) {
+        return new MusicRepository(provideLibraryManager(context));
+    }
+
+    public static LibraryManager provideLibraryManager(Context context) {
+        return new LocalLibraryManager(context);
     }
 }

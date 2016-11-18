@@ -40,7 +40,7 @@ public class AlbumsFragment extends Fragment implements FragmentsContract.View<A
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new AlbumsPresenter(Injector.provideMusicRepository(), Schedulers.io(),
+        presenter = new AlbumsPresenter(Injector.provideMusicRepository(getContext()), Schedulers.io(),
                 AndroidSchedulers.mainThread());
         context = getActivity();
     }
@@ -53,11 +53,13 @@ public class AlbumsFragment extends Fragment implements FragmentsContract.View<A
         presenter.attachView(this);
 
         recyclerViewAlbums.setLayoutManager(new GridLayoutManager(context, 2));
+        recyclerViewAlbums.setHasFixedSize(true);
         albumsAdapter = new AlbumsAdapter(null, context);
         recyclerViewAlbums.setAdapter(albumsAdapter);
         presenter.getAll();
         return v;
     }
+
 
     @Override
     public void onDestroyView() {

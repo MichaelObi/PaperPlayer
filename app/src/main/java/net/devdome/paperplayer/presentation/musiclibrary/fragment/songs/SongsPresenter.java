@@ -1,7 +1,8 @@
 package net.devdome.paperplayer.presentation.musiclibrary.fragment.songs;
 
+import android.util.Log;
+
 import net.devdome.paperplayer.data.MusicRepositoryInterface;
-import net.devdome.paperplayer.data.library.LibraryManager;
 import net.devdome.paperplayer.data.model.Song;
 import net.devdome.paperplayer.mvp.BasePresenter;
 import net.devdome.paperplayer.presentation.musiclibrary.fragment.FragmentsContract;
@@ -51,6 +52,7 @@ public class SongsPresenter extends BasePresenter<FragmentsContract.View> implem
                             @Override
                             public void onError(Throwable e) {
                                 getView().hideLoading();
+                                Log.e(TAG, e.getLocalizedMessage(), e);
                                 getView().showError(e.getMessage());
                             }
 
