@@ -3,14 +3,12 @@ package net.devdome.paperplayer.data.library.local;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import net.devdome.paperplayer.data.library.LibraryManager;
 import net.devdome.paperplayer.data.model.Album;
 import net.devdome.paperplayer.data.model.Song;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import rx.Observable;
 
@@ -29,7 +27,7 @@ public class LocalLibraryManager implements LibraryManager {
     }
 
 
-    public static Observable<Cursor> create(Cursor cursor) {
+    private static Observable<Cursor> create(Cursor cursor) {
         return Observable.create(sub -> {
             if (sub.isUnsubscribed()) return;
 
@@ -48,18 +46,25 @@ public class LocalLibraryManager implements LibraryManager {
     @Override
     public Observable<List<Song>> fetchAllSongs() {
         QueryBuilder builder = new QueryBuilder(context, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
-//                .where(MediaStore.Audio.Media.IS_MUSIC + "=1")
+                .where(MediaStore.Audio.Media.IS_MUSIC + "=1")
                 .orderBy(MediaStore.Audio.Media.TITLE);
         Cursor cursor = builder.query();
         return create(cursor)
                 .map(Song::from)
+                .doOnCompleted(cursor::close)
                 .toList();
     }
 
 
     @Override
     public Observable<List<Album>> fetchAllAlbums() {
-        return null;
+        QueryBuilder builder = new QueryBuilder(context, MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI)
+                .orderBy(MediaStore.Audio.Albums.ALBUM);
+        Cursor cursor = builder.query();
+        return create(cursor)
+                .map(Album::from)
+                .doOnCompleted(cursor::close)
+                .toList();
     }
 
     @Override

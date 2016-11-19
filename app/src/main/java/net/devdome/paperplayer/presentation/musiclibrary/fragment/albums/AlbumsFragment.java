@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,7 @@ public class AlbumsFragment extends Fragment implements FragmentsContract.View<A
         progressBar = (ProgressBar) v.findViewById(R.id.progressbar_loading);
         presenter.attachView(this);
 
-        recyclerViewAlbums.setLayoutManager(new GridLayoutManager(context, 2));
+        recyclerViewAlbums.setLayoutManager(new GridLayoutManager(context, calculateNoOfColumns()));
         recyclerViewAlbums.setHasFixedSize(true);
         albumsAdapter = new AlbumsAdapter(null, context);
         recyclerViewAlbums.setAdapter(albumsAdapter);
@@ -60,6 +61,11 @@ public class AlbumsFragment extends Fragment implements FragmentsContract.View<A
         return v;
     }
 
+    private int calculateNoOfColumns() {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        return (int) (dpWidth / 180);
+    }
 
     @Override
     public void onDestroyView() {

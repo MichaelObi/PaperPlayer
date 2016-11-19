@@ -68,7 +68,7 @@ public class MusicRepositoryTest {
         musicRepository.getAllAlbums().subscribe(subscriber);
 
         List<Album> albums = subscriber.getOnNextEvents().get(0);
-        Assert.assertEquals(albumName, albums.get(0).getName());
+        Assert.assertEquals(albumName, albums.get(0).getTitle());
 
         verify(libraryManager).fetchAllAlbums();
 
@@ -86,7 +86,7 @@ public class MusicRepositoryTest {
 
     private List<Album> albumList() {
 
-        Album song = new Album(1, albumName, albumArtist, albumArtPath);
+        Album song = new Album(1, albumName, albumArtist, false, albumArtPath, 3);
 
         List<Album> albums = new ArrayList<>();
         albums.add(song);

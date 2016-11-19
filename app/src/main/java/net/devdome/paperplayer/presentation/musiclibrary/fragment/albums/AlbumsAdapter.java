@@ -2,7 +2,6 @@ package net.devdome.paperplayer.presentation.musiclibrary.fragment.albums;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.wifi.WifiConfiguration;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import com.squareup.picasso.Picasso;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Album;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -26,10 +24,11 @@ import java.util.List;
  */
 
 class AlbumsAdapter extends RecyclerView.Adapter<AlbumsViewHolder> {
+    private static final String TAG = "AlbumsAdapter";
     private final Context context;
     private List<Album> albums;
-    private static final String TAG = "AlbumsAdapter";
-    public AlbumsAdapter(List<Album> albums, Context context) {
+
+    AlbumsAdapter(List<Album> albums, Context context) {
 
         this.albums = albums;
         this.context = context;
@@ -43,11 +42,12 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsViewHolder> {
 
     @Override
     public void onBindViewHolder(AlbumsViewHolder holder, int position) {
-        holder.name.setText(albums.get(position).getName());
+        holder.name.setText(albums.get(position).getTitle());
         holder.artist.setText(albums.get(position).getArtist());
-        Log.i(TAG, albums.get(position).getArtPath());
-        Picasso.with(context).load(albums.get(position).getArtPath())
+        Log.i(TAG, albums.get(position).toString());
+        Picasso.with(context).load(albums.get(position).getArt())
                 .error(R.drawable.default_artwork_dark)
+                .placeholder(R.drawable.default_artwork_dark)
                 .config(Bitmap.Config.ARGB_8888)
                 .resize(200, 200)
                 .into(holder.albumArt);
@@ -76,7 +76,7 @@ class AlbumsViewHolder extends RecyclerView.ViewHolder {
     final TextView name;
     final TextView artist;
 
-    public AlbumsViewHolder(View itemView) {
+    AlbumsViewHolder(View itemView) {
         super(itemView);
 
         albumArt = (ImageView) itemView.findViewById(R.id.album_art);
