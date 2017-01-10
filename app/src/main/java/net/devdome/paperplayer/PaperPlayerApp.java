@@ -10,3 +10,4 @@ import android.app.Application;
 
 public class PaperPlayerApp extends Application {
 }
+
