@@ -42,9 +42,12 @@ public class MockLocalLibraryManager implements LibraryManager {
     }
 
     private void setDummyAlbums() {
-        album1 = new Album(1, "8701", "Usher", "https://upload.wikimedia.org/wikipedia/en/6/62/Usher8701Cover.jpg");
-        album2 = new Album(2, "Revenge of the dreamers II", "Dreamville", "https://upload.wikimedia.org/wikipedia/en/3/3f/DreamvilleROTD2.jpeg");
-        album3 = new Album(3, "Views", "Drake", "https://upload.wikimedia.org/wikipedia/en/6/64/Drakeviewsfromthe6.jpg");
+        album1 = new Album(1, "8701", "Usher", false, "https://upload.wikimedia" +
+                ".org/wikipedia/en/6/62/Usher8701Cover.jpg", 20);
+        album2 = new Album(2, "Revenge of the dreamers II", "Dreamville", true, "https://upload" +
+                ".wikimedia.org/wikipedia/en/3/3f/DreamvilleROTD2.jpeg", 12);
+        album3 = new Album(3, "Views", "Drake", true, "https://upload.wikimedia" +
+                ".org/wikipedia/en/6/64/Drakeviewsfromthe6.jpg", 15);
 
         albums.add(album1);
         albums.add(album2);
