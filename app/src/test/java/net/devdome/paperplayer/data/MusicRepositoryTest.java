@@ -74,8 +74,23 @@ public class MusicRepositoryTest {
 
     }
 
+    @Test
+    public void getAllAlbumSongs_listsSongsFromAlbum_returnsOnlySongsFromAlbum() {
+        long albumId = 1;
+        when(libraryManager.fetchAllAlbumSongs(albumId)).thenReturn(Observable.just(songList()));
+
+        TestSubscriber<List<Song>> subscriber = new TestSubscriber<>();
+        musicRepository.getAllSongs().subscribe(subscriber);
+
+        List<Song> songs = subscriber.getOnNextEvents().get(0);
+        for (Song song : songs) {
+            Assert.assertEquals(albumId, song.getAlbumId());
+        }
+        verify(libraryManager).fetchAllAlbumSongs(albumId);
+    }
+
     private List<Song> songList() {
-        Song song = new Song(songTitle, albumName, albumArtist, "2016");
+        Song song = new Song(songTitle, albumName, albumArtist, 1, "2016");
 
 
         List<Song> songs = new ArrayList<>();

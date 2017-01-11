@@ -48,4 +48,17 @@ public class MusicRepository implements MusicRepositoryInterface {
                         })
                 );
     }
+
+    @Override
+    public Observable<List<Song>> getSongsFromAlbum(long albumId) {
+        return Observable.defer(() -> libraryManager.fetchAllAlbumSongs(albumId))
+                .retryWhen(observable -> observable.flatMap(o -> {
+                            if (o instanceof IOException) {
+                                return null;
+                            }
+                            return Observable.error(o);
+                        })
+
+                );
+    }
 }

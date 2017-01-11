@@ -9,6 +9,7 @@ import net.devdome.paperplayer.data.model.Album;
 import net.devdome.paperplayer.data.model.Song;
 
 import java.util.List;
+import java.util.Locale;
 
 import rx.Observable;
 
@@ -70,6 +71,18 @@ public class LocalLibraryManager implements LibraryManager {
     @Override
     public Observable<Song> getSong(long id) {
         return null;
+    }
+
+    @Override
+    public Observable<List<Song>> fetchAllAlbumSongs(long albumId) {
+        QueryBuilder builder = new QueryBuilder(context, MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI)
+                .where(String.format(Locale.getDefault(), "%s=%d", MediaStore.Audio.Media.ALBUM_ID, albumId))
+                .orderBy(MediaStore.Audio.Media.TRACK);
+        Cursor cursor = builder.query();
+        return create(cursor)
+                .map(Song::from)
+                .doOnCompleted(cursor::close)
+                .toList();
     }
 
 }

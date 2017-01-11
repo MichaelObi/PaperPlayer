@@ -58,9 +58,9 @@ public class SongsPresenterTest {
 
     public List<Song> getDummySongList() {
         List<Song> songs = new ArrayList<>();
-        songs.add(new Song("I can't let you go", "8701", "Usher", "1998"));
-        songs.add(new Song("Grow", "Revenge of the dreamers II", "Cozz", "2016"));
-        songs.add(new Song("Folgers crystals", "Revenge of the dreamers II", "J. Cole", "2016"));
+        songs.add(new Song("I can't let you go", "8701", "Usher", 1, "1998"));
+        songs.add(new Song("Grow", "Revenge of the dreamers II", "Cozz", 2, "2016"));
+        songs.add(new Song("Folgers crystals", "Revenge of the dreamers II", "J. Cole", 2, "2016"));
 
         return songs;
     }

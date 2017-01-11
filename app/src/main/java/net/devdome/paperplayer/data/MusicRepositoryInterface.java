@@ -18,4 +18,6 @@ public interface MusicRepositoryInterface {
     public Observable<List<Song>> getAllSongs();
 
     public Observable<List<Album>> getAllAlbums();
+
+    public Observable<List<Song>> getSongsFromAlbum(long albumId);
 }

@@ -32,9 +32,9 @@ public class MockLocalLibraryManager implements LibraryManager {
     }
 
     private void setDummySongs() {
-        song1 = new Song("I can't let you go", "8701", "Usher", "1998");
-        song2 = new Song("Grow", "Revenge of the dreamers II", "Cozz", "2016");
-        song3 = new Song("Folgers crystals", "Revenge of the dreamers II", "J. Cole", "2016");
+        song1 = new Song("I can't let you go", "8701", "Usher", 1, "1998");
+        song2 = new Song("Grow", "Revenge of the dreamers II", "Cozz", 2, "2016");
+        song3 = new Song("Folgers crystals", "Revenge of the dreamers II", "J. Cole", 2, "2016");
 
         songs.add(song1);
         songs.add(song2);
@@ -74,6 +74,17 @@ public class MockLocalLibraryManager implements LibraryManager {
             return Observable.just(song3);
         }
         return Observable.just(null);
+    }
+
+    @Override
+    public Observable<List<Song>> fetchAllAlbumSongs(long albumId) {
+        List<Song> albumSongs = new ArrayList<>();
+        for (Song song : this.songs) {
+            if (song.getAlbumId() == albumId) {
+                albumSongs.add(song);
+            }
+        }
+        return Observable.just(albumSongs);
     }
 
 }

@@ -57,8 +57,8 @@ public class AlbumsPresenterTest {
 
     private List<Album> getDummyAlbumList() {
         ArrayList<Album> albums = new ArrayList<>();
-        albums.add(new Album(1, "8701", "Usher", null));
-        albums.add(new Album(2, "Revenge of the Dreamers II", "Dreamville", null));
+        albums.add(new Album(1, "8701", "Usher", false, null, 20));
+        albums.add(new Album(2, "Revenge of the Dreamers II", "Dreamville", false, null, 20));
 
         return albums;
     }
