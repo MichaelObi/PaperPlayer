@@ -92,7 +92,6 @@ public class MusicRepositoryTest {
     private List<Song> songList() {
         Song song = new Song(songTitle, albumName, albumArtist, 1, "2016");
 
-
         List<Song> songs = new ArrayList<>();
         songs.add(song);
 
