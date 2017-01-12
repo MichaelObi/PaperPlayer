@@ -37,6 +37,9 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
 
 final BUTTERKNIFE_VERSION = '8.2.1'
@@ -93,4 +96,7 @@ dependencies {
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
     }
+}
+repositories {
+    mavenCentral()
 }

@@ -15,6 +15,16 @@ import net.devdome.paperplayer.data.library.local.MockLocalLibraryManager;
 
 public class Injector {
 
+    public static EventBus eventBus;
+
+    public static EventBus provideEventBus() {
+        if (eventBus == null) {
+            eventBus = new RxBus();
+        }
+
+        return eventBus;
+    }
+
     public static MusicRepositoryInterface provideMusicRepository(Context context) {
         return new MusicRepository(provideLibraryManager(context));
     }
