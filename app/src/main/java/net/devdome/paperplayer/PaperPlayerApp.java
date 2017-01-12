@@ -18,7 +18,6 @@ import net.devdome.paperplayer.playback.events.PlaybackStart;
 public class PaperPlayerApp extends Application {
     private EventBus bus;
 
-
     public PaperPlayerApp() {
         super();
         bus = Injector.provideEventBus();
