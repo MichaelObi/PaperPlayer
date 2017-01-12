@@ -1,6 +1,7 @@
 package net.devdome.paperplayer.presentation.musiclibrary.fragment.albums;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Album;
+import net.devdome.paperplayer.presentation.album.AlbumActivity;
 
 import java.util.List;
 
@@ -69,8 +71,7 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsViewHolder> {
 }
 
 
-class AlbumsViewHolder extends RecyclerView.ViewHolder {
-
+class AlbumsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     final ImageView albumArt;
     final TextView name;
@@ -78,9 +79,15 @@ class AlbumsViewHolder extends RecyclerView.ViewHolder {
 
     AlbumsViewHolder(View itemView) {
         super(itemView);
-
+        itemView.setOnClickListener(this);
         albumArt = (ImageView) itemView.findViewById(R.id.album_art);
         name = (TextView) itemView.findViewById(R.id.album_name);
         artist = (TextView) itemView.findViewById(R.id.album_artist);
+    }
+
+    @Override
+    public void onClick(View view) {
+        Context c = view.getContext();
+        c.startActivity(new Intent(c, AlbumActivity.class));
     }
 }
