@@ -21,9 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * PaperPlayer
- * Michael Obi
- * 25 10 2016 3:50 AM
+ * PaperPlayer Michael Obi 25 10 2016 3:50 AM
  */
 public class MusicRepositoryTest {
 
@@ -75,7 +73,7 @@ public class MusicRepositoryTest {
     }
 
     private List<Song> songList() {
-        Song song = new Song(songTitle, albumName, albumArtist, "2016");
+        Song song = new Song(1, songTitle, albumName, albumArtist, "2016");
 
 
         List<Song> songs = new ArrayList<>();

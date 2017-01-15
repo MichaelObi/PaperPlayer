@@ -11,19 +11,29 @@ import android.provider.MediaStore;
 
 public class Song {
 
-    private String title, album, artist, year;
+    private String title, album, artist, year, songUri;
 
-    private long id = 5;
+    private long id;
 
 
     public Song() {
     }
 
-    public Song(String title, String album, String artist, String year) {
+    public Song(long id, String title, String album, String artist, String year) {
+        this.id = id;
         this.title = title;
         this.album = album;
         this.artist = artist;
         this.year = year;
+    }
+
+    public Song(long id,String title, String album, String artist, String year, String songUri) {
+        this.id = id;
+        this.title = title;
+        this.album = album;
+        this.artist = artist;
+        this.year = year;
+        this.songUri = songUri;
     }
 
     public static Song from(Cursor cursor) {
@@ -40,10 +50,12 @@ public class Song {
         int albumColumn = cursor.getColumnIndex
                 (MediaStore.Audio.Media.ALBUM);
         return new Song(
+                cursor.getLong(idColumn),
                 cursor.getString(titleColumn),
                 cursor.getString(albumColumn),
                 cursor.getString(artistColumn),
-                ""
+                "",
+                cursor.getString(pathColumn)
         );
     }
 
@@ -85,5 +97,13 @@ public class Song {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getSongUri() {
+        return songUri;
+    }
+
+    public void setSongUri(String songUri) {
+        this.songUri = songUri;
     }
 }

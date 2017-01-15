@@ -8,6 +8,8 @@ import net.devdome.paperplayer.data.library.LibraryManager;
 import net.devdome.paperplayer.data.library.local.LocalLibraryManager;
 import net.devdome.paperplayer.event.EventBus;
 import net.devdome.paperplayer.event.RxBus;
+import net.devdome.paperplayer.playback.queue.LocalQueueManager;
+import net.devdome.paperplayer.playback.queue.QueueManager;
 
 /**
  * PaperPlayer
@@ -25,6 +27,10 @@ public class Injector {
         }
 
         return eventBus;
+    }
+
+    public static QueueManager provideQueueManager() {
+        return new LocalQueueManager();
     }
 
     public static MusicRepositoryInterface provideMusicRepository(Context context) {

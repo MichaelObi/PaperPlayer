@@ -22,9 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * PaperPlayer
- * Michael Obi
- * 22 10 2016 2:50 AM
+ * PaperPlayer Michael Obi 22 10 2016 2:50 AM
  */
 public class AlbumsPresenterTest {
 
@@ -57,8 +55,8 @@ public class AlbumsPresenterTest {
 
     private List<Album> getDummyAlbumList() {
         ArrayList<Album> albums = new ArrayList<>();
-        albums.add(new Album(1, "8701", "Usher", null));
-        albums.add(new Album(2, "Revenge of the Dreamers II", "Dreamville", null));
+        albums.add(new Album(1, "8701", "Usher", false,null, 15));
+        albums.add(new Album(2, "Revenge of the Dreamers II", "Dreamville", false, null, 20));
 
         return albums;
     }

@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.util.List;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
- * PaperPlayer
- * Michael Obi
- * 25 10 2016 3:03 AM
+ * PaperPlayer Michael Obi 25 10 2016 3:03 AM
  */
 public class MusicRepository implements MusicRepositoryInterface {
 
@@ -34,7 +34,8 @@ public class MusicRepository implements MusicRepositoryInterface {
                             return Observable.error(o);
                         })
 
-                );
+                ).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -46,6 +47,6 @@ public class MusicRepository implements MusicRepositoryInterface {
                             }
                             return Observable.error(o);
                         })
-                );
+                ).observeOn(Schedulers.io());
     }
 }

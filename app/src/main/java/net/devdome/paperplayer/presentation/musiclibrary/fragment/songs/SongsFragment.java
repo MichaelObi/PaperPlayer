@@ -15,6 +15,7 @@ import android.widget.Toast;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Song;
 import net.devdome.paperplayer.injection.Injector;
+import net.devdome.paperplayer.presentation.RecyclerItemClickListener;
 import net.devdome.paperplayer.presentation.musiclibrary.fragment.FragmentsContract;
 
 import java.util.List;
@@ -86,4 +87,5 @@ public class SongsFragment extends Fragment implements FragmentsContract.View<So
         presenter.detachView();
         super.onDestroyView();
     }
+
 }
