@@ -2,15 +2,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.MainActivity">
+    tools:context=".presentation.musiclibrary.MusicLibraryActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_albums_grid"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:horizontalSpacing="4dp"
         android:numColumns="auto_fit"
         android:scrollbars="vertical"
         android:verticalSpacing="4dp"
         tools:listitem="@layout/card_album_grid" />
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/progressbar_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
 </RelativeLayout>

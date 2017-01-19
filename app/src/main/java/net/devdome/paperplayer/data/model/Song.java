@@ -1,74 +1,78 @@
 package net.devdome.paperplayer.data.model;
 
-import android.graphics.Bitmap;
+import android.database.Cursor;
+import android.provider.MediaStore;
 
-import java.util.ArrayList;
+/**
+ * PaperPlayer
+ * Michael Obi
+ * 15 10 2016 3:23 PM
+ */
 
 public class Song {
 
+    private String title, album, artist, year, songUri;
+
     private long id;
-    private long albumId;
-    private String name;
-    private String artist;
-    private String path;
-    private String albumName;
-    private String mood;
-    private Boolean fav;
-    private Bitmap art;
-    private int count;
-    private long trackNumber;
 
-    public Song(long id, String name, String artist, String path,
-                Boolean fav, long albumId, String albumName, int count, String mood) {
-
-        this.id = id;
-        this.name = name;
-        this.artist = artist;
-        this.path = path;
-        this.fav = fav;
-        this.albumId = albumId;
-        this.albumName = albumName;
-        this.count = count;
-        this.mood = mood;
-    }
 
     public Song() {
-
     }
 
-    private static void returnSongs(ArrayList<Song> songList) {
-
-    }
-//    public static Song fromRealmObject(PlaylistItem playlistItem) {
-//        return new Song(playlistItem.getSongRealId(),
-//                playlistItem.getSongName(), playlistItem.getSongArtist(),
-//                playlistItem.getSongPath(), playlistItem.getSongFav(),
-//                playlistItem.getSongAlbumId(), playlistItem.getSongAlbumName(), playlistItem.getSongCount(),
-//                playlistItem.getSongMood());
-//    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
+    public Song(long id, String title, String album, String artist, String year) {
         this.id = id;
+        this.title = title;
+        this.album = album;
+        this.artist = artist;
+        this.year = year;
     }
 
-    public long getAlbumId() {
-        return albumId;
+    public Song(long id,String title, String album, String artist, String year, String songUri) {
+        this.id = id;
+        this.title = title;
+        this.album = album;
+        this.artist = artist;
+        this.year = year;
+        this.songUri = songUri;
     }
 
-    public void setAlbumId(long albumId) {
-        this.albumId = albumId;
+    public static Song from(Cursor cursor) {
+        int titleColumn = cursor.getColumnIndex
+                (android.provider.MediaStore.Audio.Media.TITLE);
+        int idColumn = cursor.getColumnIndex
+                (android.provider.MediaStore.Audio.Media._ID);
+        int artistColumn = cursor.getColumnIndex
+                (android.provider.MediaStore.Audio.Media.ARTIST);
+        int pathColumn = cursor.getColumnIndex
+                (MediaStore.Audio.Media.DATA);
+        int albumIdColumn = cursor.getColumnIndex
+                (MediaStore.Audio.Media.ALBUM_ID);
+        int albumColumn = cursor.getColumnIndex
+                (MediaStore.Audio.Media.ALBUM);
+        return new Song(
+                cursor.getLong(idColumn),
+                cursor.getString(titleColumn),
+                cursor.getString(albumColumn),
+                cursor.getString(artistColumn),
+                "",
+                cursor.getString(pathColumn)
+        );
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(String album) {
+        this.album = album;
     }
 
     public String getArtist() {
@@ -79,61 +83,27 @@ public class Song {
         this.artist = artist;
     }
 
-    public String getPath() {
-        return path;
+    public String getYear() {
+        return year;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setYear(String year) {
+        this.year = year;
     }
 
-    public String getAlbumName() {
-        return albumName;
+    public long getId() {
+        return id;
     }
 
-    public void setAlbumName(String albumName) {
-        this.albumName = albumName;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public String getMood() {
-        return mood;
+    public String getSongUri() {
+        return songUri;
     }
 
-    public void setMood(String mood) {
-        this.mood = mood;
+    public void setSongUri(String songUri) {
+        this.songUri = songUri;
     }
-
-    public Boolean getFav() {
-        return fav;
-    }
-
-    public void setFav(Boolean fav) {
-        this.fav = fav;
-    }
-
-    public Bitmap getArt() {
-        return art;
-    }
-
-    public void setArt(Bitmap art) {
-        this.art = art;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public long getTrackNumber() {
-        return trackNumber;
-    }
-
-    public void setTrackNumber(long trackNumber) {
-        this.trackNumber = trackNumber;
-    }
-
-
 }

@@ -6,16 +6,15 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
-        android:name=".PaperPlayer"
+        android:name=".PaperPlayerApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_player"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.activity.SplashActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/SplashTheme">
+            android:name=".presentation.musiclibrary.MusicLibraryActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -23,27 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.activity.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".ui.activity.NowPlayingActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/Player"/>
 
         <service
-            android:name=".playback.PlayerService"
+            android:name=".playback.PlaybackService"
             android:enabled="true"/>
-
-        <activity
-            android:name=".ui.activity.AlbumActivity"
-            android:label="@string/title_activity_album"
-            android:screenOrientation="portrait"
-            android:theme="@style/Player"/>
-        <activity
-            android:name=".ui.activity.SettingsActivity"
-            android:label="@string/title_activity_settings"/>
     </application>
 
 </manifest>
