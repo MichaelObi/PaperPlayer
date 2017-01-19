@@ -1,11 +1,13 @@
 package net.devdome.paperplayer.playback.events;
 
+import android.util.Log;
+
 /**
  * PaperPlayer Michael Obi 14 01 2017 10:33 AM
  */
 
 public class PlayAllSongs {
-
+    private static final String TAG = "PlayAllSongs";
     /**
      * ID of SOng to start play with
      */
@@ -16,6 +18,7 @@ public class PlayAllSongs {
     }
 
     public long getStartSongId() {
+        Log.d(TAG, "getStartSongId() called");
         return this.startSongId;
     }
 }

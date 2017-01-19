@@ -20,7 +20,6 @@ public class RxBus implements EventBus {
 
     @Override
     public void post(@NonNull Object event) {
-        bus.onCompleted();
         if (this.bus.hasObservers()) {
             this.bus.onNext(event);
         }

@@ -38,11 +38,11 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     @Override
     public void onCreate() {
         super.onCreate();
-        registerEvents();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        registerEvents();
         player = new MediaPlayer();
         player.setOnCompletionListener(this);
         player.setOnPreparedListener(this);

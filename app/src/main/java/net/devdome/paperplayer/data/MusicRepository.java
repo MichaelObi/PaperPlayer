@@ -34,8 +34,7 @@ public class MusicRepository implements MusicRepositoryInterface {
                             return Observable.error(o);
                         })
 
-                ).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                );
     }
 
     @Override
