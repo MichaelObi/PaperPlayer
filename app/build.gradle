@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+//apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 25
@@ -36,6 +37,9 @@ android {
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
     }
 }
 
@@ -93,4 +97,8 @@ dependencies {
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
     }
+//    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
