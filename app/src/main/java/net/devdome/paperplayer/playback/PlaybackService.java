@@ -61,10 +61,17 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     public void onAudioFocusChange(int focusChange) {
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_LOSS:
-                pauseMusic();
+                stopMusic();
                 break;
             case AudioManager.AUDIOFOCUS_GAIN:
                 playMusic();
+                player.setVolume(1.0f, 1.0f);
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                pauseMusic();
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                player.setVolume(0.2f, 0.2f);
                 break;
             default:
         }
@@ -75,8 +82,53 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
             if (player.isPlaying()) {
                 songSeek = player.getCurrentPosition();
                 player.pause();
-                abandonAudioFocus();
             }
+        }
+    }
+
+    private boolean requestAudioFocus() {
+        AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int result = am.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+    }
+
+    private void abandonAudioFocus() {
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audioManager.abandonAudioFocus(this);
+    }
+
+    private void registerEvents() {
+        eventBus.observable(PlayAllSongs.class).subscribe(event -> {
+            musicRepository.getAllSongs().subscribe(songs -> {
+                stopMusic();
+                queueManager.setQueue(songs, event.getStartSongId());
+                playMusic();
+            }, error -> {
+                Log.e(TAG, error.getMessage());
+            }, () -> {
+                Log.d(TAG, "Get all songs complete");
+            });
+        }, error -> {
+            Log.e(TAG, error.getMessage());
+        });
+    }
+
+    private void stopMusic() {
+        pauseMusic();
+        songSeek = 0;
+        abandonAudioFocus();
+    }
+
+    private void playMusic() {
+        if (!player.isPlaying()) {
+            player.reset();
+            try {
+                Uri uri = Uri.parse(queueManager.getCurrentSong().getSongUri());
+                player.setDataSource(this, uri);
+            } catch (Exception e) {
+                Log.e(TAG, "playMusic: Cannot set song Uri", e);
+            }
+            player.prepareAsync();
         }
     }
 
@@ -99,47 +151,10 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
         player.start();
     }
 
-    private boolean requestAudioFocus() {
-        AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        int result = am.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-        return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
-    }
-
-    private void abandonAudioFocus() {
-        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        audioManager.abandonAudioFocus(this);
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         eventBus.cleanup();
         player.release();
-    }
-
-    private void registerEvents() {
-        eventBus.observable(PlayAllSongs.class).subscribe(event -> {
-            musicRepository.getAllSongs().subscribe(songs -> {
-                queueManager.setQueue(songs, event.getStartSongId());
-                playMusic();
-            }, error -> {
-                Log.e(TAG, error.getMessage());
-            }, () -> {
-                Log.d(TAG, "Get all songs complete");
-            });
-        }, error -> {
-            Log.e(TAG, error.getMessage());
-        });
-    }
-
-    private void playMusic() {
-        player.reset();
-        try {
-            Uri uri = Uri.parse(queueManager.getCurrentSong().getSongUri());
-            player.setDataSource(this, uri);
-        } catch (Exception e) {
-            Log.e(TAG, "playMusic: Cannot set song Uri", e);
-        }
-        player.prepareAsync();
     }
 }
