@@ -14,25 +14,31 @@ import android.widget.Toast;
 
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Song;
+import net.devdome.paperplayer.event.EventBus;
+import net.devdome.paperplayer.injection.Injector;
+import net.devdome.paperplayer.playback.events.PlayAllSongs;
+import net.devdome.paperplayer.presentation.RecyclerItemClickListener;
 
 import java.util.List;
 
 /**
- * PaperPlayer
- * Michael Obi
- * 23 10 2016 11:02 AM
+ * PaperPlayer Michael Obi 23 10 2016 11:02 AM
  */
 
-class SongsAdapter extends RecyclerView.Adapter<SongViewHolder> {
+class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHolder> {
     private static final String TAG = "SongsAdapter";
     private final Context context;
     private List<Song> songs;
 
+    private EventBus bus;
+
     public SongsAdapter(List<Song> songs, Context context) {
         super();
+        bus = Injector.provideEventBus();
         this.songs = songs;
         this.context = context;
     }
+
 
     @Override
     public SongViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -79,18 +85,25 @@ class SongsAdapter extends RecyclerView.Adapter<SongViewHolder> {
         this.songs = songs;
         notifyDataSetChanged();
     }
-}
 
-class SongViewHolder extends RecyclerView.ViewHolder {
-    final TextView title;
-    final TextView artist;
-    final ImageView menu;
 
-    public SongViewHolder(View itemView) {
-        super(itemView);
 
-        title = (TextView) itemView.findViewById(R.id.song_item_name);
-        artist = (TextView) itemView.findViewById(R.id.song_item_desc);
-        menu = (ImageView) itemView.findViewById(R.id.song_item_menu);
+    class SongViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        final TextView title;
+        final TextView artist;
+        final ImageView menu;
+
+        public SongViewHolder(View itemView) {
+            super(itemView);
+            title = (TextView) itemView.findViewById(R.id.song_item_name);
+            artist = (TextView) itemView.findViewById(R.id.song_item_desc);
+            menu = (ImageView) itemView.findViewById(R.id.song_item_menu);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+           bus.post(new PlayAllSongs(songs.get(getAdapterPosition()).getId()));
+        }
     }
 }
