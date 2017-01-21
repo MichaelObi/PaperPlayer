@@ -1,4 +1,4 @@
-package net.devdome.paperplayer.presentation.musiclibrary.fragment.songs;
+package net.devdome.paperplayer.presentation.musiclibrary.fragment.artist;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import net.devdome.paperplayer.R;
-import net.devdome.paperplayer.data.model.Song;
+import net.devdome.paperplayer.data.model.Artist;
 import net.devdome.paperplayer.injection.Injector;
 import net.devdome.paperplayer.presentation.musiclibrary.fragment.FragmentsContract;
 
@@ -23,51 +23,49 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * PaperPlayer
- * Michael Obi
- * 19 10 2016 6:15 PM
+ * PaperPlayer Michael Obi 21 01 2017 8:09 AM
  */
 
-public class SongsFragment extends Fragment implements FragmentsContract.View<Song> {
+public class ArtistsFragment extends Fragment implements FragmentsContract.View<Artist> {
 
     FragmentsContract.Presenter presenter;
-    private SongsAdapter songsAdapter;
-    private Context context;
-    private RecyclerView recyclerViewSongs;
-    private ProgressBar progressBar;
 
+    private Context context;
+    private RecyclerView recyclerViewArtists;
+    private ProgressBar progressBar;
+    private ArtistsAdapter artistsAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new SongsPresenter(Injector.provideMusicRepository(getContext()), Schedulers.io(),
+        presenter = new ArtistsPresenter(Injector.provideMusicRepository(getContext()), Schedulers.io(),
                 AndroidSchedulers.mainThread());
         context = getActivity();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_songs, container, false);
-        recyclerViewSongs = (RecyclerView) v.findViewById(R.id.rv_songs);
+        View v = inflater.inflate(R.layout.fragment_artists, container, false);
+        recyclerViewArtists = (RecyclerView) v.findViewById(R.id.rv_artists);
         progressBar = (ProgressBar) v.findViewById(R.id.progressbar_loading);
         presenter.attachView(this);
-
-        recyclerViewSongs.setLayoutManager(new LinearLayoutManager(context));
-        songsAdapter = new SongsAdapter(null, context);
-        recyclerViewSongs.setAdapter(songsAdapter);
+        recyclerViewArtists.setHasFixedSize(true);
+        recyclerViewArtists.setLayoutManager(new LinearLayoutManager(context));
+        artistsAdapter = new ArtistsAdapter(context);
+        recyclerViewArtists.setAdapter(artistsAdapter);
         presenter.getAll();
         return v;
     }
 
     @Override
-    public void showList(List<Song> songs) {
-        recyclerViewSongs.setVisibility(View.VISIBLE);
-        songsAdapter.setSongs(songs);
+    public void showList(List<Artist> artists) {
+        recyclerViewArtists.setVisibility(View.VISIBLE);
+        artistsAdapter.setArtists(artists);
     }
 
     @Override
     public void showLoading() {
-        recyclerViewSongs.setVisibility(View.GONE);
+        recyclerViewArtists.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
     }
 
@@ -86,5 +84,4 @@ public class SongsFragment extends Fragment implements FragmentsContract.View<So
         presenter.detachView();
         super.onDestroyView();
     }
-
 }

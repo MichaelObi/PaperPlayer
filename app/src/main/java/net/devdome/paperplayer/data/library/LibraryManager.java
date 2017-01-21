@@ -1,10 +1,9 @@
 package net.devdome.paperplayer.data.library;
 
-import android.content.Context;
 
 import net.devdome.paperplayer.data.model.Album;
+import net.devdome.paperplayer.data.model.Artist;
 import net.devdome.paperplayer.data.model.Song;
-import net.devdome.paperplayer.data.model.SongList;
 
 import java.util.List;
 
@@ -20,4 +19,6 @@ public interface LibraryManager {
     Observable<List<Song>> fetchAllSongs();
     Observable<List<Album>> fetchAllAlbums();
     Observable<Song> getSong(long id);
+
+    Observable<List<Artist>> fetchAllArtists();
 }

@@ -1,6 +1,7 @@
 package net.devdome.paperplayer.data;
 
 import net.devdome.paperplayer.data.model.Album;
+import net.devdome.paperplayer.data.model.Artist;
 import net.devdome.paperplayer.data.model.Song;
 
 import java.util.List;
@@ -15,7 +16,9 @@ import rx.Observable;
 
 public interface MusicRepositoryInterface {
 
-    public Observable<List<Song>> getAllSongs();
+    Observable<List<Song>> getAllSongs();
 
-    public Observable<List<Album>> getAllAlbums();
+    Observable<List<Album>> getAllAlbums();
+
+    Observable<List<Artist>> getAllArtists();
 }

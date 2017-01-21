@@ -2,14 +2,13 @@ package net.devdome.paperplayer.data;
 
 import net.devdome.paperplayer.data.library.LibraryManager;
 import net.devdome.paperplayer.data.model.Album;
+import net.devdome.paperplayer.data.model.Artist;
 import net.devdome.paperplayer.data.model.Song;
 
 import java.io.IOException;
 import java.util.List;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * PaperPlayer Michael Obi 25 10 2016 3:03 AM
@@ -46,6 +45,18 @@ public class MusicRepository implements MusicRepositoryInterface {
                             }
                             return Observable.error(o);
                         })
-                ).observeOn(Schedulers.io());
+                );
+    }
+
+    @Override
+    public Observable<List<Artist>> getAllArtists() {
+        return Observable.defer(() -> libraryManager.fetchAllArtists())
+                .retryWhen(observable -> observable.flatMap(o -> {
+                            if (o instanceof IOException) {
+                                return null;
+                            }
+                            return Observable.error(o);
+                        })
+                );
     }
 }

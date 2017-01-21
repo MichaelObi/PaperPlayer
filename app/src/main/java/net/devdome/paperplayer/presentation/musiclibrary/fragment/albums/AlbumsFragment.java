@@ -52,7 +52,6 @@ public class AlbumsFragment extends Fragment implements FragmentsContract.View<A
         recyclerViewAlbums = (RecyclerView) v.findViewById(R.id.rv_albums_grid);
         progressBar = (ProgressBar) v.findViewById(R.id.progressbar_loading);
         presenter.attachView(this);
-
         recyclerViewAlbums.setLayoutManager(new GridLayoutManager(context, calculateNoOfColumns()));
         recyclerViewAlbums.setHasFixedSize(true);
         albumsAdapter = new AlbumsAdapter(null, context);

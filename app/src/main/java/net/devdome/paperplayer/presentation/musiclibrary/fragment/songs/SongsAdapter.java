@@ -5,7 +5,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,7 +16,6 @@ import net.devdome.paperplayer.data.model.Song;
 import net.devdome.paperplayer.event.EventBus;
 import net.devdome.paperplayer.injection.Injector;
 import net.devdome.paperplayer.playback.events.PlayAllSongs;
-import net.devdome.paperplayer.presentation.RecyclerItemClickListener;
 
 import java.util.List;
 
@@ -32,7 +30,7 @@ class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHolder> {
 
     private EventBus bus;
 
-    public SongsAdapter(List<Song> songs, Context context) {
+    SongsAdapter(List<Song> songs, Context context) {
         super();
         bus = Injector.provideEventBus();
         this.songs = songs;
@@ -52,24 +50,18 @@ class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHolder> {
         Song song = songs.get(position);
         holder.title.setText(song.getTitle());
         holder.artist.setText(song.getArtist());
-        holder.menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(context, v);
-                MenuInflater inflater = popup.getMenuInflater();
-                inflater.inflate(R.menu.song_actions, popup.getMenu());
-                popup.show();
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            default:
-                                Toast.makeText(context, "Not yet implemented.", Toast.LENGTH_SHORT).show();
-                        }
-                        return true;
-                    }
-                });
-            }
+        holder.menu.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(context, v);
+            MenuInflater inflater = popup.getMenuInflater();
+            inflater.inflate(R.menu.song_actions, popup.getMenu());
+            popup.show();
+            popup.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getItemId()) {
+                    default:
+                        Toast.makeText(context, "Not yet implemented.", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            });
         });
     }
 
@@ -93,7 +85,7 @@ class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHolder> {
         final TextView artist;
         final ImageView menu;
 
-        public SongViewHolder(View itemView) {
+        SongViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.song_item_name);
             artist = (TextView) itemView.findViewById(R.id.song_item_desc);

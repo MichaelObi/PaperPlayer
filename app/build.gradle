@@ -28,6 +28,7 @@ android {
 
     productFlavors {
         prod {
+            applicationId "net.devdome.paperplayer"
         }
         mock {
             applicationId "net.devdome.paperplayer.mock"
@@ -56,7 +57,6 @@ dependencies {
     compile "com.android.support:support-vector-drawable:${SUPPORT_LIB_VERSION}"
 
     compile 'com.annimon:paperstyle:1.1.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
 
     // RxJava
     compile 'io.reactivex:rxandroid:1.2.1'
@@ -92,6 +92,7 @@ dependencies {
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
     }
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
 }
 repositories {
     mavenCentral()

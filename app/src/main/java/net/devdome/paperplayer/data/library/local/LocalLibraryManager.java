@@ -6,6 +6,7 @@ import android.provider.MediaStore;
 
 import net.devdome.paperplayer.data.library.LibraryManager;
 import net.devdome.paperplayer.data.model.Album;
+import net.devdome.paperplayer.data.model.Artist;
 import net.devdome.paperplayer.data.model.Song;
 
 import java.util.List;
@@ -13,9 +14,7 @@ import java.util.List;
 import rx.Observable;
 
 /**
- * PaperPlayer
- * Michael Obi
- * 22 10 2016 12:29 PM
+ * PaperPlayer Michael Obi 22 10 2016 12:29 PM
  */
 
 public class LocalLibraryManager implements LibraryManager {
@@ -49,6 +48,7 @@ public class LocalLibraryManager implements LibraryManager {
                 .where(MediaStore.Audio.Media.IS_MUSIC + "=1")
                 .orderBy(MediaStore.Audio.Media.TITLE);
         Cursor cursor = builder.query();
+
         return create(cursor)
                 .map(Song::from)
                 .doOnCompleted(cursor::close)
@@ -70,6 +70,17 @@ public class LocalLibraryManager implements LibraryManager {
     @Override
     public Observable<Song> getSong(long id) {
         return null;
+    }
+
+    @Override
+    public Observable<List<Artist>> fetchAllArtists() {
+        QueryBuilder builder = new QueryBuilder(context, MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI)
+                .orderBy(MediaStore.Audio.Artists.ARTIST);
+        Cursor cursor = builder.query();
+        return create(cursor)
+                .map(Artist::from)
+                .doOnCompleted(cursor::close)
+                .toList();
     }
 
 }
