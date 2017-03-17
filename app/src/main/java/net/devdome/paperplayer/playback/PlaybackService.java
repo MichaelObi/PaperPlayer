@@ -13,7 +13,10 @@ import android.util.Log;
 import net.devdome.paperplayer.data.MusicRepositoryInterface;
 import net.devdome.paperplayer.event.EventBus;
 import net.devdome.paperplayer.injection.Injector;
-import net.devdome.paperplayer.playback.events.PlayAllSongs;
+import net.devdome.paperplayer.playback.events.PlaybackPaused;
+import net.devdome.paperplayer.playback.events.PlaybackStarted;
+import net.devdome.paperplayer.playback.events.action.PausePlayback;
+import net.devdome.paperplayer.playback.events.action.PlayAllSongs;
 import net.devdome.paperplayer.playback.queue.QueueManager;
 
 /**
@@ -84,6 +87,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                 player.pause();
             }
         }
+        eventBus.post(new PlaybackPaused());
     }
 
     private boolean requestAudioFocus() {
@@ -98,19 +102,15 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     }
 
     private void registerEvents() {
-        eventBus.observable(PlayAllSongs.class).subscribe(event -> {
-            musicRepository.getAllSongs().subscribe(songs -> {
-                stopMusic();
-                queueManager.setQueue(songs, event.getStartSongId());
-                playMusic();
-            }, error -> {
-                Log.e(TAG, error.getMessage());
-            }, () -> {
-                Log.d(TAG, "Get all songs complete");
-            });
-        }, error -> {
-            Log.e(TAG, error.getMessage());
-        });
+        eventBus.observable(PlayAllSongs.class)
+                .subscribe(event -> musicRepository.getAllSongs()
+                        .subscribe(songs -> {
+                            stopMusic();
+                            queueManager.setQueue(songs, event.getStartSongId());
+                            playMusic();
+                        }, error -> Log.e(TAG, error.getMessage()), () -> Log.d(TAG, "Get all songs complete")), error -> Log.e(TAG, error.getMessage()));
+        eventBus.observable(PausePlayback.class)
+                .subscribe(event -> pauseMusic());
     }
 
     private void stopMusic() {
@@ -135,6 +135,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         Log.d(TAG, "Song Play complete");
+        eventBus.post(new PlaybackPaused());
     }
 
     @Override
@@ -149,6 +150,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
             player.seekTo(songSeek);
         }
         player.start();
+        eventBus.post(new PlaybackStarted(queueManager.getCurrentSong()));
     }
 
     @Override

@@ -40,7 +40,7 @@ android {
         sourceCompatibility 1.8
     }
     dexOptions {
-        javaMaxHeapSize "2048M"
+        javaMaxHeapSize "8G"
     }
 }
 

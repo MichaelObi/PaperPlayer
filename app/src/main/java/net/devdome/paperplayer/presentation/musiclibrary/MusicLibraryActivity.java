@@ -2,12 +2,18 @@ package net.devdome.paperplayer.presentation.musiclibrary;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import net.devdome.paperplayer.R;
+import net.devdome.paperplayer.event.EventBus;
+import net.devdome.paperplayer.injection.Injector;
+import net.devdome.paperplayer.playback.events.PlaybackPaused;
+import net.devdome.paperplayer.playback.events.PlaybackStarted;
 import net.devdome.paperplayer.presentation.musiclibrary.fragment.albums.AlbumsFragment;
 import net.devdome.paperplayer.presentation.musiclibrary.fragment.artist.ArtistsFragment;
 import net.devdome.paperplayer.presentation.musiclibrary.fragment.songs.SongsFragment;
@@ -18,9 +24,13 @@ import net.devdome.paperplayer.presentation.musiclibrary.fragment.songs.SongsFra
  * 15 10 2016 3:36 PM
  */
 
-public class MusicLibraryActivity extends AppCompatActivity implements MusicLibraryContract.View {
+public class MusicLibraryActivity extends AppCompatActivity implements MusicLibraryContract.View, View.OnClickListener {
 
     MusicLibraryContract.Presenter musicLibraryPresenter;
+
+    private EventBus bus = Injector.provideEventBus();
+
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,9 +38,18 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
         setContentView(R.layout.activity_main);
         musicLibraryPresenter = new MusicLibraryPresenter();
         musicLibraryPresenter.attachView(this);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setUpEventBus();
+    }
+
+    private void setUpEventBus() {
+        bus.observable(PlaybackPaused.class)
+                .subscribe(playbackPaused -> fab.setImageResource(R.drawable.ic_play_arrow_white_24dp));
+        bus.observable(PlaybackStarted.class)
+                .subscribe(playbackPaused -> fab.setImageResource(R.drawable.ic_pause_white_24dp));
     }
 
     @Override
@@ -51,4 +70,15 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
             tabLayout.setupWithViewPager(mViewPager);
         }
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab:
+                musicLibraryPresenter.onFabClick();
+                break;
+            default:
+        }
+    }
+
 }

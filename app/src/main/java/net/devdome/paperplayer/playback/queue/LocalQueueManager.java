@@ -8,7 +8,6 @@ import java.util.List;
 
 public final class LocalQueueManager implements QueueManager {
 
-    private static final String TAG = "LocalQueueManager";
     /**
      * Now Playing Queue
      */
@@ -18,7 +17,6 @@ public final class LocalQueueManager implements QueueManager {
 
     private QueueActionListener queueActionListener;
     private String title;
-
 
     public LocalQueueManager() {
         playingQueue = Collections.synchronizedList(new ArrayList<QueueItem>());
