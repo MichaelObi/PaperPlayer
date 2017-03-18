@@ -16,6 +16,7 @@ import net.devdome.paperplayer.playback.PlaybackService;
 public class PaperPlayerApp extends Application {
     public PaperPlayerApp() {
         super();
+
     }
 
     @Override

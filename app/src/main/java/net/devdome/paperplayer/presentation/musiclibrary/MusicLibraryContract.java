@@ -17,5 +17,6 @@ public interface MusicLibraryContract {
         void initialize();
 
         void onFabClick();
+
     }
 }

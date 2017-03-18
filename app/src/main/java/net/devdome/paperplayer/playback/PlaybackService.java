@@ -17,6 +17,7 @@ import net.devdome.paperplayer.playback.events.PlaybackPaused;
 import net.devdome.paperplayer.playback.events.PlaybackStarted;
 import net.devdome.paperplayer.playback.events.action.PausePlayback;
 import net.devdome.paperplayer.playback.events.action.PlayAllSongs;
+import net.devdome.paperplayer.playback.events.action.RequestPlaybackState;
 import net.devdome.paperplayer.playback.queue.QueueManager;
 
 /**
@@ -109,8 +110,21 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                             queueManager.setQueue(songs, event.getStartSongId());
                             playMusic();
                         }, error -> Log.e(TAG, error.getMessage()), () -> Log.d(TAG, "Get all songs complete")), error -> Log.e(TAG, error.getMessage()));
+
         eventBus.observable(PausePlayback.class)
                 .subscribe(event -> pauseMusic());
+
+        eventBus.observable(RequestPlaybackState.class)
+                .subscribe(requestPlaybackState -> {
+                    Log.d(TAG, "requestPlaybackState called");
+                    if (player != null) {
+                        if (player.isPlaying()) {
+                            eventBus.post(new PlaybackStarted(queueManager.getCurrentSong()));
+                            return;
+                        }
+                    }
+                    eventBus.post(new PlaybackPaused());
+                });
     }
 
     private void stopMusic() {
