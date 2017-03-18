@@ -55,11 +55,12 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         musicLibraryPresenter = new MusicLibraryPresenter();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
-
+        fab.setOnClickListener(this);
         PermissionListener listener = new CompositePermissionListener(this,
                 DialogOnDeniedPermissionListener.Builder
                         .withContext(this)
@@ -72,7 +73,6 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(listener)
-                .onSameThread()
                 .check();
 
     }
@@ -82,7 +82,6 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
                 .subscribe(playbackPaused -> fab.setImageResource(R.drawable.ic_play_arrow_white_24dp));
         bus.observable(PlaybackStarted.class)
                 .subscribe(playbackPaused -> fab.setImageResource(R.drawable.ic_pause_white_24dp));
-
         bus.post(new RequestPlaybackState());
     }
 
@@ -105,12 +104,10 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
         }
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
 
     @Override
     public void onClick(View v) {
@@ -126,6 +123,7 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
     public void onPermissionGranted(PermissionGrantedResponse response) {
         musicLibraryPresenter.attachView(this);
         setUpEventBus();
+        fab.setVisibility(View.VISIBLE);
     }
 
     @Override
