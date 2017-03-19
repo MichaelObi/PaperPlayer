@@ -86,9 +86,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
             if (player.isPlaying()) {
                 songSeek = player.getCurrentPosition();
                 player.pause();
-                return;
             }
-            playMusic();
         }
         eventBus.post(new PlaybackPaused());
     }
