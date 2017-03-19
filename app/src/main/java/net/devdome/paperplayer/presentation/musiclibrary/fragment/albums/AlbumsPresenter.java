@@ -25,7 +25,7 @@ public class AlbumsPresenter extends BasePresenter<FragmentsContract.View> imple
     private final Scheduler ioScheduler;
     private final Scheduler mainScheduler;
 
-    MusicRepositoryInterface musicRepository;
+    private MusicRepositoryInterface musicRepository;
 
     public AlbumsPresenter(MusicRepositoryInterface musicRepository, Scheduler ioScheduler, Scheduler
             mainScheduler) {

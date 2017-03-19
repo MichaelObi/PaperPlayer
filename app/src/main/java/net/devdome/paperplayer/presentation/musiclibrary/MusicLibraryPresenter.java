@@ -1,6 +1,9 @@
 package net.devdome.paperplayer.presentation.musiclibrary;
 
+import net.devdome.paperplayer.event.EventBus;
+import net.devdome.paperplayer.injection.Injector;
 import net.devdome.paperplayer.mvp.BasePresenter;
+import net.devdome.paperplayer.playback.events.action.PausePlayback;
 
 /**
  * PaperPlayer
@@ -10,6 +13,11 @@ import net.devdome.paperplayer.mvp.BasePresenter;
 
 class MusicLibraryPresenter extends BasePresenter<MusicLibraryContract.View> implements
         MusicLibraryContract.Presenter {
+    private EventBus bus;
+
+    public MusicLibraryPresenter() {
+        bus = Injector.provideEventBus();
+    }
 
     @Override
     public void attachView(MusicLibraryContract.View view) {
@@ -20,5 +28,10 @@ class MusicLibraryPresenter extends BasePresenter<MusicLibraryContract.View> imp
     public void initialize() {
         checkViewAttached();
         getView().initializeViewPager();
+    }
+
+    @Override
+    public void onFabClick() {
+        bus.post(new PausePlayback());
     }
 }
