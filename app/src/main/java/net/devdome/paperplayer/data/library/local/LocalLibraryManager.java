@@ -18,7 +18,6 @@ import rx.Observable;
  */
 
 public class LocalLibraryManager implements LibraryManager {
-    private static final String TAG = "LocalLibraryManager";
     private final Context context;
 
     public LocalLibraryManager(Context context) {

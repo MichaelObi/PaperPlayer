@@ -15,7 +15,7 @@ import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Song;
 import net.devdome.paperplayer.event.EventBus;
 import net.devdome.paperplayer.injection.Injector;
-import net.devdome.paperplayer.playback.events.PlayAllSongs;
+import net.devdome.paperplayer.playback.events.action.PlayAllSongs;
 
 import java.util.List;
 
@@ -24,7 +24,6 @@ import java.util.List;
  */
 
 class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHolder> {
-    private static final String TAG = "SongsAdapter";
     private final Context context;
     private List<Song> songs;
 

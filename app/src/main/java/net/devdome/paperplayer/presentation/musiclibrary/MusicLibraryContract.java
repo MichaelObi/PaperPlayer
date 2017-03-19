@@ -15,5 +15,8 @@ public interface MusicLibraryContract {
 
     interface Presenter extends Mvp.Presenter<View> {
         void initialize();
+
+        void onFabClick();
+
     }
 }

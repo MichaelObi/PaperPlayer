@@ -86,5 +86,4 @@ public class SongsFragment extends Fragment implements FragmentsContract.View<So
         presenter.detachView();
         super.onDestroyView();
     }
-
 }
