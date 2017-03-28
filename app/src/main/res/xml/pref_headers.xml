@@ -3,12 +3,12 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="net.devdome.paperplayer.ui.activity.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="net.devdome.paperplayer_old.ui.activity.SettingsActivity$GeneralPreferenceFragment"
         android:icon="@drawable/ic_info_black_24dp"
         android:title="@string/pref_header_general" />
 
     <header
-        android:fragment="net.devdome.paperplayer.ui.activity.SettingsActivity$AppearancePreferenceFragment"
+        android:fragment="net.devdome.paperplayer_old.ui.activity.SettingsActivity$AppearancePreferenceFragment"
         android:icon="@drawable/ic_color_lens_black_24dp"
         android:title="@string/pref_header_appearance" />
 

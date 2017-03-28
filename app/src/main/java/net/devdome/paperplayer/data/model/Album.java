@@ -1,76 +1,103 @@
 package net.devdome.paperplayer.data.model;
 
+import android.database.Cursor;
+import android.provider.MediaStore;
+import android.util.Log;
+
+import java.io.File;
+
+/**
+ * PaperPlayer
+ * Michael Obi
+ * 23 10 2016 4:06 PM
+ */
+
 public class Album {
 
-    long id;
-    String name;
-    String artist;
-    String artString;
-    boolean fav;
-    int numOfSongs;
+    private static final String TAG = "Album";
+    private boolean favorite;
+    private int numberOfSongs;
+    private long id;
+    private String title;
+    private String artist;
+    private String artPath;
 
-    public Album(long id, String name, String artist, boolean fav, String artString, int numOfSongs) {
+    public Album(long id, String title, String artist, boolean favorite, String artPath, int
+            numberOfSongs) {
+        this.id = id;
+        this.title = title;
         this.artist = artist;
-        this.fav = fav;
-        this.id = id;
-        this.name = name;
-        this.artString = artString;
-        this.numOfSongs = numOfSongs;
+        this.favorite = favorite;
+        this.artPath = artPath;
+        this.numberOfSongs = numberOfSongs;
     }
 
-    public Album(long id, String name, String artist, boolean fav, int numOfSongs) {
-        this.id = id;
-        this.name = name;
-        this.artist = artist;
-        this.fav = fav;
-        this.numOfSongs = numOfSongs;
+    public static Album from(Cursor cursor) {
+        int titleColumn = cursor.getColumnIndex
+                (MediaStore.Audio.Albums.ALBUM);
+        int idColumn = cursor.getColumnIndex
+                (android.provider.MediaStore.Audio.Albums._ID);
+        int artistColumn = cursor.getColumnIndex
+                (android.provider.MediaStore.Audio.Albums.ARTIST);
+        int numOfSongsColumn = cursor.getColumnIndex
+                (android.provider.MediaStore.Audio.Albums.NUMBER_OF_SONGS);
+        int albumArtColumn = cursor.getColumnIndex
+                (android.provider.MediaStore.Audio.Albums.ALBUM_ART);
+
+        return new Album(cursor.getLong(idColumn),
+                cursor.getString(titleColumn),
+                cursor.getString(artistColumn),
+                false, cursor.getString(albumArtColumn),
+                cursor.getInt(numOfSongsColumn));
+
     }
 
-    public long getId() {
-        return id;
+    public int getNumberOfSongs() {
+        return numberOfSongs;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public boolean isFavorite() {
+        return favorite;
     }
 
     public String getArtist() {
         return artist;
     }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public String getTitle() {
+        return title;
     }
 
-    public String getArtString() {
-        return artString;
+    public long getId() {
+        return id;
     }
 
-    public void setArtString(String artString) {
-        this.artString = artString;
+    public String getArtPath() {
+        return artPath;
     }
 
-    public boolean getFav() {
-        return fav;
+    public void setArtPath(String artPath) {
+        this.artPath = artPath;
     }
 
-    public void setFav(boolean fav) {
-        this.fav = fav;
+    @Override
+    public String toString() {
+        return "Album{" +
+                "favorite=" + favorite +
+                ", numberOfSongs=" + numberOfSongs +
+                ", id=" + id +
+                ", title='" + title + '\'' +
+                ", artist='" + artist + '\'' +
+                ", artPath='" + artPath + '\'' +
+                '}';
     }
 
-    public int getNumOfSongs() {
-        return numOfSongs;
-    }
-
-    public void setNumOfSongs(int numOfSongs) {
-        this.numOfSongs = numOfSongs;
+    public File getArt() {
+        try {
+            return new File(artPath);
+        } catch (NullPointerException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            return null;
+        }
     }
 }
