@@ -48,6 +48,13 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
     @Override
     protected void onResume() {
         super.onResume();
+        setUpEventBus();
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -77,12 +84,19 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        bus = null;
+    }
+
     private void setUpEventBus() {
         bus.observable(PlaybackPaused.class)
                 .subscribe(playbackPaused -> fab.setImageResource(R.drawable.ic_play_arrow_white_24dp));
         bus.observable(PlaybackStarted.class)
                 .subscribe(playbackPaused -> fab.setImageResource(R.drawable.ic_pause_white_24dp));
         bus.post(new RequestPlaybackState());
+
     }
 
     @Override
@@ -122,8 +136,7 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
     @Override
     public void onPermissionGranted(PermissionGrantedResponse response) {
         musicLibraryPresenter.attachView(this);
-        setUpEventBus();
-        fab.setVisibility(View.VISIBLE);
+//        fab.setVisibility(View.VISIBLE);
     }
 
     @Override

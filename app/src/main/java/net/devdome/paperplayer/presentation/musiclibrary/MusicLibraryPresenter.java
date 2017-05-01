@@ -3,7 +3,7 @@ package net.devdome.paperplayer.presentation.musiclibrary;
 import net.devdome.paperplayer.event.EventBus;
 import net.devdome.paperplayer.injection.Injector;
 import net.devdome.paperplayer.mvp.BasePresenter;
-import net.devdome.paperplayer.playback.events.action.PausePlayback;
+import net.devdome.paperplayer.playback.events.action.TogglePlayback;
 
 /**
  * PaperPlayer
@@ -27,11 +27,11 @@ class MusicLibraryPresenter extends BasePresenter<MusicLibraryContract.View> imp
 
     public void initialize() {
         checkViewAttached();
-        getView().initializeViewPager();
+        getViewOrThrow().initializeViewPager();
     }
 
     @Override
     public void onFabClick() {
-        bus.post(new PausePlayback());
+        bus.post(new TogglePlayback());
     }
 }

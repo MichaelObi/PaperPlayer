@@ -15,7 +15,7 @@ import android.widget.Toast;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Song;
 import net.devdome.paperplayer.injection.Injector;
-import net.devdome.paperplayer.presentation.musiclibrary.fragment.FragmentsContract;
+import net.devdome.paperplayer.presentation.musiclibrary.fragment.LibraryFragmentsContract;
 
 import java.util.List;
 
@@ -28,9 +28,9 @@ import rx.schedulers.Schedulers;
  * 19 10 2016 6:15 PM
  */
 
-public class SongsFragment extends Fragment implements FragmentsContract.View<Song> {
+public class SongsFragment extends Fragment implements LibraryFragmentsContract.View<Song> {
 
-    FragmentsContract.Presenter presenter;
+    LibraryFragmentsContract.Presenter presenter;
     private SongsAdapter songsAdapter;
     private Context context;
     private RecyclerView recyclerViewSongs;
@@ -46,12 +46,16 @@ public class SongsFragment extends Fragment implements FragmentsContract.View<So
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        presenter.attachView(this);
         View v = inflater.inflate(R.layout.fragment_songs, container, false);
         recyclerViewSongs = (RecyclerView) v.findViewById(R.id.rv_songs);
         progressBar = (ProgressBar) v.findViewById(R.id.progressbar_loading);
-        presenter.attachView(this);
-
         recyclerViewSongs.setLayoutManager(new LinearLayoutManager(context));
         songsAdapter = new SongsAdapter(null, context);
         recyclerViewSongs.setAdapter(songsAdapter);
@@ -82,8 +86,13 @@ public class SongsFragment extends Fragment implements FragmentsContract.View<So
     }
 
     @Override
-    public void onDestroyView() {
+    public void onPause() {
+        super.onPause();
         presenter.detachView();
+    }
+
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
     }
 }

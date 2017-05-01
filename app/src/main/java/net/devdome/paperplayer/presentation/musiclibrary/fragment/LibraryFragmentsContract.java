@@ -10,7 +10,7 @@ import java.util.List;
  * 15 10 2016 3:39 PM
  */
 
-public interface FragmentsContract {
+public interface LibraryFragmentsContract {
     interface View<T> extends Mvp.View {
         void showList(List<T> items);
 

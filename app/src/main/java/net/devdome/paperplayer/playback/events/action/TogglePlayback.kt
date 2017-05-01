@@ -6,4 +6,4 @@ package net.devdome.paperplayer.playback.events.action
  * 17 03 2017 1:52 PM
  */
 
-class PausePlayback
+class TogglePlayback

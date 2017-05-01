@@ -13,21 +13,13 @@ public class Song {
 
     private String title, album, artist, year, songUri;
 
-    private long id;
+    private long id, albumId;
 
 
     public Song() {
     }
 
-    public Song(long id, String title, String album, String artist, String year) {
-        this.id = id;
-        this.title = title;
-        this.album = album;
-        this.artist = artist;
-        this.year = year;
-    }
-
-    public Song(long id,String title, String album, String artist, String year, String songUri) {
+    public Song(long id, String title, String album, String artist, String year, String songUri) {
         this.id = id;
         this.title = title;
         this.album = album;
@@ -49,7 +41,7 @@ public class Song {
                 (MediaStore.Audio.Media.ALBUM_ID);
         int albumColumn = cursor.getColumnIndex
                 (MediaStore.Audio.Media.ALBUM);
-        return new Song(
+        Song song = new Song(
                 cursor.getLong(idColumn),
                 cursor.getString(titleColumn),
                 cursor.getString(albumColumn),
@@ -57,6 +49,8 @@ public class Song {
                 "",
                 cursor.getString(pathColumn)
         );
+        song.setAlbumId(cursor.getLong(albumIdColumn));
+        return song;
     }
 
     public String getTitle() {
@@ -105,5 +99,13 @@ public class Song {
 
     public void setSongUri(String songUri) {
         this.songUri = songUri;
+    }
+
+    public long getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(long albumId) {
+        this.albumId = albumId;
     }
 }
