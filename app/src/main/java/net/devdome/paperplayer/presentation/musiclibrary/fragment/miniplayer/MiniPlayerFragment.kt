@@ -1,6 +1,5 @@
 package net.devdome.paperplayer.presentation.musiclibrary.fragment.miniplayer
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
@@ -41,8 +40,12 @@ class MiniPlayerFragment : Fragment(), MiniPlayerContract.View, View.OnClickList
         super.onCreate(savedInstanceState)
         presenter = MiniPlayerPresenter(Injector.provideMusicRepository(activity), Schedulers.io(),
                 AndroidSchedulers.mainThread())
-        presenter?.attachView(this)
-        presenter?.initialize()
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        presenter?.detachView()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -58,6 +61,8 @@ class MiniPlayerFragment : Fragment(), MiniPlayerContract.View, View.OnClickList
 
     override fun onResume() {
         super.onResume()
+        presenter?.attachView(this)
+        presenter?.initialize()
     }
 
     override fun onDestroy() {
