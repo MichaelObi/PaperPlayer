@@ -1,3 +1,5 @@
+### Checkout the develop branch for the latest code
+
 # PaperPlayer
 
 Yea! Horrible name. I know.
