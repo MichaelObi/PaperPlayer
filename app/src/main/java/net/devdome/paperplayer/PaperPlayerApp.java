@@ -3,8 +3,6 @@ package net.devdome.paperplayer;
 import android.app.Application;
 import android.content.Intent;
 
-import net.devdome.paperplayer.event.EventBus;
-import net.devdome.paperplayer.injection.Injector;
 import net.devdome.paperplayer.playback.PlaybackService;
 
 /**
@@ -22,7 +20,6 @@ public class PaperPlayerApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        startService(new Intent(this, PlaybackService.class));
     }
 }
 

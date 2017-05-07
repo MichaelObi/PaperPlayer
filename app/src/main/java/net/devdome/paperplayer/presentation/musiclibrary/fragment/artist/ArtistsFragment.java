@@ -15,7 +15,7 @@ import android.widget.Toast;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.data.model.Artist;
 import net.devdome.paperplayer.injection.Injector;
-import net.devdome.paperplayer.presentation.musiclibrary.fragment.FragmentsContract;
+import net.devdome.paperplayer.presentation.musiclibrary.fragment.LibraryFragmentsContract;
 
 import java.util.List;
 
@@ -26,9 +26,9 @@ import rx.schedulers.Schedulers;
  * PaperPlayer Michael Obi 21 01 2017 8:09 AM
  */
 
-public class ArtistsFragment extends Fragment implements FragmentsContract.View<Artist> {
+public class ArtistsFragment extends Fragment implements LibraryFragmentsContract.View<Artist> {
 
-    FragmentsContract.Presenter presenter;
+    LibraryFragmentsContract.Presenter presenter;
 
     private Context context;
     private RecyclerView recyclerViewArtists;

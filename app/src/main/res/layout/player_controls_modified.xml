@@ -8,7 +8,7 @@
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
     android:layout_marginTop="8dp"
-    tools:showIn="@layout/activity_player">
+    tools:showIn="@layout/player_activity">
 
     <ImageView
         android:id="@+id/play_pause"

@@ -2,7 +2,7 @@ package net.devdome.paperplayer.presentation.musiclibrary.fragment.songs;
 
 import net.devdome.paperplayer.data.MusicRepository;
 import net.devdome.paperplayer.data.model.Album;
-import net.devdome.paperplayer.presentation.musiclibrary.fragment.FragmentsContract;
+import net.devdome.paperplayer.presentation.musiclibrary.fragment.LibraryFragmentsContract;
 import net.devdome.paperplayer.presentation.musiclibrary.fragment.albums.AlbumsPresenter;
 
 import org.junit.Before;
@@ -30,7 +30,7 @@ public class AlbumsPresenterTest {
     MusicRepository musicRepository;
 
     @Mock
-    FragmentsContract.View view;
+    LibraryFragmentsContract.View view;
 
     private AlbumsPresenter albumsPresenter;
 

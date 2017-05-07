@@ -96,7 +96,7 @@ public class Album {
         try {
             return new File(artPath);
         } catch (NullPointerException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
+            Log.d(TAG, ex.getMessage());
             return null;
         }
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import net.devdome.paperplayer.data.library.LibraryManager;
 import net.devdome.paperplayer.data.model.Album;
+import net.devdome.paperplayer.data.model.Artist;
 import net.devdome.paperplayer.data.model.Song;
 
 import java.util.ArrayList;
@@ -26,15 +27,15 @@ public class MockLocalLibraryManager implements LibraryManager {
 
     private Album album1, album2, album3;
 
-    public MockLocalLibraryManager(Context context) {
+    public MockLocalLibraryManager() {
         setDummySongs();
         setDummyAlbums();
     }
 
     private void setDummySongs() {
-        song1 = new Song("I can't let you go", "8701", "Usher", "1998");
-        song2 = new Song("Grow", "Revenge of the dreamers II", "Cozz", "2016");
-        song3 = new Song("Folgers crystals", "Revenge of the dreamers II", "J. Cole", "2016");
+        song1 = new Song(1, "I can't let you go", "8701", "Usher", "1998", "");
+        song2 = new Song(2, "Grow", "Revenge of the dreamers II", "Cozz", "2016", "");
+        song3 = new Song(3, "Folgers crystals", "Revenge of the dreamers II", "J. Cole", "2016", "");
 
         songs.add(song1);
         songs.add(song2);
@@ -74,6 +75,11 @@ public class MockLocalLibraryManager implements LibraryManager {
             return Observable.just(song3);
         }
         return Observable.just(null);
+    }
+
+    @Override
+    public Observable<List<Artist>> fetchAllArtists() {
+        return Observable.empty();
     }
 
 }

@@ -15,10 +15,13 @@ import net.devdome.paperplayer.event.EventBus;
 import net.devdome.paperplayer.injection.Injector;
 import net.devdome.paperplayer.playback.events.PlaybackPaused;
 import net.devdome.paperplayer.playback.events.PlaybackStarted;
-import net.devdome.paperplayer.playback.events.action.PausePlayback;
+import net.devdome.paperplayer.playback.events.PlaybackState;
 import net.devdome.paperplayer.playback.events.action.PlayAllSongs;
 import net.devdome.paperplayer.playback.events.action.RequestPlaybackState;
+import net.devdome.paperplayer.playback.events.action.TogglePlayback;
 import net.devdome.paperplayer.playback.queue.QueueManager;
+
+import java.io.IOException;
 
 /**
  * PaperPlayer Michael Obi 11 01 2017 10:46 PM
@@ -53,6 +56,8 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
         player.setOnErrorListener(this);
         player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        musicRepository.getAllSongs().subscribe(songs -> queueManager.setQueue(songs, 0));
+        eventBus.post(new RequestPlaybackState());
         return START_STICKY;
     }
 
@@ -87,8 +92,8 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                 songSeek = player.getCurrentPosition();
                 player.pause();
             }
+            eventBus.post(new PlaybackPaused());
         }
-        eventBus.post(new PlaybackPaused());
     }
 
     private boolean requestAudioFocus() {
@@ -111,8 +116,14 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                             playMusic();
                         }, error -> Log.e(TAG, error.getMessage()), () -> Log.d(TAG, "Get all songs complete")), error -> Log.e(TAG, error.getMessage()));
 
-        eventBus.observable(PausePlayback.class)
-                .subscribe(event -> pauseMusic());
+        eventBus.observable(TogglePlayback.class)
+                .subscribe(event -> {
+                    if (player.isPlaying()) {
+                        pauseMusic();
+                        return;
+                    }
+                    playMusic();
+                });
 
         eventBus.observable(RequestPlaybackState.class)
                 .subscribe(requestPlaybackState -> {
@@ -120,10 +131,14 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                     if (player != null) {
                         if (player.isPlaying()) {
                             eventBus.post(new PlaybackStarted(queueManager.getCurrentSong()));
+                            eventBus.post(new PlaybackState(queueManager.getCurrentSong()));
                             return;
                         }
                     }
                     eventBus.post(new PlaybackPaused());
+                    if (queueManager.hasSongs()) {
+                        eventBus.post(new PlaybackState(queueManager.getCurrentSong()));
+                    }
                 });
     }
 
@@ -137,19 +152,26 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
         if (!player.isPlaying()) {
             player.reset();
             try {
-                Uri uri = Uri.parse(queueManager.getCurrentSong().getSongUri());
-                player.setDataSource(this, uri);
-            } catch (Exception e) {
-                Log.e(TAG, "playMusic: Cannot set song Uri", e);
+                if (queueManager.hasSongs()) {
+                    Uri uri = Uri.parse(queueManager.getCurrentSong().getSongUri());
+                    player.setDataSource(this, uri);
+                    player.prepareAsync();
+                }
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage(), e);
             }
-            player.prepareAsync();
         }
     }
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         Log.d(TAG, "Song Play complete");
-        eventBus.post(new PlaybackPaused());
+        if (queueManager.next() != null) {
+            songSeek = 0;
+            playMusic();
+        } else {
+            pauseMusic();
+        }
     }
 
     @Override
@@ -160,11 +182,11 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         if (requestAudioFocus()) {
-            player.start();
             player.seekTo(songSeek);
+            player.start();
+            eventBus.post(new PlaybackStarted(queueManager.getCurrentSong()));
+            eventBus.post(new RequestPlaybackState());
         }
-        player.start();
-        eventBus.post(new PlaybackStarted(queueManager.getCurrentSong()));
     }
 
     @Override

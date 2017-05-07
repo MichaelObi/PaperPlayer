@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cv_mini_player"
+    android:id="@+id/mini_player"
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:layout_gravity="bottom"
@@ -32,7 +32,7 @@
             android:translationZ="4dp"
             tools:src="@drawable/cover_drake" />
 
-        <net.devdome.paperplayer_old.ui.widget.PlayPauseButton
+        <net.devdome.paperplayer.widget.PlayPauseButton
             android:id="@+id/play_pause"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

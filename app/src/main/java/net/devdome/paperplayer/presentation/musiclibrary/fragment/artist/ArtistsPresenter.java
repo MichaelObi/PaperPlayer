@@ -5,7 +5,7 @@ import android.util.Log;
 import net.devdome.paperplayer.data.MusicRepositoryInterface;
 import net.devdome.paperplayer.data.model.Artist;
 import net.devdome.paperplayer.mvp.BasePresenter;
-import net.devdome.paperplayer.presentation.musiclibrary.fragment.FragmentsContract;
+import net.devdome.paperplayer.presentation.musiclibrary.fragment.LibraryFragmentsContract;
 
 import java.util.List;
 
@@ -16,8 +16,8 @@ import rx.Subscriber;
  * PaperPlayer Michael Obi 15 10 2016 3:45 PM
  */
 
-public class ArtistsPresenter extends BasePresenter<FragmentsContract.View> implements
-        FragmentsContract.Presenter {
+public class ArtistsPresenter extends BasePresenter<LibraryFragmentsContract.View> implements
+        LibraryFragmentsContract.Presenter {
 
     private static final String TAG = "ArtistsPresenter";
     private final Scheduler ioScheduler;

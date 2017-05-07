@@ -20,5 +20,7 @@ public interface MusicRepositoryInterface {
 
     Observable<List<Album>> getAllAlbums();
 
+    Observable<Album> getAlbum(long albumId);
+
     Observable<List<Artist>> getAllArtists();
 }

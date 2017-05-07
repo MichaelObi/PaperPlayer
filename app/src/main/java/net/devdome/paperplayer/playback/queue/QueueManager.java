@@ -26,6 +26,8 @@ public interface QueueManager {
 
     void setCurrentIndex(int index);
 
+    boolean hasSongs();
+
 
     public interface QueueActionListener {
 

@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-
+apply plugin: 'me.tatarka.retrolambda'
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
         applicationId "net.devdome.paperplayer"
@@ -13,9 +13,6 @@ android {
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        jackOptions {
-            enabled = true
-        }
     }
     buildTypes {
         release {
@@ -40,11 +37,15 @@ android {
         sourceCompatibility 1.8
     }
     dexOptions {
-        javaMaxHeapSize "8G"
+        javaMaxHeapSize "4G"
+        preDexLibraries = true
+    }
+    dataBinding {
+        enabled = true
     }
 }
 
-final SUPPORT_LIB_VERSION = "25.3.0"
+final SUPPORT_LIB_VERSION = "25.3.1"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -54,7 +55,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+//    compile "com.android.support:support-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:support-vector-drawable:${SUPPORT_LIB_VERSION}"
 
     compile 'com.annimon:paperstyle:1.1.0'
@@ -95,9 +96,10 @@ dependencies {
     }
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-
     compile 'com.karumi:dexter:4.0.0'
+
+    kapt "com.android.databinding:compiler:$android_plugin_version"
 }
-repositories {
-    mavenCentral()
+kapt {
+    generateStubs = true
 }

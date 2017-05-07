@@ -1,5 +1,8 @@
 package net.devdome.paperplayer.mvp;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
@@ -20,7 +23,14 @@ public abstract class BasePresenter<T extends Mvp.View> implements Mvp.Presenter
         this.view = null;
     }
 
+    @Nullable
     public T getView() {
+        return this.view;
+    }
+
+    @NonNull
+    public T getViewOrThrow() {
+        checkViewAttached();
         return this.view;
     }
 
@@ -37,8 +47,8 @@ public abstract class BasePresenter<T extends Mvp.View> implements Mvp.Presenter
     protected void addSubscription(Subscription subscription) {
         this.compositeSubscription.add(subscription);
     }
-    
-    public static class MvpViewNotAttachedException extends RuntimeException {
+
+    public static class MvpViewNotAttachedException extends IllegalStateException {
         public MvpViewNotAttachedException() {
             super("Please call Presenter.attachView(MvpView) before requesting data to the Presenter");
         }

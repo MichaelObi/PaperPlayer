@@ -5,7 +5,7 @@ import android.util.Log;
 import net.devdome.paperplayer.data.MusicRepositoryInterface;
 import net.devdome.paperplayer.data.model.Song;
 import net.devdome.paperplayer.mvp.BasePresenter;
-import net.devdome.paperplayer.presentation.musiclibrary.fragment.FragmentsContract;
+import net.devdome.paperplayer.presentation.musiclibrary.fragment.LibraryFragmentsContract;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ import rx.Subscriber;
  * 15 10 2016 3:45 PM
  */
 
-public class SongsPresenter extends BasePresenter<FragmentsContract.View> implements
-        FragmentsContract.Presenter {
+public class SongsPresenter extends BasePresenter<LibraryFragmentsContract.View> implements
+        LibraryFragmentsContract.Presenter {
 
     private static final String TAG = "AlbumsPresenter";
     private final Scheduler ioScheduler;

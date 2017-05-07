@@ -1,6 +1,7 @@
 package net.devdome.paperplayer.presentation.musiclibrary;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.event.EventBus;
 import net.devdome.paperplayer.injection.Injector;
+import net.devdome.paperplayer.playback.PlaybackService;
 import net.devdome.paperplayer.playback.events.PlaybackPaused;
 import net.devdome.paperplayer.playback.events.PlaybackStarted;
 import net.devdome.paperplayer.playback.events.action.RequestPlaybackState;
@@ -48,6 +50,13 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
     @Override
     protected void onResume() {
         super.onResume();
+        setUpEventBus();
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -77,12 +86,19 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        bus = null;
+    }
+
     private void setUpEventBus() {
         bus.observable(PlaybackPaused.class)
                 .subscribe(playbackPaused -> fab.setImageResource(R.drawable.ic_play_arrow_white_24dp));
         bus.observable(PlaybackStarted.class)
                 .subscribe(playbackPaused -> fab.setImageResource(R.drawable.ic_pause_white_24dp));
         bus.post(new RequestPlaybackState());
+
     }
 
     @Override
@@ -122,8 +138,7 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
     @Override
     public void onPermissionGranted(PermissionGrantedResponse response) {
         musicLibraryPresenter.attachView(this);
-        setUpEventBus();
-        fab.setVisibility(View.VISIBLE);
+        startService(new Intent(this, PlaybackService.class));
     }
 
     @Override
