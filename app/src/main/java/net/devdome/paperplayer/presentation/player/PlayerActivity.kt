@@ -2,11 +2,11 @@ package net.devdome.paperplayer.presentation.player
 
 import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import com.squareup.picasso.Picasso
 import net.devdome.paperplayer.R
 import net.devdome.paperplayer.databinding.PlayerActivityBinding
@@ -31,6 +31,7 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
         viewBinding = DataBindingUtil.setContentView(this, R.layout.player_activity)
         presenter = PlayerPresenter(Injector.provideMusicRepository(this))
         presenter?.attachView(this)
+        viewBinding?.presenter = presenter
     }
 
     override fun onDestroy() {

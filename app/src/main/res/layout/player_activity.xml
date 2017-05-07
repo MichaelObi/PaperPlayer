@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
+    <data>
+
+        <variable
+                name="presenter"
+                type="net.devdome.paperplayer.presentation.player.PlayerContract.Presenter"/>
+    </data>
+
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                      xmlns:app="http://schemas.android.com/apk/res-auto"
                                                      xmlns:tools="http://schemas.android.com/tools"
@@ -115,8 +123,9 @@
                         android:padding="16dp"
                         android:scaleX="1.5"
                         android:scaleY="1.5"
+                        android:onClick="@{() -> presenter.playPauseToggle()}"
                         android:tint="@android:color/white"
-                        app:srcCompat="@drawable/ic_play_arrow_white_24dp" />
+                        app:srcCompat="@drawable/ic_play_arrow_white_24dp"/>
 
                 <ImageView
                         android:id="@+id/btn_previous"

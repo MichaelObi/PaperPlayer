@@ -17,6 +17,6 @@ interface PlayerContract {
     }
 
     interface Presenter : Mvp.Presenter<View> {
-
+        fun playPauseToggle()
     }
 }

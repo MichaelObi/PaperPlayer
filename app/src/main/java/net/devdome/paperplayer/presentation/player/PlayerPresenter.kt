@@ -9,6 +9,7 @@ import net.devdome.paperplayer.playback.events.PlaybackPaused
 import net.devdome.paperplayer.playback.events.PlaybackStarted
 import net.devdome.paperplayer.playback.events.PlaybackState
 import net.devdome.paperplayer.playback.events.action.RequestPlaybackState
+import net.devdome.paperplayer.playback.events.action.TogglePlayback
 import net.devdome.paperplayer.presentation.musiclibrary.fragment.miniplayer.MiniPlayerPresenter
 import rx.Subscriber
 
@@ -19,6 +20,10 @@ import rx.Subscriber
  */
 
 class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePresenter<PlayerContract.View>(), PlayerContract.Presenter {
+    override fun playPauseToggle() {
+        bus.post(TogglePlayback())
+    }
+
     internal var bus = Injector.provideEventBus()
 
     override fun attachView(view: PlayerContract.View) {
