@@ -1,4 +1,4 @@
-package net.devdome.paperplayer.presentation.musiclibrary.fragment.miniplayer
+package net.devdome.paperplayer.presentation.player
 
 import net.devdome.paperplayer.mvp.Mvp
 import net.devdome.paperplayer.playback.events.PlaybackState
@@ -6,9 +6,9 @@ import net.devdome.paperplayer.playback.events.PlaybackState
 /**
  * PaperPlayer
  * Michael Obi
- * 08 04 2017 10:43 AM
+ * 06 05 2017 11:29 PM
  */
-interface MiniPlayerContract {
+interface PlayerContract {
 
     interface View : Mvp.View {
         fun updatePlayPauseButton(isPlaying: Boolean)
@@ -17,10 +17,6 @@ interface MiniPlayerContract {
     }
 
     interface Presenter : Mvp.Presenter<View> {
-        fun initialize()
 
-        fun onPlayButtonClicked()
-
-        fun onPlayerStateUpdate()
     }
 }

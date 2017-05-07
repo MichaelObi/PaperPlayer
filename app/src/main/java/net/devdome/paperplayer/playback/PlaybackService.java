@@ -87,13 +87,12 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     }
 
     private void pauseMusic() {
-
         if (player != null) {
             if (player.isPlaying()) {
                 songSeek = player.getCurrentPosition();
                 player.pause();
-                eventBus.post(new PlaybackPaused());
             }
+            eventBus.post(new PlaybackPaused());
         }
     }
 
@@ -137,7 +136,9 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                         }
                     }
                     eventBus.post(new PlaybackPaused());
-                    eventBus.post(new PlaybackState(queueManager.getCurrentSong()));
+                    if (queueManager.hasSongs()) {
+                        eventBus.post(new PlaybackState(queueManager.getCurrentSong()));
+                    }
                 });
     }
 
@@ -151,19 +152,26 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
         if (!player.isPlaying()) {
             player.reset();
             try {
-                Uri uri = Uri.parse(queueManager.getCurrentSong().getSongUri());
-                player.setDataSource(this, uri);
+                if (queueManager.hasSongs()) {
+                    Uri uri = Uri.parse(queueManager.getCurrentSong().getSongUri());
+                    player.setDataSource(this, uri);
+                    player.prepareAsync();
+                }
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage(), e);
             }
-            player.prepareAsync();
         }
     }
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         Log.d(TAG, "Song Play complete");
-        eventBus.post(new PlaybackPaused());
+        if (queueManager.next() != null) {
+            songSeek = 0;
+            playMusic();
+        } else {
+            pauseMusic();
+        }
     }
 
     @Override

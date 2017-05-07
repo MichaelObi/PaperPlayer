@@ -1,6 +1,7 @@
 package net.devdome.paperplayer.presentation.musiclibrary;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import net.devdome.paperplayer.R;
 import net.devdome.paperplayer.event.EventBus;
 import net.devdome.paperplayer.injection.Injector;
+import net.devdome.paperplayer.playback.PlaybackService;
 import net.devdome.paperplayer.playback.events.PlaybackPaused;
 import net.devdome.paperplayer.playback.events.PlaybackStarted;
 import net.devdome.paperplayer.playback.events.action.RequestPlaybackState;
@@ -136,7 +138,7 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
     @Override
     public void onPermissionGranted(PermissionGrantedResponse response) {
         musicLibraryPresenter.attachView(this);
-//        fab.setVisibility(View.VISIBLE);
+        startService(new Intent(this, PlaybackService.class));
     }
 
     @Override

@@ -54,16 +54,28 @@ class LocalQueueManager : QueueManager {
         return null
     }
 
-    override fun getCurrentSong(): Song {
+    override fun getCurrentSong(): Song? {
+        if (currentIndex >= playingQueue.size) {
+            return null
+        }
         return playingQueue[currentIndex].song
     }
 
     override fun next(): Song? {
-        return null
+        currentIndex++;
+        if (currentIndex >= playingQueue.size) {
+            currentIndex = 0
+            return null
+        }
+        return playingQueue.get(currentIndex).song
     }
 
     override fun previous(): Song? {
         return null
+    }
+
+    override fun hasSongs(): Boolean {
+        return playingQueue.size > 0
     }
 
     fun setQueueActionListener(queueActionListener: QueueManager.QueueActionListener) {

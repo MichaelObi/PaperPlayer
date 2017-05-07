@@ -30,9 +30,7 @@ public abstract class BasePresenter<T extends Mvp.View> implements Mvp.Presenter
 
     @NonNull
     public T getViewOrThrow() {
-        if (this.view == null) {
-            throw new MvpViewNotAttachedException();
-        }
+        checkViewAttached();
         return this.view;
     }
 

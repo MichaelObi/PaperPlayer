@@ -1,5 +1,6 @@
 package net.devdome.paperplayer.presentation.musiclibrary.fragment.miniplayer
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
@@ -17,10 +18,10 @@ import net.devdome.paperplayer.event.EventBus
 import net.devdome.paperplayer.injection.Injector
 import net.devdome.paperplayer.playback.events.PlaybackState
 import net.devdome.paperplayer.playback.events.action.TogglePlayback
+import net.devdome.paperplayer.presentation.player.PlayerActivity
 import net.devdome.paperplayer.widget.PlayPauseButton
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-
 
 /**
  * PaperPlayer
@@ -35,27 +36,20 @@ class MiniPlayerFragment : Fragment(), MiniPlayerContract.View, View.OnClickList
     var miniPlayerSongArtist: TextView? = null
     var miniAlbumArt: ImageView? = null
     var playPauseButton: PlayPauseButton? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        presenter = MiniPlayerPresenter(Injector.provideMusicRepository(activity), Schedulers.io(),
-                AndroidSchedulers.mainThread())
-
-    }
-
-    override fun onPause() {
-        super.onPause()
-        presenter?.detachView()
-    }
+    var miniPlayer: View? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater!!.inflate(R.layout.mini_player, container, false)
+        presenter = MiniPlayerPresenter(Injector.provideMusicRepository(activity), Schedulers.io(),
+                AndroidSchedulers.mainThread())
         presenter?.attachView(this)
         miniPlayerSongName = view.findViewById(R.id.song_name_mini) as TextView?
+        miniPlayer = view.findViewById(R.id.mini_player)
         miniPlayerSongArtist = view.findViewById(R.id.song_artist_mini) as TextView?
         miniAlbumArt = view.findViewById(R.id.album_art_mini) as ImageView?
         playPauseButton = view.findViewById(R.id.play_pause) as PlayPauseButton?
         playPauseButton?.setOnClickListener(this)
+        miniPlayer?.setOnClickListener(this)
         return view
     }
 
@@ -65,16 +59,19 @@ class MiniPlayerFragment : Fragment(), MiniPlayerContract.View, View.OnClickList
         presenter?.initialize()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter?.detachView()
         bus = null
+
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.play_pause -> bus?.post(TogglePlayback())
             else -> {
-                TODO("Not Implemented - Now Playing")
+                val intent = Intent(activity, PlayerActivity::class.java)
+                startActivity(intent)
             }
         }
     }
@@ -106,5 +103,4 @@ class MiniPlayerFragment : Fragment(), MiniPlayerContract.View, View.OnClickList
             playPauseButton?.play()
         }
     }
-
 }
