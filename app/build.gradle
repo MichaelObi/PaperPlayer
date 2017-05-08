@@ -6,7 +6,7 @@ android {
     buildToolsVersion '25.0.2'
 
     defaultConfig {
-        applicationId "net.devdome.paperplayer"
+        applicationId "xyz.michaelobi.paperplayer"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
@@ -26,10 +26,10 @@ android {
 
     productFlavors {
         prod {
-            applicationId "net.devdome.paperplayer"
+            applicationId "xyz.michaelobi.paperplayer"
         }
         mock {
-            applicationId "net.devdome.paperplayer.mock"
+            applicationId "xyz.michaelobi.paperplayer.mock"
         }
     }
     compileOptions {

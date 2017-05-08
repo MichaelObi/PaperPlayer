@@ -1,11 +1,11 @@
-package net.devdome.paperplayer.data.library.local;
+package xyz.michaelobi.paperplayer.data.library.local;
 
 import android.content.Context;
 
-import net.devdome.paperplayer.data.library.LibraryManager;
-import net.devdome.paperplayer.data.model.Album;
-import net.devdome.paperplayer.data.model.Artist;
-import net.devdome.paperplayer.data.model.Song;
+import xyz.michaelobi.paperplayer.data.library.LibraryManager;
+import xyz.michaelobi.paperplayer.data.model.Album;
+import xyz.michaelobi.paperplayer.data.model.Artist;
+import xyz.michaelobi.paperplayer.data.model.Song;
 
 import java.util.ArrayList;
 import java.util.List;

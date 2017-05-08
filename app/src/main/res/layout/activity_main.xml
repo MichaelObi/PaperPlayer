@@ -57,7 +57,7 @@
     <!--<include layout="@layout/mini_player"/>-->
 
     <fragment
-            android:name="net.devdome.paperplayer.presentation.musiclibrary.fragment.miniplayer.MiniPlayerFragment"
+            android:name="xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.miniplayer.MiniPlayerFragment"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:layout_gravity="bottom"
