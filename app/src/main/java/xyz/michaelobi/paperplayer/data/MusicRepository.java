@@ -15,7 +15,6 @@ import rx.Observable;
  */
 public class MusicRepository implements MusicRepositoryInterface {
 
-
     private LibraryManager libraryManager;
 
     public MusicRepository(LibraryManager libraryManager) {

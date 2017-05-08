@@ -35,6 +35,5 @@ public class RxBus implements EventBus {
 
     @Override
     public void cleanup() {
-
     }
 }

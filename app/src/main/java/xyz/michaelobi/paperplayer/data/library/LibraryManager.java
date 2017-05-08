@@ -1,10 +1,6 @@
 package xyz.michaelobi.paperplayer.data.library;
 
 
-import xyz.michaelobi.paperplayer.data.model.Album;
-import xyz.michaelobi.paperplayer.data.model.Artist;
-import xyz.michaelobi.paperplayer.data.model.Song;
-
 import java.util.List;
 
 import rx.Observable;
