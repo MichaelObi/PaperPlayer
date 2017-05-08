@@ -11,12 +11,15 @@ import net.devdome.paperplayer.playback.events.PlaybackState
 interface PlayerContract {
 
     interface View : Mvp.View {
-        fun updatePlayPauseButton(isPlaying: Boolean)
+        fun updatePlaybackState(isPlaying: Boolean)
         fun updateTitleAndArtist(playbackState: PlaybackState)
         fun updateSongArt(uri: String?)
+        fun updateSeeker(playbackState: PlaybackState)
     }
 
     interface Presenter : Mvp.Presenter<View> {
         fun playPauseToggle()
+        fun next()
+        fun previous()
     }
 }
