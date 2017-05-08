@@ -1,15 +1,15 @@
-package net.devdome.paperplayer.injection;
+package xyz.michaelobi.paperplayer.injection;
 
 import android.content.Context;
 
-import net.devdome.paperplayer.data.MusicRepository;
-import net.devdome.paperplayer.data.MusicRepositoryInterface;
-import net.devdome.paperplayer.data.library.LibraryManager;
-import net.devdome.paperplayer.data.library.local.MockLocalLibraryManager;
-import net.devdome.paperplayer.event.EventBus;
-import net.devdome.paperplayer.event.RxBus;
-import net.devdome.paperplayer.playback.queue.LocalQueueManager;
-import net.devdome.paperplayer.playback.queue.QueueManager;
+import xyz.michaelobi.paperplayer.data.MusicRepository;
+import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
+import xyz.michaelobi.paperplayer.data.library.LibraryManager;
+import xyz.michaelobi.paperplayer.data.library.local.MockLocalLibraryManager;
+import xyz.michaelobi.paperplayer.event.EventBus;
+import xyz.michaelobi.paperplayer.event.RxBus;
+import xyz.michaelobi.paperplayer.playback.queue.LocalQueueManager;
+import xyz.michaelobi.paperplayer.playback.queue.QueueManager;
 
 /**
  * PaperPlayer

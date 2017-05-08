@@ -32,7 +32,7 @@
             android:translationZ="4dp"
             tools:src="@drawable/cover_drake" />
 
-        <net.devdome.paperplayer.widget.PlayPauseButton
+        <xyz.michaelobi.paperplayer.widget.PlayPauseButton
             android:id="@+id/play_pause"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

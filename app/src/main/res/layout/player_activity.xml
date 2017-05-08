@@ -5,7 +5,7 @@
 
         <variable
                 name="presenter"
-                type="net.devdome.paperplayer.presentation.player.PlayerContract.Presenter"/>
+                type="xyz.michaelobi.paperplayer.presentation.player.PlayerContract.Presenter"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -111,7 +111,7 @@
                             android:paddingRight="8dp"
                             tools:showIn="@layout/player_activity">
 
-                <net.devdome.paperplayer.widget.PlayPauseButton
+                <xyz.michaelobi.paperplayer.widget.PlayPauseButton
                         android:id="@+id/play_pause"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
