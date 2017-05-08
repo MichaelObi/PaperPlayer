@@ -28,8 +28,17 @@ class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePrese
 
     override fun attachView(view: PlayerContract.View) {
         super.attachView(view)
-        bus.observable(PlaybackPaused::class.java)?.subscribe { getView()?.updatePlaybackState(false) }
-        bus.observable(PlaybackStarted::class.java)?.subscribe { getView()?.updatePlaybackState(true) }
+        bus.observable(PlaybackPaused::class.java)?.subscribe {
+            playbackPaused ->
+            getView()?.updatePlaybackState(playbackPaused.playbackState)
+        }
+        bus.observable(PlaybackStarted::class.java)?.subscribe {
+            playbackStarted ->
+            run {
+                getView()?.updatePlaybackState(playbackStarted.playbackState)
+
+            }
+        }
         bus.observable(PlaybackState::class.java)?.subscribe {
             playbackState ->
             run {

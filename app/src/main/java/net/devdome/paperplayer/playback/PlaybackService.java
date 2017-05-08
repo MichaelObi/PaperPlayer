@@ -38,6 +38,8 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     private MediaPlayer player;
     private int songSeek = 0;
 
+    // TODO: Remove all PlaybackStarted and PlaybackStopped  events in favor of PlaybackState
+
     public PlaybackService() {
         eventBus = Injector.provideEventBus();
         queueManager = Injector.provideQueueManager();
@@ -89,7 +91,9 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                 songSeek = player.getCurrentPosition();
                 player.pause();
             }
-            eventBus.post(new PlaybackPaused());
+            PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
+                    player.isPlaying(), player.getDuration(), songSeek);
+            eventBus.post(new PlaybackPaused(playbackState));
         }
     }
 
@@ -125,18 +129,16 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
         eventBus.observable(RequestPlaybackState.class)
                 .subscribe(requestPlaybackState -> {
                     Log.d(TAG, "requestPlaybackState called");
-                    if (player != null) {
-                        if (player.isPlaying()) {
-                            eventBus.post(new PlaybackStarted(queueManager.getCurrentSong()));
-                            eventBus.post(new PlaybackState(queueManager.getCurrentSong(),
-                                    player.isPlaying(), player.getDuration(), songSeek));
-                            return;
-                        }
+                    PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
+                            player.isPlaying(), player.getDuration(), songSeek);
+                    if (player.isPlaying()) {
+                        eventBus.post(new PlaybackStarted(playbackState));
+                        eventBus.post(playbackState);
+                        return;
                     }
-                    eventBus.post(new PlaybackPaused());
                     if (queueManager.hasSongs()) {
-                        eventBus.post(new PlaybackState(queueManager.getCurrentSong(),
-                                player.isPlaying(), player.getDuration(), songSeek));
+                        eventBus.post(new PlaybackPaused(playbackState));
+                        eventBus.post(playbackState);
                     }
                 });
         eventBus.observable(NextSong.class)
@@ -202,7 +204,9 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
         if (requestAudioFocus()) {
             player.seekTo(songSeek);
             player.start();
-            eventBus.post(new PlaybackStarted(queueManager.getCurrentSong()));
+            PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
+                    player.isPlaying(), player.getDuration(), songSeek);
+            eventBus.post(new PlaybackStarted(playbackState));
             eventBus.post(new RequestPlaybackState());
         }
     }

@@ -11,7 +11,7 @@ import net.devdome.paperplayer.playback.events.PlaybackState
 interface PlayerContract {
 
     interface View : Mvp.View {
-        fun updatePlaybackState(isPlaying: Boolean)
+        fun updatePlaybackState(playbackState: PlaybackState)
         fun updateTitleAndArtist(playbackState: PlaybackState)
         fun updateSongArt(uri: String?)
         fun updateSeeker(playbackState: PlaybackState)
