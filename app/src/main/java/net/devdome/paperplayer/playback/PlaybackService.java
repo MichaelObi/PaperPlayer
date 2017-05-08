@@ -16,8 +16,11 @@ import net.devdome.paperplayer.injection.Injector;
 import net.devdome.paperplayer.playback.events.PlaybackPaused;
 import net.devdome.paperplayer.playback.events.PlaybackStarted;
 import net.devdome.paperplayer.playback.events.PlaybackState;
+import net.devdome.paperplayer.playback.events.action.NextSong;
 import net.devdome.paperplayer.playback.events.action.PlayAllSongs;
+import net.devdome.paperplayer.playback.events.action.PreviousSong;
 import net.devdome.paperplayer.playback.events.action.RequestPlaybackState;
+import net.devdome.paperplayer.playback.events.action.Seek;
 import net.devdome.paperplayer.playback.events.action.TogglePlayback;
 import net.devdome.paperplayer.playback.queue.QueueManager;
 
@@ -36,15 +39,12 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     private MediaPlayer player;
     private int songSeek = 0;
 
+    // TODO: Remove all PlaybackStarted and PlaybackStopped  events in favor of PlaybackState
+
     public PlaybackService() {
         eventBus = Injector.provideEventBus();
         queueManager = Injector.provideQueueManager();
         musicRepository = Injector.provideMusicRepository(this);
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
     }
 
     @Override
@@ -92,7 +92,9 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                 songSeek = player.getCurrentPosition();
                 player.pause();
             }
-            eventBus.post(new PlaybackPaused());
+            PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
+                    player.isPlaying(), player.getDuration(), songSeek);
+            eventBus.post(new PlaybackPaused(playbackState));
         }
     }
 
@@ -128,18 +130,37 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
         eventBus.observable(RequestPlaybackState.class)
                 .subscribe(requestPlaybackState -> {
                     Log.d(TAG, "requestPlaybackState called");
-                    if (player != null) {
-                        if (player.isPlaying()) {
-                            eventBus.post(new PlaybackStarted(queueManager.getCurrentSong()));
-                            eventBus.post(new PlaybackState(queueManager.getCurrentSong()));
-                            return;
-                        }
+                    PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
+                            player.isPlaying(), player.getDuration(), songSeek);
+                    if (player.isPlaying()) {
+                        eventBus.post(new PlaybackStarted(playbackState));
+                        eventBus.post(playbackState);
+                        return;
                     }
-                    eventBus.post(new PlaybackPaused());
                     if (queueManager.hasSongs()) {
-                        eventBus.post(new PlaybackState(queueManager.getCurrentSong()));
+                        eventBus.post(new PlaybackPaused(playbackState));
+                        eventBus.post(playbackState);
                     }
                 });
+        eventBus.observable(NextSong.class).subscribe(nextSong -> playNextSong());
+
+        eventBus.observable(PreviousSong.class).subscribe(nextSong -> playPreviousSong());
+
+        eventBus.observable(Seek.class).subscribe(seek -> {
+            songSeek = seek.getSeekTo();
+            player.seekTo(songSeek);
+            eventBus.post(new RequestPlaybackState());
+        }, e -> Log.e(TAG, e.getMessage()));
+    }
+
+    private void playPreviousSong() {
+        pauseMusic();
+        songSeek = 0;
+        if (queueManager.previous() != null) {
+            playMusic();
+        }
+        eventBus.post(RequestPlaybackState.class);
+
     }
 
     private void stopMusic() {
@@ -166,17 +187,21 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         Log.d(TAG, "Song Play complete");
+        playNextSong();
+    }
+
+    private void playNextSong() {
+        pauseMusic();
         if (queueManager.next() != null) {
             songSeek = 0;
             playMusic();
-        } else {
-            pauseMusic();
         }
+        eventBus.post(RequestPlaybackState.class);
     }
 
     @Override
-    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-        return false;
+    public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
+        return true;
     }
 
     @Override
@@ -184,7 +209,9 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
         if (requestAudioFocus()) {
             player.seekTo(songSeek);
             player.start();
-            eventBus.post(new PlaybackStarted(queueManager.getCurrentSong()));
+            PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
+                    player.isPlaying(), player.getDuration(), songSeek);
+            eventBus.post(new PlaybackStarted(playbackState));
             eventBus.post(new RequestPlaybackState());
         }
     }

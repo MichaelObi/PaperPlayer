@@ -13,6 +13,7 @@
                                                      xmlns:tools="http://schemas.android.com/tools"
                                                      android:layout_width="match_parent"
                                                      android:layout_height="match_parent"
+                                                     android:fitsSystemWindows="true"
                                                      tools:context=".presentation.player.PlayerActivity">
 
         <LinearLayout
@@ -137,6 +138,7 @@
                         android:layout_toLeftOf="@id/play_pause"
                         android:layout_toStartOf="@id/play_pause"
                         android:tint="@android:color/white"
+                        android:onClick="@{() -> presenter.previous()}"
                         app:srcCompat="@drawable/ic_skip_previous_24dp"/>
 
                 <ImageView
@@ -160,6 +162,7 @@
                         android:layout_toEndOf="@id/play_pause"
                         android:layout_toRightOf="@id/play_pause"
                         android:tint="@android:color/white"
+                        android:onClick="@{() -> presenter.next()}"
                         app:srcCompat="@drawable/ic_skip_next_24dp"/>
 
                 <ImageView
@@ -188,8 +191,9 @@
                     android:background="@android:color/transparent"
                     app:layout_collapseMode="pin"
                     app:navigationIcon="@drawable/ic_close_24dp"
+                    android:fitsSystemWindows="true"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                    app:theme="@style/ThemeOverlay.AppCompat.Dark"/>
+                    android:theme="@style/ThemeOverlay.AppCompat.Dark"/>
         </LinearLayout>
 
     </android.support.design.widget.CoordinatorLayout>
