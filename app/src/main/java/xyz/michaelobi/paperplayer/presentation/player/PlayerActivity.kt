@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.SeekBar
 import com.squareup.picasso.Picasso
 import xyz.michaelobi.paperplayer.R
@@ -37,6 +39,18 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View, SeekBar.OnSeekB
         presenter?.attachView(this)
         viewBinding.presenter = presenter
         viewBinding.playerSeekbar.setOnSeekBarChangeListener(this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_player, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+        }
+        return true
     }
 
     override fun onDestroy() {
@@ -120,4 +134,6 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View, SeekBar.OnSeekB
     override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+
+
 }

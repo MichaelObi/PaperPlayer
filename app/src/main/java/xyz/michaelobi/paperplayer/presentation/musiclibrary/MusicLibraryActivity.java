@@ -138,7 +138,7 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
     @Override
     public void onPermissionGranted(PermissionGrantedResponse response) {
         musicLibraryPresenter.attachView(this);
-        startService(new Intent(this, PlaybackService.class));
+        getApplicationContext().startService(new Intent(getApplicationContext(), PlaybackService.class));
     }
 
     @Override

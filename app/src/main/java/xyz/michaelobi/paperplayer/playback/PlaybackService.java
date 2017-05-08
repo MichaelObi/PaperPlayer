@@ -10,6 +10,8 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
 
+import java.io.IOException;
+
 import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
 import xyz.michaelobi.paperplayer.event.EventBus;
 import xyz.michaelobi.paperplayer.injection.Injector;
@@ -23,8 +25,6 @@ import xyz.michaelobi.paperplayer.playback.events.action.RequestPlaybackState;
 import xyz.michaelobi.paperplayer.playback.events.action.Seek;
 import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback;
 import xyz.michaelobi.paperplayer.playback.queue.QueueManager;
-
-import java.io.IOException;
 
 /**
  * PaperPlayer Michael Obi 11 01 2017 10:46 PM
@@ -48,7 +48,8 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public void onCreate() {
+        super.onCreate();
         registerEvents();
         player = new MediaPlayer();
         player.setOnCompletionListener(this);
@@ -57,6 +58,10 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
         player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         musicRepository.getAllSongs().subscribe(songs -> queueManager.setQueue(songs, 0));
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         eventBus.post(new RequestPlaybackState());
         return START_STICKY;
     }
@@ -93,7 +98,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                 player.pause();
             }
             PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
-                    player.isPlaying(), player.getDuration(), songSeek);
+                    player.isPlaying(), player.getDuration(), player.getCurrentPosition());
             eventBus.post(new PlaybackPaused(playbackState));
         }
     }
@@ -131,7 +136,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                 .subscribe(requestPlaybackState -> {
                     Log.d(TAG, "requestPlaybackState called");
                     PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
-                            player.isPlaying(), player.getDuration(), songSeek);
+                            player.isPlaying(), player.getDuration(), player.getCurrentPosition());
                     if (player.isPlaying()) {
                         eventBus.post(new PlaybackStarted(playbackState));
                         eventBus.post(playbackState);
@@ -155,12 +160,16 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
 
     private void playPreviousSong() {
         pauseMusic();
-        songSeek = 0;
-        if (queueManager.previous() != null) {
-            playMusic();
+        if (player.getCurrentPosition() > 3) {
+            songSeek = 0;
+            if (queueManager.previous() != null) {
+                playMusic();
+            }
+        } else {
+            songSeek = 0;
+            player.seekTo(songSeek);
         }
         eventBus.post(RequestPlaybackState.class);
-
     }
 
     private void stopMusic() {
@@ -207,10 +216,10 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         if (requestAudioFocus()) {
-            player.seekTo(songSeek);
-            player.start();
+            mediaPlayer.seekTo(songSeek);
+            mediaPlayer.start();
             PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
-                    player.isPlaying(), player.getDuration(), songSeek);
+                    mediaPlayer.isPlaying(), mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition());
             eventBus.post(new PlaybackStarted(playbackState));
             eventBus.post(new RequestPlaybackState());
         }

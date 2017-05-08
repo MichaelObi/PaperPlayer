@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-
     <data>
-
         <variable
                 name="presenter"
                 type="xyz.michaelobi.paperplayer.presentation.player.PlayerContract.Presenter"/>
@@ -14,6 +12,7 @@
                                                      android:layout_width="match_parent"
                                                      android:layout_height="match_parent"
                                                      android:fitsSystemWindows="true"
+                                                     android:weightSum="6"
                                                      tools:context=".presentation.player.PlayerActivity">
 
         <LinearLayout
@@ -21,14 +20,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/black"
-                android:orientation="vertical">
+                android:orientation="vertical"
+               android:weightSum="5">
 
-            <ImageView
+            <xyz.michaelobi.paperplayer.widget.SquareImageView
                     android:id="@+id/album_art"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/album_art"
+                    android:layout_weight="5"
                     android:src="@drawable/default_artwork_dark"/>
 
             <com.annimon.paperstyle.PaperSeekBar
