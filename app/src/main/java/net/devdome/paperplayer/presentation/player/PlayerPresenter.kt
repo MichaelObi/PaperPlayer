@@ -8,6 +8,8 @@ import net.devdome.paperplayer.mvp.BasePresenter
 import net.devdome.paperplayer.playback.events.PlaybackPaused
 import net.devdome.paperplayer.playback.events.PlaybackStarted
 import net.devdome.paperplayer.playback.events.PlaybackState
+import net.devdome.paperplayer.playback.events.action.NextSong
+import net.devdome.paperplayer.playback.events.action.PreviousSong
 import net.devdome.paperplayer.playback.events.action.RequestPlaybackState
 import net.devdome.paperplayer.playback.events.action.TogglePlayback
 import net.devdome.paperplayer.presentation.musiclibrary.fragment.miniplayer.MiniPlayerPresenter
@@ -20,20 +22,28 @@ import rx.Subscriber
  */
 
 class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePresenter<PlayerContract.View>(), PlayerContract.Presenter {
-    override fun playPauseToggle() {
-        bus.post(TogglePlayback())
-    }
+
 
     internal var bus = Injector.provideEventBus()
 
     override fun attachView(view: PlayerContract.View) {
         super.attachView(view)
-        bus.observable(PlaybackPaused::class.java)?.subscribe { getView()?.updatePlayPauseButton(false) }
-        bus.observable(PlaybackStarted::class.java)?.subscribe { getView()?.updatePlayPauseButton(true) }
+        bus.observable(PlaybackPaused::class.java)?.subscribe {
+            playbackPaused ->
+            getView()?.updatePlaybackState(playbackPaused.playbackState)
+        }
+        bus.observable(PlaybackStarted::class.java)?.subscribe {
+            playbackStarted ->
+            run {
+                getView()?.updatePlaybackState(playbackStarted.playbackState)
+
+            }
+        }
         bus.observable(PlaybackState::class.java)?.subscribe {
             playbackState ->
             run {
                 getView()?.updateTitleAndArtist(playbackState)
+                getView()?.updateSeeker(playbackState)
                 getAlbumArtUri(playbackState.song.albumId)
             }
         }
@@ -45,7 +55,19 @@ class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePrese
         super.detachView()
     }
 
-    fun getAlbumArtUri(albumId: Long) {
+    override fun next() {
+        bus.post(NextSong())
+    }
+
+    override fun previous() {
+        bus.post(PreviousSong())
+    }
+
+    override fun playPauseToggle() {
+        bus.post(TogglePlayback())
+    }
+
+    private fun getAlbumArtUri(albumId: Long) {
         addSubscription(musicRepository.getAlbum(albumId).subscribe(object : Subscriber<Album>() {
             override fun onCompleted() {}
 

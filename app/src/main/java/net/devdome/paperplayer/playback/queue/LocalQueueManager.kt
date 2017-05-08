@@ -8,7 +8,7 @@ class LocalQueueManager : QueueManager {
     /**
      * Now Playing Queue
      */
-    private val playingQueue: MutableList<QueueItem> = Collections.synchronizedList(ArrayList<QueueItem>())
+    private val playingQueue: MutableList<QueueItem?> = Collections.synchronizedList(ArrayList<QueueItem?>())
 
     private var currentIndex: Int = 0
 
@@ -58,7 +58,7 @@ class LocalQueueManager : QueueManager {
         if (currentIndex >= playingQueue.size) {
             return null
         }
-        return playingQueue[currentIndex].song
+        return playingQueue[currentIndex]?.song
     }
 
     override fun next(): Song? {
@@ -67,11 +67,15 @@ class LocalQueueManager : QueueManager {
             currentIndex = 0
             return null
         }
-        return playingQueue.get(currentIndex).song
+        return playingQueue[currentIndex]?.song
     }
 
     override fun previous(): Song? {
-        return null
+        currentIndex--;
+        if (currentIndex < 0) {
+            currentIndex = 0
+        }
+        return playingQueue[currentIndex]?.song
     }
 
     override fun hasSongs(): Boolean {

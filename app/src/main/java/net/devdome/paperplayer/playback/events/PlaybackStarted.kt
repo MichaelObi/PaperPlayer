@@ -8,4 +8,4 @@ import net.devdome.paperplayer.data.model.Song
  * 12 01 2017 7:09 AM
  */
 
-class PlaybackStarted(val song: Song)
+class PlaybackStarted(val playbackState: PlaybackState)

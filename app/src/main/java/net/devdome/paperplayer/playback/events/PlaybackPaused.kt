@@ -6,4 +6,4 @@ package net.devdome.paperplayer.playback.events
  * Michael Obi
  * 17 03 2017 2:36 PM
  */
-class PlaybackPaused
+class PlaybackPaused(val playbackState: PlaybackState)
