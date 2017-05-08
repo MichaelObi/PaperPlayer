@@ -129,14 +129,14 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                         if (player.isPlaying()) {
                             eventBus.post(new PlaybackStarted(queueManager.getCurrentSong()));
                             eventBus.post(new PlaybackState(queueManager.getCurrentSong(),
-                                    player.isPlaying(), player.getDuration(),songSeek));
+                                    player.isPlaying(), player.getDuration(), songSeek));
                             return;
                         }
                     }
                     eventBus.post(new PlaybackPaused());
                     if (queueManager.hasSongs()) {
                         eventBus.post(new PlaybackState(queueManager.getCurrentSong(),
-                                player.isPlaying(), player.getDuration(),songSeek));
+                                player.isPlaying(), player.getDuration(), songSeek));
                     }
                 });
         eventBus.observable(NextSong.class)
@@ -193,8 +193,8 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     }
 
     @Override
-    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-        return false;
+    public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
+        return true;
     }
 
     @Override
