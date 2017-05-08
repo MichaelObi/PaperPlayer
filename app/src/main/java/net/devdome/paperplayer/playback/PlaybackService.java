@@ -20,6 +20,7 @@ import net.devdome.paperplayer.playback.events.action.NextSong;
 import net.devdome.paperplayer.playback.events.action.PlayAllSongs;
 import net.devdome.paperplayer.playback.events.action.PreviousSong;
 import net.devdome.paperplayer.playback.events.action.RequestPlaybackState;
+import net.devdome.paperplayer.playback.events.action.Seek;
 import net.devdome.paperplayer.playback.events.action.TogglePlayback;
 import net.devdome.paperplayer.playback.queue.QueueManager;
 
@@ -141,11 +142,15 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                         eventBus.post(playbackState);
                     }
                 });
-        eventBus.observable(NextSong.class)
-                .subscribe(nextSong -> playNextSong());
+        eventBus.observable(NextSong.class).subscribe(nextSong -> playNextSong());
 
-        eventBus.observable(PreviousSong.class)
-                .subscribe(nextSong -> playPreviousSong());
+        eventBus.observable(PreviousSong.class).subscribe(nextSong -> playPreviousSong());
+
+        eventBus.observable(Seek.class).subscribe(seek -> {
+            songSeek = seek.getSeekTo();
+            player.seekTo(songSeek);
+            eventBus.post(new RequestPlaybackState());
+        }, e -> Log.e(TAG, e.getMessage()));
     }
 
     private void playPreviousSong() {
