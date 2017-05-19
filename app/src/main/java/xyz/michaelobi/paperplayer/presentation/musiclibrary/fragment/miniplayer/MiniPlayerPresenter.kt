@@ -6,8 +6,6 @@ import xyz.michaelobi.paperplayer.data.model.Album
 import xyz.michaelobi.paperplayer.event.EventBus
 import xyz.michaelobi.paperplayer.injection.Injector
 import xyz.michaelobi.paperplayer.mvp.BasePresenter
-import xyz.michaelobi.paperplayer.playback.events.PlaybackPaused
-import xyz.michaelobi.paperplayer.playback.events.PlaybackStarted
 import xyz.michaelobi.paperplayer.playback.events.PlaybackState
 import xyz.michaelobi.paperplayer.playback.events.action.RequestPlaybackState
 import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback
@@ -28,11 +26,10 @@ class MiniPlayerPresenter(val musicRepository: MusicRepositoryInterface, val ioS
 
     override fun initialize() {
         checkViewAttached()
-        bus.observable(PlaybackPaused::class.java)?.subscribe { getView()?.updatePlayPauseButton(false) }
-        bus.observable(PlaybackStarted::class.java)?.subscribe { getView()?.updatePlayPauseButton(true) }
         bus.observable(PlaybackState::class.java)?.subscribe {
             playbackState ->
             run {
+                getView()?.updatePlayPauseButton(playbackState.playing)
                 getView()?.updateTitleAndArtist(playbackState)
                 playbackState.song?.albumId?.let { getAlbumArtUri(it) }
             }

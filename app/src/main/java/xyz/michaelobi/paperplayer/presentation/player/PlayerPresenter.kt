@@ -5,8 +5,6 @@ import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface
 import xyz.michaelobi.paperplayer.data.model.Album
 import xyz.michaelobi.paperplayer.injection.Injector
 import xyz.michaelobi.paperplayer.mvp.BasePresenter
-import xyz.michaelobi.paperplayer.playback.events.PlaybackPaused
-import xyz.michaelobi.paperplayer.playback.events.PlaybackStarted
 import xyz.michaelobi.paperplayer.playback.events.PlaybackState
 import xyz.michaelobi.paperplayer.playback.events.action.NextSong
 import xyz.michaelobi.paperplayer.playback.events.action.PreviousSong
@@ -28,20 +26,10 @@ class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePrese
 
     override fun attachView(view: PlayerContract.View) {
         super.attachView(view)
-        bus.observable(PlaybackPaused::class.java)?.subscribe {
-            playbackPaused ->
-            getView()?.updatePlaybackState(playbackPaused.playbackState)
-        }
-        bus.observable(PlaybackStarted::class.java)?.subscribe {
-            playbackStarted ->
-            run {
-                getView()?.updatePlaybackState(playbackStarted.playbackState)
-
-            }
-        }
         bus.observable(PlaybackState::class.java)?.subscribe {
             playbackState ->
             run {
+                getView()?.updatePlaybackState(playbackState)
                 getView()?.updateTitleAndArtist(playbackState)
                 getView()?.updateSeeker(playbackState)
                 playbackState.song?.albumId?.let { getAlbumArtUri(it) }

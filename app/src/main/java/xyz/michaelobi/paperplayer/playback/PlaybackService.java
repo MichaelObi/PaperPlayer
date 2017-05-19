@@ -15,8 +15,6 @@ import java.io.IOException;
 import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
 import xyz.michaelobi.paperplayer.event.EventBus;
 import xyz.michaelobi.paperplayer.injection.Injector;
-import xyz.michaelobi.paperplayer.playback.events.PlaybackPaused;
-import xyz.michaelobi.paperplayer.playback.events.PlaybackStarted;
 import xyz.michaelobi.paperplayer.playback.events.PlaybackState;
 import xyz.michaelobi.paperplayer.playback.events.action.NextSong;
 import xyz.michaelobi.paperplayer.playback.events.action.PlayAllSongs;
@@ -99,7 +97,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
             }
             PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
                     player.isPlaying(), player.getDuration(), player.getCurrentPosition());
-            eventBus.post(new PlaybackPaused(playbackState));
+            eventBus.post(playbackState);
         }
     }
 
@@ -135,15 +133,10 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
         eventBus.observable(RequestPlaybackState.class)
                 .subscribe(requestPlaybackState -> {
                     Log.d(TAG, "requestPlaybackState called");
+                    int duration = player.isPlaying() ? player.getDuration() : 0;
                     PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
-                            player.isPlaying(), player.getDuration(), player.getCurrentPosition());
-                    if (player.isPlaying()) {
-                        eventBus.post(new PlaybackStarted(playbackState));
-                        eventBus.post(playbackState);
-                        return;
-                    }
+                            player.isPlaying(), duration, player.getCurrentPosition());
                     if (queueManager.hasSongs()) {
-                        eventBus.post(new PlaybackPaused(playbackState));
                         eventBus.post(playbackState);
                     }
                 });
@@ -220,7 +213,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
             mediaPlayer.start();
             PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
                     mediaPlayer.isPlaying(), mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition());
-            eventBus.post(new PlaybackStarted(playbackState));
+            eventBus.post(playbackState); //TODO: Check the implication of this
             eventBus.post(new RequestPlaybackState());
         }
     }
