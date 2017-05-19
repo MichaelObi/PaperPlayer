@@ -50,13 +50,13 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     @Override
     public void onCreate() {
         super.onCreate();
-        registerEvents();
         player = new MediaPlayer();
         player.setOnCompletionListener(this);
         player.setOnPreparedListener(this);
         player.setOnErrorListener(this);
         player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        registerEvents();
         musicRepository.getAllSongs().subscribe(songs -> queueManager.setQueue(songs, 0));
     }
 

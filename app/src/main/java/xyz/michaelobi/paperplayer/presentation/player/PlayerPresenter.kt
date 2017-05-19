@@ -44,7 +44,7 @@ class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePrese
             run {
                 getView()?.updateTitleAndArtist(playbackState)
                 getView()?.updateSeeker(playbackState)
-                getAlbumArtUri(playbackState.song.albumId)
+                playbackState.song?.albumId?.let { getAlbumArtUri(it) }
             }
         }
         bus.post(RequestPlaybackState())

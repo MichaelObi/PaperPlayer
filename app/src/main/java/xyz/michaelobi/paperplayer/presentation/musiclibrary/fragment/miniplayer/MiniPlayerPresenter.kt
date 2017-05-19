@@ -34,7 +34,7 @@ class MiniPlayerPresenter(val musicRepository: MusicRepositoryInterface, val ioS
             playbackState ->
             run {
                 getView()?.updateTitleAndArtist(playbackState)
-                getAlbumArtUri(playbackState.song.albumId)
+                playbackState.song?.albumId?.let { getAlbumArtUri(it) }
             }
         }
         bus.post(RequestPlaybackState())

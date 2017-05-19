@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'me.tatarka.retrolambda'
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
@@ -24,11 +23,15 @@ android {
         }
     }
 
+    flavorDimensions "build"
+
     productFlavors {
         prod {
+            dimension "build"
             applicationId "xyz.michaelobi.paperplayer"
         }
         mock {
+            dimension "build"
             applicationId "xyz.michaelobi.paperplayer.mock"
         }
     }
@@ -55,7 +58,6 @@ dependencies {
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
-//    compile "com.android.support:support-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:support-vector-drawable:${SUPPORT_LIB_VERSION}"
 
     compile 'com.annimon:paperstyle:1.1.0'

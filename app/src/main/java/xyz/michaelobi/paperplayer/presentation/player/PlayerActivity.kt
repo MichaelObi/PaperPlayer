@@ -104,8 +104,8 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View, SeekBar.OnSeekB
 
     override fun updateTitleAndArtist(playbackState: PlaybackState) {
         val song = playbackState.song
-        viewBinding.songName?.text = song.title
-        viewBinding.albumArtist?.text = song.artist
+        viewBinding.songName?.text = song?.title
+        viewBinding.albumArtist?.text = song?.artist
     }
 
     override fun updateSongArt(uri: String?) {
