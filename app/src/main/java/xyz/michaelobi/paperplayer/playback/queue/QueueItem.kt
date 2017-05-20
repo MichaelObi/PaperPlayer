@@ -5,4 +5,4 @@ import xyz.michaelobi.paperplayer.data.model.Song
 /**
  * A song in a queue to improve SoC
  */
-class QueueItem(val song: Song, var isPlaying: Boolean)
+class QueueItem(val song: Song, val isPlaying: Boolean)

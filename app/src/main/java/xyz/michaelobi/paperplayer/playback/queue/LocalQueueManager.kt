@@ -37,11 +37,9 @@ class LocalQueueManager : QueueManager {
     override fun setQueue(title: String, songs: List<Song>, startSongId: Long) {
         this.title = title
         var firstSongId = songs[0].id
-        if (startSongId != 0L) {
-            firstSongId = startSongId
-        }
+        if (startSongId != 0L) firstSongId = startSongId
         playingQueue.clear()
-        for (song in songs) {
+        songs.forEach { song ->
             val item = QueueItem(song, song.id == firstSongId)
             playingQueue.add(item)
             if (song.id == startSongId) {
