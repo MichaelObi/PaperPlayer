@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatImageButton
 import android.util.AttributeSet
-
 import xyz.michaelobi.paperplayer.R
 
 /**
@@ -18,9 +17,9 @@ class PlayPauseButton : AppCompatImageButton {
 
     constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     fun play() {
         changeState(ContextCompat.getDrawable(context, R.drawable.ic_play_arrow_white_24dp))
