@@ -5,6 +5,7 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import xyz.michaelobi.paperplayer.R
 import xyz.michaelobi.paperplayer.injection.Injector
@@ -43,5 +44,6 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var title: TextView = itemView.findViewById(R.id.song_item_title) as TextView
         var artist: TextView = itemView.findViewById(R.id.song_item_artist) as TextView
+        var art: ImageView = itemView.findViewById(R.id.album_art) as ImageView
     }
 }

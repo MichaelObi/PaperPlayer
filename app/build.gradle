@@ -59,7 +59,6 @@ dependencies {
     compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:support-vector-drawable:${SUPPORT_LIB_VERSION}"
-
     compile 'com.annimon:paperstyle:1.1.0'
 
     // RxJava

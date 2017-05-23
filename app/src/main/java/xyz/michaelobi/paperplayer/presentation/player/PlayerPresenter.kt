@@ -21,7 +21,6 @@ import rx.Subscriber
 
 class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePresenter<PlayerContract.View>(), PlayerContract.Presenter {
 
-
     internal var bus = Injector.provideEventBus()
 
     override fun attachView(view: PlayerContract.View) {
@@ -69,5 +68,4 @@ class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePrese
             }
         }))
     }
-
 }
