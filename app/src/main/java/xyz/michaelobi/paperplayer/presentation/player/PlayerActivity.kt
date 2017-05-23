@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -32,6 +33,7 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View, SeekBar.OnSeekB
     private var timer: Timer? = null
     private val eventBus = Injector.provideEventBus()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = DataBindingUtil.setContentView(this, R.layout.player_activity)
@@ -39,6 +41,11 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View, SeekBar.OnSeekB
         presenter?.attachView(this)
         viewBinding.presenter = presenter
         viewBinding.playerSeekbar.setOnSeekBarChangeListener(this)
+
+        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        setSupportActionBar(toolbar)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -47,8 +54,18 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View, SeekBar.OnSeekB
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressed()
+        when {
+            item.itemId == android.R.id.home -> {
+                onBackPressed()
+            }
+            else -> when {
+                item.itemId == R.id.action_playlist -> {
+                    val playlistFragment = PlaylistFragment()
+                    val args = Bundle()
+                    playlistFragment.arguments = args
+                    playlistFragment.show(supportFragmentManager, playlistFragment.tag)
+                }
+            }
         }
         return true
     }
@@ -61,11 +78,7 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View, SeekBar.OnSeekB
     override fun updatePlaybackState(playbackState: PlaybackState) {
         updateSeeker(playbackState)
         updateCurrentTime(playbackState.currentDuration)
-        if (playbackState.playing) {
-            viewBinding.playPause?.pause()
-        } else {
-            viewBinding.playPause?.play()
-        }
+        if (playbackState.playing) viewBinding.playPause?.pause() else viewBinding.playPause?.play()
     }
 
 
@@ -104,8 +117,8 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View, SeekBar.OnSeekB
 
     override fun updateTitleAndArtist(playbackState: PlaybackState) {
         val song = playbackState.song
-        viewBinding.songName?.text = song.title
-        viewBinding.albumArtist?.text = song.artist
+        viewBinding.songName?.text = song?.title
+        viewBinding.albumArtist?.text = song?.artist
     }
 
     override fun updateSongArt(uri: String?) {
@@ -134,6 +147,5 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View, SeekBar.OnSeekB
     override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-
 
 }

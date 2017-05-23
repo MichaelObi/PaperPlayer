@@ -1,7 +1,5 @@
 package xyz.michaelobi.paperplayer.playback.queue;
 
-import xyz.michaelobi.paperplayer.data.model.Song;
-
 import java.util.List;
 
 import xyz.michaelobi.paperplayer.data.model.Song;
@@ -15,6 +13,8 @@ public interface QueueManager {
     void setQueue(List<Song> songList, long startSongId);
 
     void setQueue(String title, List<Song> songList, long startSongId);
+
+    List<QueueItem> getQueue();
 
     String getQueueTitle();
 
@@ -31,7 +31,7 @@ public interface QueueManager {
     boolean hasSongs();
 
 
-    public interface QueueActionListener {
+    interface QueueActionListener {
 
         void onQueueSet();
 

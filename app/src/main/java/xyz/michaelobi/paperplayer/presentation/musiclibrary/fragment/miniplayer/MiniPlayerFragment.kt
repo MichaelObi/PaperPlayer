@@ -63,7 +63,6 @@ class MiniPlayerFragment : Fragment(), MiniPlayerContract.View, View.OnClickList
         super.onDestroyView()
         presenter?.detachView()
         bus = null
-
     }
 
     override fun onClick(v: View?) {
@@ -92,15 +91,11 @@ class MiniPlayerFragment : Fragment(), MiniPlayerContract.View, View.OnClickList
 
     override fun updateTitleAndArtist(playbackState: PlaybackState) {
         val song = playbackState.song
-        miniPlayerSongName?.text = song.title
-        miniPlayerSongArtist?.text = song.artist
+        miniPlayerSongName?.text = song?.title
+        miniPlayerSongArtist?.text = song?.artist
     }
 
     override fun updatePlayPauseButton(isPlaying: Boolean) {
-        if (isPlaying) {
-            playPauseButton?.pause()
-        } else {
-            playPauseButton?.play()
-        }
+        if (isPlaying) playPauseButton?.pause() else playPauseButton?.play()
     }
 }

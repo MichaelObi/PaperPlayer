@@ -1,9 +1,5 @@
 package xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.songs;
 
-import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
-import xyz.michaelobi.paperplayer.data.model.Song;
-import xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.LibraryFragmentsContract;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -60,9 +56,9 @@ public class SongsPresenterTest {
 
     public List<Song> getDummySongList() {
         List<Song> songs = new ArrayList<>();
-        songs.add(new Song(1, "I can't let you go", "8701", "Usher", "1998"));
-        songs.add(new Song(2, "Grow", "Revenge of the dreamers II", "Cozz", "2016"));
-        songs.add(new Song(3, "Folgers crystals", "Revenge of the dreamers II", "J. Cole", "2016"));
+        songs.add(new Song(1, "I can't let you go", "8701", "Usher", "1998", null));
+        songs.add(new Song(2, "Grow", "Revenge of the dreamers II", "Cozz", "2016", null));
+        songs.add(new Song(3, "Folgers crystals", "Revenge of the dreamers II", "J. Cole", "2016", null));
 
         return songs;
     }

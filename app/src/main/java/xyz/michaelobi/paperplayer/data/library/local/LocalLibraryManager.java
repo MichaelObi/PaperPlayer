@@ -52,7 +52,7 @@ public class LocalLibraryManager implements LibraryManager {
         Cursor cursor = builder.query();
 
         return create(cursor)
-                .map(Song::from)
+                .map(Song.Companion::from)
                 .doOnCompleted(cursor::close)
                 .toList();
     }
@@ -64,7 +64,7 @@ public class LocalLibraryManager implements LibraryManager {
                 .orderBy(MediaStore.Audio.Albums.ALBUM);
         Cursor cursor = builder.query();
         return create(cursor)
-                .map(Album::from)
+                .map(Album.Companion::from)
                 .doOnCompleted(cursor::close)
                 .toList();
     }
@@ -82,7 +82,7 @@ public class LocalLibraryManager implements LibraryManager {
         Cursor cursor = builder.query();
         return create(cursor)
                 .take(1)
-                .map(Album::from)
+                .map(Album.Companion::from)
                 .doOnCompleted(cursor::close)
                 .first();
     }
@@ -93,7 +93,7 @@ public class LocalLibraryManager implements LibraryManager {
                 .orderBy(MediaStore.Audio.Artists.ARTIST);
         Cursor cursor = builder.query();
         return create(cursor)
-                .map(Artist::from)
+                .map(Artist.Companion::from)
                 .doOnCompleted(cursor::close)
                 .toList();
     }

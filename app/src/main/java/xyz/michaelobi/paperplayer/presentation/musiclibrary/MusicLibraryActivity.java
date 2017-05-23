@@ -25,8 +25,7 @@ import xyz.michaelobi.paperplayer.R;
 import xyz.michaelobi.paperplayer.event.EventBus;
 import xyz.michaelobi.paperplayer.injection.Injector;
 import xyz.michaelobi.paperplayer.playback.PlaybackService;
-import xyz.michaelobi.paperplayer.playback.events.PlaybackPaused;
-import xyz.michaelobi.paperplayer.playback.events.PlaybackStarted;
+import xyz.michaelobi.paperplayer.playback.events.PlaybackState;
 import xyz.michaelobi.paperplayer.playback.events.action.RequestPlaybackState;
 import xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.albums.AlbumsFragment;
 import xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.artist.ArtistsFragment;
@@ -93,11 +92,15 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
     }
 
     private void setUpEventBus() {
-        bus.observable(PlaybackPaused.class)
-                .subscribe(playbackPaused -> fab.setImageResource(R.drawable.ic_play_arrow_white_24dp));
-        bus.observable(PlaybackStarted.class)
-                .subscribe(playbackPaused -> fab.setImageResource(R.drawable.ic_pause_white_24dp));
-        bus.post(new RequestPlaybackState());
+        bus.observable(PlaybackState.class)
+                .subscribe(playbackState -> {
+                    if (playbackState.getPlaying()) {
+                        fab.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+                    } else {
+                        fab.setImageResource(R.drawable.ic_pause_white_24dp);
+                    }
+                });
+      bus.post(new RequestPlaybackState());
 
     }
 

@@ -82,4 +82,14 @@ public class MockLocalLibraryManager implements LibraryManager {
         return Observable.empty();
     }
 
+    @Override
+    public Observable<Album> getAlbum(long id) {
+        for (Album album : albums) {
+            if (album.getId() == id) {
+                return Observable.just(album);
+            }
+        }
+        return Observable.empty();
+    }
+
 }
