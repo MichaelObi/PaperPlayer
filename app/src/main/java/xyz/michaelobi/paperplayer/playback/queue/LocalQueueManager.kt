@@ -20,9 +20,8 @@ class LocalQueueManager : QueueManager {
         title = ""
     }
 
-    override fun getCurrentIndex(): Int {
-        return currentIndex
-    }
+    override fun getCurrentIndex() = currentIndex
+
 
     override fun setCurrentIndex(index: Int) {
         if (index >= 0 && index < playingQueue.size) {
@@ -30,9 +29,7 @@ class LocalQueueManager : QueueManager {
         }
     }
 
-    override fun setQueue(songs: List<Song>, startSongId: Long) {
-        setQueue("", songs, startSongId)
-    }
+    override fun setQueue(songs: List<Song>, startSongId: Long) = setQueue("", songs, startSongId)
 
     override fun setQueue(title: String, songs: List<Song>, startSongId: Long) {
         this.title = title
@@ -48,9 +45,10 @@ class LocalQueueManager : QueueManager {
         }
     }
 
-    override fun getQueueTitle(): String? {
-        return null
-    }
+    override fun getQueue() = playingQueue
+
+
+    override fun getQueueTitle(): String? = null
 
     override fun getCurrentSong(): Song? {
         if (currentIndex >= playingQueue.size) {
@@ -76,9 +74,7 @@ class LocalQueueManager : QueueManager {
         return playingQueue[currentIndex].song
     }
 
-    override fun hasSongs(): Boolean {
-        return playingQueue.size > 0
-    }
+    override fun hasSongs() = playingQueue.size > 0
 
     fun setQueueActionListener(queueActionListener: QueueManager.QueueActionListener) {
         this.queueActionListener = queueActionListener

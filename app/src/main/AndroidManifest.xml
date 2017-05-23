@@ -24,7 +24,7 @@
         </activity>
         <activity
                 android:name=".presentation.player.PlayerActivity"
-                android:theme="@style/AppTheme.NoActionBar"/>
+                android:theme="@style/Player"/>
 
         <service
                 android:name=".playback.PlaybackService"

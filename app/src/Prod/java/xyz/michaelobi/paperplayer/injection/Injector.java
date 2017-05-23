@@ -11,14 +11,6 @@ import xyz.michaelobi.paperplayer.event.RxBus;
 import xyz.michaelobi.paperplayer.playback.queue.LocalQueueManager;
 import xyz.michaelobi.paperplayer.playback.queue.QueueManager;
 
-import xyz.michaelobi.paperplayer.data.MusicRepository;
-import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
-import xyz.michaelobi.paperplayer.data.library.local.LocalLibraryManager;
-import xyz.michaelobi.paperplayer.event.EventBus;
-import xyz.michaelobi.paperplayer.event.RxBus;
-import xyz.michaelobi.paperplayer.playback.queue.LocalQueueManager;
-import xyz.michaelobi.paperplayer.playback.queue.QueueManager;
-
 /**
  * PaperPlayer
  * Michael Obi
@@ -26,8 +18,8 @@ import xyz.michaelobi.paperplayer.playback.queue.QueueManager;
  */
 
 public class Injector {
-
     private static EventBus eventBus;
+    private static QueueManager queueManager;
 
     public static EventBus provideEventBus() {
         if (eventBus == null) {
@@ -38,7 +30,11 @@ public class Injector {
     }
 
     public static QueueManager provideQueueManager() {
-        return new LocalQueueManager();
+        if (queueManager == null) {
+            queueManager = new LocalQueueManager();
+        }
+
+        return queueManager;
     }
 
     public static MusicRepositoryInterface provideMusicRepository(Context context) {

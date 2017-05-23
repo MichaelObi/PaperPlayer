@@ -5,16 +5,16 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
-
     </style>
 
     <style name="Player" parent="AppTheme.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowEnterAnimation">@android:transition/slide_top</item>
         <item name="android:activityOpenEnterAnimation">@android:transition/slide_top</item>
         <item name="android:activityOpenExitAnimation">@android:transition/slide_top</item>
         <item name="android:windowExitAnimation">@android:transition/slide_top</item>
-        <!--<item name="android:windowFullscreen">true</item>-->
     </style>
 </resources>

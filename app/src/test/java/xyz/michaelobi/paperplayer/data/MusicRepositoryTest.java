@@ -2,10 +2,6 @@ package xyz.michaelobi.paperplayer.data;
 
 import junit.framework.Assert;
 
-import xyz.michaelobi.paperplayer.data.library.LibraryManager;
-import xyz.michaelobi.paperplayer.data.model.Album;
-import xyz.michaelobi.paperplayer.data.model.Song;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,6 +12,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.observers.TestSubscriber;
+import xyz.michaelobi.paperplayer.data.library.LibraryManager;
 import xyz.michaelobi.paperplayer.data.model.Album;
 import xyz.michaelobi.paperplayer.data.model.Song;
 
@@ -33,6 +30,7 @@ public class MusicRepositoryTest {
     private final String songTitle = "Folgers Crystals";
 
     @Mock
+    private
     LibraryManager libraryManager;
     private MusicRepositoryInterface musicRepository;
 

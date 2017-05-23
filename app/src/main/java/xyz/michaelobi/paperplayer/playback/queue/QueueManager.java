@@ -14,6 +14,8 @@ public interface QueueManager {
 
     void setQueue(String title, List<Song> songList, long startSongId);
 
+    List<QueueItem> getQueue();
+
     String getQueueTitle();
 
     Song getCurrentSong();
