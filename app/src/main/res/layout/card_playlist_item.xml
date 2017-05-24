@@ -1,80 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2017 MIchael Obi
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/song_item_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:clickable="true"
-    tools:showIn="@layout/bottomsheet_playlist">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/song_item_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                tools:showIn="@layout/bottomsheet_playlist">
 
     <ImageButton
-        android:id="@+id/reorder"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:background="?attr/selectableItemBackground"
-        android:cropToPadding="true"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:padding="8dp"
-        android:tint="?android:attr/textColorHint"
-        app:srcCompat="@drawable/ic_reorder_black_24dp" />
+            android:id="@+id/reorder"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackground"
+            android:cropToPadding="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:padding="8dp"
+            android:tint="?android:attr/textColorHint"
+            app:srcCompat="@drawable/ic_reorder_black_24dp"/>
 
-
-    <ImageButton
-        android:id="@+id/song_item_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:background="?attr/selectableItemBackground"
-        android:cropToPadding="true"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:padding="8dp"
-        android:tint="?android:attr/textColorHint"
-        app:srcCompat="@drawable/ic_more_vert_24dp" />
-
+    <ImageView
+            android:layout_toRightOf="@id/reorder"
+            android:layout_toEndOf="@id/reorder"
+            android:id="@+id/album_art"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="2dp"
+            android:layout_marginStart="2dp"
+            android:contentDescription="@string/album_art"
+            tools:src="@drawable/cover_drake"/>
 
     <TextView
-        android:id="@+id/song_item_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_toEndOf="@id/reorder"
-        android:layout_toLeftOf="@id/song_item_menu"
-        android:layout_toRightOf="@id/reorder"
-        android:layout_toStartOf="@id/song_item_menu"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        tools:text="6pm in New York" />
+            android:id="@+id/song_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@id/album_art"
+            android:layout_toRightOf="@id/album_art"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            tools:text="6pm in New York"/>
 
     <TextView
-        android:id="@+id/song_item_artist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/song_item_title"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@id/reorder"
-        android:layout_toRightOf="@id/reorder"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        tools:text="Drake" />
+            android:id="@+id/song_item_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/song_item_title"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@id/album_art"
+            android:layout_toRightOf="@id/album_art"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            tools:text="Drake"/>
 
 </RelativeLayout>

@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 MIchael Obi
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 android {
@@ -59,12 +83,11 @@ dependencies {
     compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:support-vector-drawable:${SUPPORT_LIB_VERSION}"
-
     compile 'com.annimon:paperstyle:1.1.0'
 
     // RxJava
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'io.reactivex:rxjava:1.2.3'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
 
@@ -96,7 +119,7 @@ dependencies {
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
     }
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile 'com.karumi:dexter:4.0.0'
 
