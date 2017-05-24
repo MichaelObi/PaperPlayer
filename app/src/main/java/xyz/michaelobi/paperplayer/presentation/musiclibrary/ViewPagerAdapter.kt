@@ -22,11 +22,43 @@
  * SOFTWARE.
  */
 
-package xyz.michaelobi.paperplayer.playback.events.action
+package xyz.michaelobi.paperplayer.presentation.musiclibrary
+
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
+
+import java.util.ArrayList
 
 /**
  * PaperPlayer
  * Michael Obi
- * 08 05 2017 2:10 PM
+ * 19 10 2016 5:34 PM
  */
-class Seek(val seekTo: Int)
+
+internal class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+
+    private var fragments: MutableList<Fragment> = ArrayList()
+    private val fragmentTitles = ArrayList<String>()
+
+    override fun getItem(position: Int): Fragment {
+        return fragments[position]
+    }
+
+    override fun getCount(): Int {
+        return fragments.size
+    }
+
+    override fun getPageTitle(position: Int): CharSequence {
+        return fragmentTitles[position]
+    }
+
+    fun setFragments(fragments: MutableList<Fragment>) {
+        this.fragments = fragments
+    }
+
+    fun addFragment(fragment: Fragment, title: String) {
+        fragments.add(fragment)
+        fragmentTitles.add(title)
+    }
+}

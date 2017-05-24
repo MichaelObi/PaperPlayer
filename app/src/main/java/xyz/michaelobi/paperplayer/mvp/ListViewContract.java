@@ -22,11 +22,31 @@
  * SOFTWARE.
  */
 
-package xyz.michaelobi.paperplayer.playback.events.action
+package xyz.michaelobi.paperplayer.mvp;
+
+import java.util.List;
 
 /**
  * PaperPlayer
  * Michael Obi
- * 08 05 2017 2:10 PM
+ * 15 10 2016 3:39 PM
+ *
  */
-class Seek(val seekTo: Int)
+
+
+public interface ListViewContract {
+
+    interface View<T> extends Mvp.View {
+        void showList(List<T> items);
+
+        void showLoading();
+
+        void hideLoading();
+
+        void showError(String message);
+    }
+
+    interface Presenter extends Mvp.Presenter<View> {
+        void getAll();
+    }
+}
