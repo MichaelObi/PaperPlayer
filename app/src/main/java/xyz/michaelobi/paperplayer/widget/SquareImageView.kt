@@ -44,10 +44,9 @@ class SquareImageView : android.support.v7.widget.AppCompatImageView {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val measuredWidth = measuredWidth
         val measuredHeight = measuredHeight
-        if (measuredWidth > measuredHeight) {
+        if (measuredWidth > measuredHeight)
             setMeasuredDimension(measuredHeight, measuredHeight)
-        } else {
+        else
             setMeasuredDimension(measuredWidth, measuredWidth)
-        }
     }
 }
