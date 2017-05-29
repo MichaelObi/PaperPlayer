@@ -28,18 +28,11 @@
                 android:layout_width="match_parent"
                 android:padding="8dp">
 
-    <ImageView
-            android:id="@+id/artist_img"
-            android:layout_width="72dp"
-            android:layout_margin="8dp"
-            android:layout_height="72dp"
-            tools:src="@drawable/cover_fame"/>
-
     <TextView
             android:id="@+id/artist_content_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:layout_below="@id/artist_name"
@@ -55,7 +48,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             tools:text="PartyNextDoor"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_alignParentTop="true"
             android:layout_alignTop="@+id/artist_img"
             android:layout_toRightOf="@+id/artist_img"

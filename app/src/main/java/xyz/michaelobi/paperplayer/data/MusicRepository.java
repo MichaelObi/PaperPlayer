@@ -24,15 +24,14 @@
 
 package xyz.michaelobi.paperplayer.data;
 
-import xyz.michaelobi.paperplayer.data.library.LibraryManager;
-import xyz.michaelobi.paperplayer.data.model.Album;
-import xyz.michaelobi.paperplayer.data.model.Artist;
-import xyz.michaelobi.paperplayer.data.model.Song;
-
 import java.io.IOException;
 import java.util.List;
 
 import rx.Observable;
+import xyz.michaelobi.paperplayer.data.library.LibraryManager;
+import xyz.michaelobi.paperplayer.data.model.Album;
+import xyz.michaelobi.paperplayer.data.model.Artist;
+import xyz.michaelobi.paperplayer.data.model.Song;
 
 /**
  * PaperPlayer Michael Obi 25 10 2016 3:03 AM
@@ -42,7 +41,6 @@ public class MusicRepository implements MusicRepositoryInterface {
     private LibraryManager libraryManager;
 
     public MusicRepository(LibraryManager libraryManager) {
-
         this.libraryManager = libraryManager;
     }
 
