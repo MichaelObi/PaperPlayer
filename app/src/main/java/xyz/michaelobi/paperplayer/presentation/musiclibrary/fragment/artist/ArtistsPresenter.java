@@ -26,15 +26,14 @@ package xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.artist;
 
 import android.util.Log;
 
-import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
-import xyz.michaelobi.paperplayer.data.model.Artist;
-import xyz.michaelobi.paperplayer.mvp.BasePresenter;
-import xyz.michaelobi.paperplayer.mvp.ListViewContract;
-
 import java.util.List;
 
 import rx.Scheduler;
 import rx.Subscriber;
+import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
+import xyz.michaelobi.paperplayer.data.model.Artist;
+import xyz.michaelobi.paperplayer.mvp.BasePresenter;
+import xyz.michaelobi.paperplayer.mvp.ListViewContract;
 
 /**
  * PaperPlayer Michael Obi 15 10 2016 3:45 PM
@@ -64,25 +63,24 @@ public class ArtistsPresenter extends BasePresenter<ListViewContract.View> imple
         addSubscription(musicRepository.getAllArtists()
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
-                .subscribe(
-                        new Subscriber<List<Artist>>() {
-                            @Override
-                            public void onCompleted() {
-                            }
+                .subscribe(new Subscriber<List<Artist>>() {
+                               @Override
+                               public void onCompleted() {
+                               }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                getView().hideLoading();
-                                Log.e(TAG, e.getLocalizedMessage(), e);
-                                getView().showError(e.getMessage());
-                            }
+                               @Override
+                               public void onError(Throwable e) {
+                                   getView().hideLoading();
+                                   Log.e(TAG, e.getLocalizedMessage(), e);
+                                   getView().showError(e.getMessage());
+                               }
 
-                            @Override
-                            public void onNext(List<Artist> artists) {
-                                getView().hideLoading();
-                                getView().showList(artists);
-                            }
-                        }
+                               @Override
+                               public void onNext(List<Artist> artists) {
+                                   getView().hideLoading();
+                                   getView().showList(artists);
+                               }
+                           }
                 )
         );
     }

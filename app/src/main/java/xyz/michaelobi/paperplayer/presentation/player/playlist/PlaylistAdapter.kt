@@ -25,15 +25,11 @@
 package xyz.michaelobi.paperplayer.presentation.player.playlist
 
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import xyz.michaelobi.paperplayer.R
-import xyz.michaelobi.paperplayer.injection.Injector
 import xyz.michaelobi.paperplayer.playback.queue.QueueItem
+
 
 /**
  * PaperPlayer
@@ -41,33 +37,28 @@ import xyz.michaelobi.paperplayer.playback.queue.QueueItem
  * 22 05 2017 11:19 PM
  */
 
-class PlaylistAdapter : android.support.v7.widget.RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
+class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
+    private var queue: List<QueueItem> = ArrayList()
 
-    internal var itemTouchHelper: android.support.v7.widget.helper.ItemTouchHelper? = null
-    private val queue: List<xyz.michaelobi.paperplayer.playback.queue.QueueItem>
-
-    init {
-        val queueManager = xyz.michaelobi.paperplayer.injection.Injector.provideQueueManager()
-        queue = queueManager.queue
+    fun setQueueItems(queue: List<QueueItem>) {
+        this.queue = queue
+        notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): xyz.michaelobi.paperplayer.presentation.player.playlist.PlaylistAdapter.ViewHolder {
-        val itemView = android.view.LayoutInflater.from(parent.context).inflate(xyz.michaelobi.paperplayer.R.layout.card_playlist_item, parent, false)
-        return xyz.michaelobi.paperplayer.presentation.player.playlist.PlaylistAdapter.ViewHolder(itemView)
+    override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): PlaylistAdapter.ViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.card_playlist_item, parent, false)
+        return ViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: xyz.michaelobi.paperplayer.presentation.player.playlist.PlaylistAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PlaylistAdapter.ViewHolder, position: Int) {
         holder.title.text = queue[position].song.title
         holder.artist.text = queue[position].song.artist
     }
 
-    override fun getItemCount(): Int {
-        return queue.size
-    }
+    override fun getItemCount(): Int = queue.size
 
-    class ViewHolder(itemView: android.view.View) : android.support.v7.widget.RecyclerView.ViewHolder(itemView) {
-        var title: android.widget.TextView = itemView.findViewById(xyz.michaelobi.paperplayer.R.id.song_item_title) as android.widget.TextView
-        var artist: android.widget.TextView = itemView.findViewById(xyz.michaelobi.paperplayer.R.id.song_item_artist) as android.widget.TextView
-        var art: android.widget.ImageView = itemView.findViewById(xyz.michaelobi.paperplayer.R.id.album_art) as android.widget.ImageView
+    class ViewHolder(itemView: android.view.View) : RecyclerView.ViewHolder(itemView) {
+        var title = itemView.findViewById(R.id.song_item_title) as TextView
+        var artist = itemView.findViewById(R.id.song_item_artist) as TextView
     }
 }

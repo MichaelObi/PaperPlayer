@@ -24,6 +24,7 @@
 
 package xyz.michaelobi.paperplayer.playback.queue
 
+import rx.Observable
 import xyz.michaelobi.paperplayer.data.model.Song
 import java.util.*
 
@@ -69,8 +70,7 @@ class LocalQueueManager : QueueManager {
         }
     }
 
-    override fun getQueue() = playingQueue
-
+    override fun getQueue(): Observable<MutableList<QueueItem>> = Observable.just(playingQueue)
 
     override fun getQueueTitle(): String? = null
 

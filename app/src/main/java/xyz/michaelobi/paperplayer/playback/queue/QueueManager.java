@@ -26,6 +26,7 @@ package xyz.michaelobi.paperplayer.playback.queue;
 
 import java.util.List;
 
+import rx.Observable;
 import xyz.michaelobi.paperplayer.data.model.Song;
 
 /**
@@ -38,7 +39,7 @@ public interface QueueManager {
 
     void setQueue(String title, List<Song> songList, long startSongId);
 
-    List<QueueItem> getQueue();
+    Observable<List<QueueItem>> getQueue();
 
     String getQueueTitle();
 

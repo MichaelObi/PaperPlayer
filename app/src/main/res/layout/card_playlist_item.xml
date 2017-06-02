@@ -50,18 +50,7 @@
             android:padding="8dp"
             android:tint="?android:attr/textColorHint"
             app:srcCompat="@drawable/ic_reorder_black_24dp"/>
-
-    <ImageView
-            android:layout_toRightOf="@id/reorder"
-            android:layout_toEndOf="@id/reorder"
-            android:id="@+id/album_art"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="2dp"
-            android:layout_marginStart="2dp"
-            android:contentDescription="@string/album_art"
-            tools:src="@drawable/cover_drake"/>
+    
 
     <TextView
             android:id="@+id/song_item_title"
@@ -71,8 +60,8 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_toEndOf="@id/album_art"
-            android:layout_toRightOf="@id/album_art"
+            android:layout_toEndOf="@id/reorder"
+            android:layout_toRightOf="@id/reorder"
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
@@ -86,8 +75,8 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_toEndOf="@id/album_art"
-            android:layout_toRightOf="@id/album_art"
+            android:layout_toEndOf="@id/reorder"
+            android:layout_toRightOf="@id/reorder"
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"

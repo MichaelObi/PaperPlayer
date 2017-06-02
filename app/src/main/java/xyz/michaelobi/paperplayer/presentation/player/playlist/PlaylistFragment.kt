@@ -29,11 +29,13 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialogFragment
 import android.support.design.widget.CoordinatorLayout
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.View
+import android.widget.Toast
+import kotlinx.android.synthetic.main.bottomsheet_playlist.*
 import xyz.michaelobi.paperplayer.R
 import xyz.michaelobi.paperplayer.injection.Injector
+import xyz.michaelobi.paperplayer.mvp.ListViewContract
+import xyz.michaelobi.paperplayer.playback.queue.QueueItem
 import xyz.michaelobi.paperplayer.playback.queue.QueueManager
 
 
@@ -42,9 +44,22 @@ import xyz.michaelobi.paperplayer.playback.queue.QueueManager
  * Michael Obi
  * 22 05 2017 1:04 AM
  */
-class PlaylistFragment : BottomSheetDialogFragment() {
+class PlaylistFragment : BottomSheetDialogFragment(), ListViewContract.View<QueueItem> {
+    lateinit var playlistAdapter: PlaylistAdapter
     val queueManager: QueueManager = Injector.provideQueueManager()
+    val presenter: ListViewContract.Presenter = PlaylistPresenter()
 
+    override fun showList(items: MutableList<QueueItem>) {
+        playlistAdapter.setQueueItems(items)
+    }
+
+    override fun showLoading() {}
+
+    override fun hideLoading() {}
+
+    override fun showError(message: String?) {
+        Toast.makeText(activity, "An error occurred", Toast.LENGTH_SHORT).show()
+    }
 
     override fun setupDialog(dialog: Dialog?, style: Int) {
         super.setupDialog(dialog, style)
@@ -56,20 +71,24 @@ class PlaylistFragment : BottomSheetDialogFragment() {
             (behavior as BottomSheetBehavior<*>).state = BottomSheetBehavior.STATE_EXPANDED
             behavior.setBottomSheetCallback(bottomSheetBehaviorCallback)
         }
-        val toolbar = view.findViewById(R.id.toolbar) as Toolbar
-        toolbar.title = getString(R.string.playlist)
-        toolbar.setNavigationOnClickListener({ dismiss() })
-        setUpPlaylist(view)
+        activity.toolbar.title = getString(R.string.playlist)
+        activity.toolbar.setNavigationOnClickListener { dismiss() }
+        setUpPlaylist()
+        presenter.attachView(this)
+        presenter.getAll()
     }
 
-    private fun setUpPlaylist(view: View) {
-        val rvPlaylist = view.findViewById(R.id.rv_playlist) as RecyclerView
-        val layoutManager = LinearLayoutManager(activity)
+    private fun setUpPlaylist() {
+        playlistAdapter = PlaylistAdapter()
         val currentPlayingIndex = queueManager.currentIndex
-        layoutManager.scrollToPositionWithOffset(currentPlayingIndex, 20)
-        layoutManager.supportsPredictiveItemAnimations()
-        rvPlaylist.layoutManager = layoutManager
-        rvPlaylist.adapter = PlaylistAdapter()
+        val linearLayoutManager = LinearLayoutManager(activity)
+        linearLayoutManager.scrollToPositionWithOffset(currentPlayingIndex, 20)
+
+        with(activity.rv_playlist) {
+            setHasFixedSize(true)
+            layoutManager = linearLayoutManager
+            adapter = playlistAdapter
+        }
     }
 
 
