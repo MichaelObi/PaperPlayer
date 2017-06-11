@@ -126,6 +126,4 @@ dependencies {
 
     kapt "com.android.databinding:compiler:$android_plugin_version"
 }
-kapt {
-    generateStubs = true
-}
+apply plugin: 'kotlin-kapt'
