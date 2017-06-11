@@ -33,26 +33,7 @@ import android.provider.MediaStore
  * 15 10 2016 3:23 PM
  */
 
-class Song {
-
-    var title: String? = null
-    var album: String? = null
-    var artist: String? = null
-    var year: String? = null
-    var songUri: String? = null
-    var id: Long = 0
-    var albumId: Long = 0
-
-    constructor()
-
-    constructor(id: Long, title: String, album: String, artist: String, year: String, songUri: String) {
-        this.id = id
-        this.title = title
-        this.album = album
-        this.artist = artist
-        this.year = year
-        this.songUri = songUri
-    }
+data class Song(val id: Long, val title: String, val album: String, val artist: String, val year: String, val songUri: String, val albumId: Long) {
 
     companion object {
         fun from(cursor: Cursor): Song {
@@ -68,9 +49,9 @@ class Song {
                     cursor.getString(albumColumn),
                     cursor.getString(artistColumn),
                     "",
-                    cursor.getString(pathColumn)
+                    cursor.getString(pathColumn),
+                    cursor.getLong(albumIdColumn)
             )
-            song.albumId = cursor.getLong(albumIdColumn)
             return song
         }
     }

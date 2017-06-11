@@ -81,6 +81,11 @@ public class LocalLibraryManager implements LibraryManager {
                 .toList();
     }
 
+    @Override
+    public Observable<List<Song>> fetchSongsForAlbum(long id) {
+        return null;
+    }
+
 
     @Override
     public Observable<List<Album>> fetchAllAlbums() {

@@ -25,6 +25,7 @@
 package xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.songs;
 
 import xyz.michaelobi.paperplayer.data.MusicRepository;
+import xyz.michaelobi.paperplayer.data.library.local.MockLocalLibraryManager;
 import xyz.michaelobi.paperplayer.data.model.Album;
 import xyz.michaelobi.paperplayer.mvp.ListViewContract;
 import xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.albums.AlbumsPresenter;
@@ -67,7 +68,7 @@ public class AlbumsPresenterTest {
 
     @Test
     public void getAllAlbums_returnAlbumList() throws Exception {
-        List<Album> albums = getDummyAlbumList();
+        List<Album> albums = MockLocalLibraryManager.albums;
         when(musicRepository.getAllAlbums()).thenReturn(Observable.just(albums));
 
         albumsPresenter.getAll();

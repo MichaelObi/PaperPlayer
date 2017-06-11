@@ -41,6 +41,8 @@ import xyz.michaelobi.paperplayer.data.model.Song;
 public interface LibraryManager {
     Observable<List<Song>> fetchAllSongs();
 
+    Observable<List<Song>> fetchSongsForAlbum(long id);
+
     Observable<List<Album>> fetchAllAlbums();
 
     Observable<Song> getSong(long id);

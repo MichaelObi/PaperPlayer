@@ -34,7 +34,7 @@ import java.io.File
  * 23 10 2016 4:06 PM
  */
 
-class Album(val id: Long, val title: String, val artist: String, val isFavorite: Boolean, var artPath: String?, val numberOfSongs: Int) {
+data class Album @JvmOverloads constructor(val id: Long, val title: String, val artist: String, val isFavorite: Boolean, var artPath: String?, var numberOfSongs: Int = 0) {
 
     val art: File?
         get() = artPath?.let { File(it) }
