@@ -22,22 +22,47 @@
  * SOFTWARE.
  */
 
-package xyz.michaelobi.paperplayer.presentation.musiclibrary;
-
+package xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.miniplayer;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
+import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@LargeTest
+import xyz.michaelobi.paperplayer.R;
+import xyz.michaelobi.paperplayer.presentation.musiclibrary.MusicLibraryActivity;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
+/**
+ * PaperPlayer
+ * Michael Obi
+ * 10 06 2017 9:04 PM
+ */
 @RunWith(AndroidJUnit4.class)
-public class MusicLibraryActivityTest {
-
+public final class MiniPlayerFragmentTest {
     @Rule
-    public ActivityTestRule<MusicLibraryActivity> mActivityTestRule = new ActivityTestRule<>(MusicLibraryActivity.class);
+    public final ActivityTestRule<MusicLibraryActivity> mActivityTestRule = new ActivityTestRule<>(MusicLibraryActivity.class);
 
+
+    @Before
+    public void setUp() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void loadingActivity_DisplaysPlayPauseButton() {
+        onView(withId(R.id.play_pause)).check(matches(isCompletelyDisplayed()));
+    }
 
 }
