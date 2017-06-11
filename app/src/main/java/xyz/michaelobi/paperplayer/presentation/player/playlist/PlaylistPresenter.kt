@@ -27,7 +27,6 @@ package xyz.michaelobi.paperplayer.presentation.player.playlist
 import android.util.Log
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import xyz.michaelobi.paperplayer.injection.Injector
 import xyz.michaelobi.paperplayer.mvp.BasePresenter
 import xyz.michaelobi.paperplayer.mvp.ListViewContract
@@ -46,7 +45,7 @@ class PlaylistPresenter : BasePresenter<ListViewContract.View<Any>>(), ListViewC
     override fun getAll() {
         checkViewAttached()
         getView()!!.showLoading()
-        addSubscription(queueManager.queue.subscribeOn(Schedulers.io())
+        addSubscription(queueManager.queue.subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : Subscriber<List<QueueItem>>() {
                     override fun onCompleted() {}

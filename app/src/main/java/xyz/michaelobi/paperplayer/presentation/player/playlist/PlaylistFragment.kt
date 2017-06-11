@@ -50,7 +50,8 @@ class PlaylistFragment : BottomSheetDialogFragment(), ListViewContract.View<Queu
     val presenter: ListViewContract.Presenter = PlaylistPresenter()
 
     override fun showList(items: MutableList<QueueItem>) {
-        playlistAdapter.setQueueItems(items)
+        playlistAdapter = PlaylistAdapter(items)
+        activity.rv_playlist.adapter = playlistAdapter
     }
 
     override fun showLoading() {}
@@ -79,18 +80,14 @@ class PlaylistFragment : BottomSheetDialogFragment(), ListViewContract.View<Queu
     }
 
     private fun setUpPlaylist() {
-        playlistAdapter = PlaylistAdapter()
         val currentPlayingIndex = queueManager.currentIndex
         val linearLayoutManager = LinearLayoutManager(activity)
         linearLayoutManager.scrollToPositionWithOffset(currentPlayingIndex, 20)
-
         with(activity.rv_playlist) {
             setHasFixedSize(true)
             layoutManager = linearLayoutManager
-            adapter = playlistAdapter
         }
     }
-
 
     private val bottomSheetBehaviorCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {

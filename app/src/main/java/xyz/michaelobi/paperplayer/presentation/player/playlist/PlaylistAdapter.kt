@@ -37,13 +37,7 @@ import xyz.michaelobi.paperplayer.playback.queue.QueueItem
  * 22 05 2017 11:19 PM
  */
 
-class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
-    private var queue: List<QueueItem> = ArrayList()
-
-    fun setQueueItems(queue: List<QueueItem>) {
-        this.queue = queue
-        notifyDataSetChanged()
-    }
+class PlaylistAdapter(private var queue: List<QueueItem>) : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): PlaylistAdapter.ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.card_playlist_item, parent, false)
