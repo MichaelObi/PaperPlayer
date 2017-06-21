@@ -25,6 +25,8 @@
 package xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.miniplayer
 
 import android.util.Log
+import rx.Scheduler
+import rx.Subscriber
 import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface
 import xyz.michaelobi.paperplayer.data.model.Album
 import xyz.michaelobi.paperplayer.event.EventBus
@@ -33,8 +35,6 @@ import xyz.michaelobi.paperplayer.mvp.BasePresenter
 import xyz.michaelobi.paperplayer.playback.events.PlaybackState
 import xyz.michaelobi.paperplayer.playback.events.action.RequestPlaybackState
 import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback
-import rx.Scheduler
-import rx.Subscriber
 
 /**
  * PaperPlayer
@@ -50,7 +50,7 @@ class MiniPlayerPresenter(val musicRepository: MusicRepositoryInterface, val ioS
 
     override fun initialize() {
         checkViewAttached()
-        bus.observable(PlaybackState::class.java)?.subscribe {
+        bus.observe(PlaybackState::class.java)?.subscribe {
             playbackState ->
             run {
                 getView()?.updatePlayPauseButton(playbackState.playing)

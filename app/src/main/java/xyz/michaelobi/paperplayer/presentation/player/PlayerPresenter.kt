@@ -25,6 +25,7 @@
 package xyz.michaelobi.paperplayer.presentation.player
 
 import android.util.Log
+import rx.Subscriber
 import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface
 import xyz.michaelobi.paperplayer.data.model.Album
 import xyz.michaelobi.paperplayer.injection.Injector
@@ -35,7 +36,6 @@ import xyz.michaelobi.paperplayer.playback.events.action.PreviousSong
 import xyz.michaelobi.paperplayer.playback.events.action.RequestPlaybackState
 import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback
 import xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.miniplayer.MiniPlayerPresenter
-import rx.Subscriber
 
 /**
  * PaperPlayer
@@ -49,7 +49,7 @@ class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePrese
 
     override fun attachView(view: PlayerContract.View) {
         super.attachView(view)
-        bus.observable(PlaybackState::class.java)?.subscribe {
+        bus.observe(PlaybackState::class.java)?.subscribe {
             playbackState ->
             run {
                 getView()?.updatePlaybackState(playbackState)

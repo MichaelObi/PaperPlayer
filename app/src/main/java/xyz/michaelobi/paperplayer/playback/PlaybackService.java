@@ -135,7 +135,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     }
 
     private void registerEvents() {
-        eventBus.observable(PlayAllSongs.class)
+        eventBus.observe(PlayAllSongs.class)
                 .subscribe(event -> musicRepository.getAllSongs()
                         .subscribe(songs -> {
                             stopMusic();
@@ -143,7 +143,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                             playMusic();
                         }, error -> Log.e(TAG, error.getMessage()), () -> Log.d(TAG, "Get all songs complete")), error -> Log.e(TAG, error.getMessage()));
 
-        eventBus.observable(TogglePlayback.class)
+        eventBus.observe(TogglePlayback.class)
                 .subscribe(event -> {
                     if (player.isPlaying()) {
                         pauseMusic();
@@ -152,7 +152,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                     playMusic();
                 });
 
-        eventBus.observable(RequestPlaybackState.class)
+        eventBus.observe(RequestPlaybackState.class)
                 .subscribe(requestPlaybackState -> {
                     Log.d(TAG, "requestPlaybackState called");
                     int duration = player.isPlaying() ? player.getDuration() : 0;
@@ -162,11 +162,11 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                         eventBus.post(playbackState);
                     }
                 });
-        eventBus.observable(NextSong.class).subscribe(nextSong -> playNextSong());
+        eventBus.observe(NextSong.class).subscribe(nextSong -> playNextSong());
 
-        eventBus.observable(PreviousSong.class).subscribe(nextSong -> playPreviousSong());
+        eventBus.observe(PreviousSong.class).subscribe(nextSong -> playPreviousSong());
 
-        eventBus.observable(Seek.class).subscribe(seek -> {
+        eventBus.observe(Seek.class).subscribe(seek -> {
             songSeek = seek.getSeekTo();
             player.seekTo(songSeek);
             eventBus.post(new RequestPlaybackState());

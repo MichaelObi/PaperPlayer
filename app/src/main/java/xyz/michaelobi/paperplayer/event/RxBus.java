@@ -50,7 +50,7 @@ public class RxBus implements EventBus {
     }
 
     @Override
-    public <T> Observable<T> observable(@NonNull Class<T> eventClass) {
+    public <T> Observable<T> observe(@NonNull Class<T> eventClass) {
         return this.bus
                 .filter(o -> o != null) // Filter out null objects, better safe than sorry
                 .filter(eventClass::isInstance) // We're only interested in a specific event class

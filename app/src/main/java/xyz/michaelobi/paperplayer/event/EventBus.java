@@ -38,7 +38,7 @@ public interface EventBus {
 
     void post(@NonNull Object event);
 
-    <T> Observable<T> observable(@NonNull Class<T> eventClass);
+    <T> Observable<T> observe(@NonNull Class<T> eventClass);
 
     void cleanup();
 

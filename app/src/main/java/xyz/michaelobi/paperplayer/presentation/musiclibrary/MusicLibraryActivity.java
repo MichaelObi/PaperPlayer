@@ -116,7 +116,7 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
     }
 
     private void setUpEventBus() {
-        bus.observable(PlaybackState.class)
+        bus.observe(PlaybackState.class)
                 .subscribe(playbackState -> {
                     if (playbackState.getPlaying()) {
                         fab.setImageResource(R.drawable.ic_play_arrow_white_24dp);
