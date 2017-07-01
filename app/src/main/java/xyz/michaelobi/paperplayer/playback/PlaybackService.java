@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 MIchael Obi
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package xyz.michaelobi.paperplayer.playback;
 
 import android.app.Service;
@@ -36,8 +60,6 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     private EventBus eventBus;
     private MediaPlayer player;
     private int songSeek = 0;
-
-    // TODO: Remove all PlaybackStarted and PlaybackStopped  events in favor of PlaybackState
 
     public PlaybackService() {
         eventBus = Injector.provideEventBus();
@@ -113,7 +135,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     }
 
     private void registerEvents() {
-        eventBus.observable(PlayAllSongs.class)
+        eventBus.observe(PlayAllSongs.class)
                 .subscribe(event -> musicRepository.getAllSongs()
                         .subscribe(songs -> {
                             stopMusic();
@@ -121,7 +143,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                             playMusic();
                         }, error -> Log.e(TAG, error.getMessage()), () -> Log.d(TAG, "Get all songs complete")), error -> Log.e(TAG, error.getMessage()));
 
-        eventBus.observable(TogglePlayback.class)
+        eventBus.observe(TogglePlayback.class)
                 .subscribe(event -> {
                     if (player.isPlaying()) {
                         pauseMusic();
@@ -130,7 +152,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                     playMusic();
                 });
 
-        eventBus.observable(RequestPlaybackState.class)
+        eventBus.observe(RequestPlaybackState.class)
                 .subscribe(requestPlaybackState -> {
                     Log.d(TAG, "requestPlaybackState called");
                     int duration = player.isPlaying() ? player.getDuration() : 0;
@@ -140,11 +162,11 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                         eventBus.post(playbackState);
                     }
                 });
-        eventBus.observable(NextSong.class).subscribe(nextSong -> playNextSong());
+        eventBus.observe(NextSong.class).subscribe(nextSong -> playNextSong());
 
-        eventBus.observable(PreviousSong.class).subscribe(nextSong -> playPreviousSong());
+        eventBus.observe(PreviousSong.class).subscribe(nextSong -> playPreviousSong());
 
-        eventBus.observable(Seek.class).subscribe(seek -> {
+        eventBus.observe(Seek.class).subscribe(seek -> {
             songSeek = seek.getSeekTo();
             player.seekTo(songSeek);
             eventBus.post(new RequestPlaybackState());
@@ -213,7 +235,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
             mediaPlayer.start();
             PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
                     mediaPlayer.isPlaying(), mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition());
-            eventBus.post(playbackState); //TODO: Check the implication of this
+            eventBus.post(playbackState);
             eventBus.post(new RequestPlaybackState());
         }
     }
