@@ -125,7 +125,6 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
                     }
                 });
       bus.post(new RequestPlaybackState());
-
     }
 
     @Override
