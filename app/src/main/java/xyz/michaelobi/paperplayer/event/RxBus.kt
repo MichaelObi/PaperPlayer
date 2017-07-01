@@ -22,24 +22,34 @@
  * SOFTWARE.
  */
 
-package xyz.michaelobi.paperplayer.event;
+package xyz.michaelobi.paperplayer.event
 
-import android.support.annotation.NonNull;
-
-import rx.Observable;
+import rx.Observable
+import rx.functions.Func1
+import rx.subjects.PublishSubject
+import rx.subjects.SerializedSubject
+import rx.subjects.Subject
 
 /**
- * PaperPlayer
- * Michael Obi
- * 12 01 2017 12:38 AM
+ * PaperPlayer Michael Obi 12 01 2017 12:06 AM
  */
 
-public interface EventBus {
+class RxBus : EventBus {
 
-    void post(@NonNull Object event);
+    private val bus = SerializedSubject(PublishSubject.create<Any>())
 
-    <T> Observable<T> observe(@NonNull Class<T> eventClass);
+    override fun post(event: Any) {
+        if (this.bus.hasObservers()) {
+            this.bus.onNext(event)
+        }
+    }
 
-    void cleanup();
+    override fun <T> observe(eventClass: Class<T>): Observable<T> {
+        return this.bus
+                .filter { o -> o != null } // Filter out null objects, better safe than sorry
+                .filter({ eventClass.isInstance(it) }) // We're only interested in a specific event class
+                .cast(eventClass) // Cast it for easier usage
+    }
 
+    override fun cleanup() {}
 }
