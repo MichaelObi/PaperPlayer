@@ -35,6 +35,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.SeekBar
 import com.squareup.picasso.Picasso
+import rx.Observable
+import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import xyz.michaelobi.paperplayer.R
 import xyz.michaelobi.paperplayer.databinding.PlayerActivityBinding
 import xyz.michaelobi.paperplayer.injection.Injector
@@ -43,6 +47,7 @@ import xyz.michaelobi.paperplayer.playback.events.action.Seek
 import xyz.michaelobi.paperplayer.presentation.player.playlist.PlaylistFragment
 import java.io.File
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -51,7 +56,7 @@ import java.util.*
  * 06 05 2017 11:12 PM
  */
 
-class PlayerActivity : AppCompatActivity(), PlayerContract.View, SeekBar.OnSeekBarChangeListener {
+class PlayerActivity : AppCompatActivity(), PlayerContract.View {
     private val TAG: String = ".PlayerActivity"
     private lateinit var viewBinding: PlayerActivityBinding
     private var presenter: PlayerContract.Presenter? = null
@@ -59,14 +64,14 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View, SeekBar.OnSeekB
     private val eventBus = Injector.provideEventBus()
 
 
+    private var seekBarProgressSubscription: Subscription? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = DataBindingUtil.setContentView(this, R.layout.player_activity)
         presenter = PlayerPresenter(Injector.provideMusicRepository(this))
         presenter?.attachView(this)
         viewBinding.presenter = presenter
-        viewBinding.playerSeekbar.setOnSeekBarChangeListener(this)
-
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setHomeButtonEnabled(true)
@@ -93,6 +98,42 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View, SeekBar.OnSeekB
             }
         }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val seekBarProgressObservable: Observable<SeekBar> = Observable.create { subscriber ->
+            viewBinding.playerSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                    if (subscriber.isUnsubscribed) return
+                    if (!fromUser) {
+                        if (progress == seekBar?.max) {
+                            seekBar.progress = 100
+                        }
+                        return
+                    }
+                    subscriber.onNext(seekBar)
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                }
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                }
+            })
+        }
+        seekBarProgressSubscription = seekBarProgressObservable
+                .debounce(200, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    val progress = it.progress
+                    eventBus.post(Seek(progress))
+                })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        seekBarProgressSubscription?.unsubscribe()
     }
 
     override fun onDestroy() {
@@ -159,18 +200,5 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View, SeekBar.OnSeekB
         }
     }
 
-    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-        if (fromUser) {
-            eventBus.post(Seek(progress))
-        } else {
-            if (progress == seekBar?.max) {
-                seekBar.progress = 100
-            }
-        }
-    }
-
-    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
 
 }
