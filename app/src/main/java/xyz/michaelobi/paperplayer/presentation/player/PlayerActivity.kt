@@ -64,6 +64,7 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
     private val eventBus = Injector.provideEventBus()
 
 
+    private var seekBarScrubSubscription: Subscription? = null
     private var seekBarProgressSubscription: Subscription? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -117,11 +118,12 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
 
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
                 }
+
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 }
             })
         }
-        seekBarProgressSubscription = seekBarProgressObservable
+        seekBarScrubSubscription = seekBarProgressObservable
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -133,6 +135,7 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
 
     override fun onPause() {
         super.onPause()
+        seekBarScrubSubscription?.unsubscribe()
         seekBarProgressSubscription?.unsubscribe()
     }
 
@@ -154,25 +157,24 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
         val strDuration = String.format("%s:%s", String.format("%02d", playbackState.songDuration / 1000 / 60), String
                 .format("%02d", playbackState.songDuration / 1000 % 60))
         viewBinding.duration?.text = strDuration
-        timer?.cancel()
-        timer = Timer()
-        timer?.schedule(object : TimerTask() {
-            override fun run() {
-                runOnUiThread {
+        seekBarProgressSubscription?.unsubscribe()
+        seekBarProgressSubscription = Observable.interval(100, 100, TimeUnit.MILLISECONDS)
+                .onBackpressureLatest()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
                     if (playbackState.playing) {
                         val progress = viewBinding.playerSeekbar?.progress
                         if (progress != null) {
                             if (progress < playbackState.songDuration) {
                                 viewBinding.playerSeekbar?.progress = progress.plus(100)
                             } else {
-                                viewBinding.playerSeekbar?.progress = 100
+                                viewBinding.playerSeekbar?.progress = 0
                             }
                             updateCurrentTime(progress)
                         }
+                        viewBinding.playerSeekbar?.progress
                     }
-                }
-            }
-        }, 0, 100)
+                })
     }
 
     private fun updateCurrentTime(progress: Int) {
