@@ -50,7 +50,7 @@ class MiniPlayerPresenter(val musicRepository: MusicRepositoryInterface, val ioS
 
     override fun initialize() {
         checkViewAttached()
-        bus.observe(PlaybackState::class.java)?.subscribe {
+        bus.observe(PlaybackState::class.java).subscribe {
             playbackState ->
             run {
                 getView()?.updatePlayPauseButton(playbackState.playing)
