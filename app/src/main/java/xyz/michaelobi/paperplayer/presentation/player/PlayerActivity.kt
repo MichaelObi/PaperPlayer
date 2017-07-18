@@ -77,6 +77,7 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
         setSupportActionBar(toolbar)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -85,17 +86,13 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when {
-            item.itemId == android.R.id.home -> {
-                onBackPressed()
-            }
-            else -> when {
-                item.itemId == R.id.action_playlist -> {
-                    val playlistFragment = PlaylistFragment()
-                    val args = Bundle()
-                    playlistFragment.arguments = args
-                    playlistFragment.show(supportFragmentManager, playlistFragment.tag)
-                }
+        when (item.itemId) {
+            android.R.id.home -> onBackPressed()
+            R.id.action_playlist -> {
+                val playlistFragment = PlaylistFragment()
+                val args = Bundle()
+                playlistFragment.arguments = args
+                playlistFragment.show(supportFragmentManager, playlistFragment.tag)
             }
         }
         return true
@@ -201,6 +198,4 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
                     this, R.drawable.default_artwork_dark))
         }
     }
-
-
 }
