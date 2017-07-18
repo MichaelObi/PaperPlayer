@@ -29,6 +29,7 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialogFragment
 import android.support.design.widget.CoordinatorLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.bottomsheet_playlist.*
@@ -50,6 +51,7 @@ class PlaylistFragment : BottomSheetDialogFragment(), ListViewContract.View<Queu
     val presenter: ListViewContract.Presenter = PlaylistPresenter()
 
     override fun showList(items: MutableList<QueueItem>) {
+        setUpPlaylist()
         playlistAdapter.setQueueItems(items)
     }
 
@@ -62,18 +64,25 @@ class PlaylistFragment : BottomSheetDialogFragment(), ListViewContract.View<Queu
     }
 
     override fun setupDialog(dialog: Dialog?, style: Int) {
-        super.setupDialog(dialog, style)
         val view = View.inflate(activity, R.layout.bottomsheet_playlist, null)
         dialog?.setContentView(view)
+        val toolbar = view.findViewById(R.id.toolbar) as Toolbar
+        toolbar.setNavigationOnClickListener { dismiss() }
+        toolbar.setTitle(R.string.playlist)
         val params = (view.parent as View).layoutParams as CoordinatorLayout.LayoutParams
         val behavior = params.behavior
-        if (behavior != null) {
-            (behavior as BottomSheetBehavior<*>).state = BottomSheetBehavior.STATE_EXPANDED
-            behavior.setBottomSheetCallback(bottomSheetBehaviorCallback)
-        }
-        activity.toolbar.title = getString(R.string.playlist)
-        activity.toolbar.setNavigationOnClickListener { dismiss() }
-        setUpPlaylist()
+        (behavior as BottomSheetBehavior<*>).state = BottomSheetBehavior.STATE_EXPANDED
+        behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_COLLAPSED, BottomSheetBehavior.STATE_HIDDEN -> {
+                        dismiss()
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
         presenter.attachView(this)
         presenter.getAll()
     }
@@ -92,13 +101,4 @@ class PlaylistFragment : BottomSheetDialogFragment(), ListViewContract.View<Queu
     }
 
 
-    private val bottomSheetBehaviorCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                dismiss()
-            }
-        }
-
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-    }
 }

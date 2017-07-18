@@ -90,8 +90,8 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
             android.R.id.home -> onBackPressed()
             R.id.action_playlist -> {
                 val playlistFragment = PlaylistFragment()
-                val args = Bundle()
-                playlistFragment.arguments = args
+//                val args = Bundle()
+//                playlistFragment.arguments = args
                 playlistFragment.show(supportFragmentManager, playlistFragment.tag)
             }
         }

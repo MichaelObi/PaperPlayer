@@ -25,6 +25,7 @@
 package xyz.michaelobi.paperplayer
 
 import android.app.Application
+import com.squareup.leakcanary.LeakCanary
 
 /**
  * PaperPlayer
@@ -32,4 +33,11 @@ import android.app.Application
  * 23 10 2016 11:00 AM
  */
 
-class PaperPlayerApp : Application()
+class PaperPlayerApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        if (LeakCanary.isInAnalyzerProcess(this)) return
+
+        LeakCanary.install(this)
+    }
+}
