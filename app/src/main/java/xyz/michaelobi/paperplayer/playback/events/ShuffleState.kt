@@ -22,14 +22,11 @@
  * SOFTWARE.
  */
 
-package xyz.michaelobi.paperplayer
-
-import android.app.Application
+package xyz.michaelobi.paperplayer.playback.events
 
 /**
  * PaperPlayer
  * Michael Obi
- * 23 10 2016 11:00 AM
+ * 18 07 2017 4:01 PM
  */
-
-class PaperPlayerApp : Application()
+class ShuffleState(val isShuffled: Boolean = false)

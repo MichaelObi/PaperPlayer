@@ -39,11 +39,13 @@ interface PlayerContract {
         fun updateTitleAndArtist(playbackState: PlaybackState)
         fun updateSongArt(uri: String?)
         fun updateSeeker(playbackState: PlaybackState)
+        fun setShuffled(shuffled: Boolean)
     }
 
     interface Presenter : Mvp.Presenter<View> {
         fun playPauseToggle()
         fun next()
         fun previous()
+        fun toggleShuffle()
     }
 }

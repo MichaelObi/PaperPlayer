@@ -40,12 +40,14 @@ import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
 import xyz.michaelobi.paperplayer.event.EventBus;
 import xyz.michaelobi.paperplayer.injection.Injector;
 import xyz.michaelobi.paperplayer.playback.events.PlaybackState;
+import xyz.michaelobi.paperplayer.playback.events.ShuffleState;
 import xyz.michaelobi.paperplayer.playback.events.action.NextSong;
 import xyz.michaelobi.paperplayer.playback.events.action.PlayAllSongs;
 import xyz.michaelobi.paperplayer.playback.events.action.PreviousSong;
 import xyz.michaelobi.paperplayer.playback.events.action.RequestPlaybackState;
 import xyz.michaelobi.paperplayer.playback.events.action.Seek;
 import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback;
+import xyz.michaelobi.paperplayer.playback.events.action.ToggleShuffle;
 import xyz.michaelobi.paperplayer.playback.queue.QueueManager;
 
 /**
@@ -171,6 +173,11 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
             player.seekTo(songSeek);
             eventBus.post(new RequestPlaybackState());
         }, e -> Log.e(TAG, e.getMessage()));
+
+        eventBus.observe(ToggleShuffle.class).subscribe(toggleShuffle -> {
+            boolean isShuffled = queueManager.toggleShuffle();
+            eventBus.post(new ShuffleState(isShuffled));
+        });
     }
 
     private void playPreviousSong() {

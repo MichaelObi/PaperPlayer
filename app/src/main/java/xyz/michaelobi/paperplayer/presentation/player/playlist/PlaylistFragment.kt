@@ -29,10 +29,10 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialogFragment
 import android.support.design.widget.CoordinatorLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.Toast
-import kotlinx.android.synthetic.main.bottomsheet_playlist.*
 import xyz.michaelobi.paperplayer.R
 import xyz.michaelobi.paperplayer.injection.Injector
 import xyz.michaelobi.paperplayer.mvp.ListViewContract
@@ -47,6 +47,7 @@ import xyz.michaelobi.paperplayer.playback.queue.QueueManager
  */
 class PlaylistFragment : BottomSheetDialogFragment(), ListViewContract.View<QueueItem> {
     lateinit var playlistAdapter: PlaylistAdapter
+    lateinit var rvPlaylist: RecyclerView
     val queueManager: QueueManager = Injector.provideQueueManager()
     val presenter: ListViewContract.Presenter = PlaylistPresenter()
 
@@ -67,6 +68,7 @@ class PlaylistFragment : BottomSheetDialogFragment(), ListViewContract.View<Queu
         val view = View.inflate(activity, R.layout.bottomsheet_playlist, null)
         dialog?.setContentView(view)
         val toolbar = view.findViewById(R.id.toolbar) as Toolbar
+        rvPlaylist = view.findViewById(R.id.rv_playlist) as RecyclerView
         toolbar.setNavigationOnClickListener { dismiss() }
         toolbar.setTitle(R.string.playlist)
         val params = (view.parent as View).layoutParams as CoordinatorLayout.LayoutParams
@@ -93,7 +95,7 @@ class PlaylistFragment : BottomSheetDialogFragment(), ListViewContract.View<Queu
         val linearLayoutManager = LinearLayoutManager(activity)
         linearLayoutManager.scrollToPositionWithOffset(currentPlayingIndex, 20)
 
-        with(activity.rv_playlist) {
+        with(rvPlaylist) {
             setHasFixedSize(true)
             layoutManager = linearLayoutManager
             adapter = playlistAdapter

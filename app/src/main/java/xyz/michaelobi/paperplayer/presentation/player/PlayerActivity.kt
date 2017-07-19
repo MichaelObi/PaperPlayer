@@ -26,6 +26,7 @@ package xyz.michaelobi.paperplayer.presentation.player
 
 import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -57,12 +58,13 @@ import java.util.concurrent.TimeUnit
  */
 
 class PlayerActivity : AppCompatActivity(), PlayerContract.View {
+
+
     private val TAG: String = ".PlayerActivity"
     private lateinit var viewBinding: PlayerActivityBinding
     private var presenter: PlayerContract.Presenter? = null
     private var timer: Timer? = null
     private val eventBus = Injector.provideEventBus()
-
 
     private var seekBarScrubSubscription: Subscription? = null
     private var seekBarProgressSubscription: Subscription? = null
@@ -90,8 +92,6 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
             android.R.id.home -> onBackPressed()
             R.id.action_playlist -> {
                 val playlistFragment = PlaylistFragment()
-//                val args = Bundle()
-//                playlistFragment.arguments = args
                 playlistFragment.show(supportFragmentManager, playlistFragment.tag)
             }
         }
@@ -197,5 +197,13 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
             viewBinding.albumArt?.setImageDrawable(ContextCompat.getDrawable(
                     this, R.drawable.default_artwork_dark))
         }
+    }
+
+    override fun setShuffled(shuffled: Boolean) {
+        if (shuffled) {
+            viewBinding.btnShuffle.drawable.setColorFilter(ContextCompat.getColor(this, R.color.activeWhite), PorterDuff.Mode.SRC_ATOP)
+            return
+        }
+        viewBinding.btnShuffle.drawable.setColorFilter(ContextCompat.getColor(this, R.color.inactiveWhite), PorterDuff.Mode.SRC_ATOP)
     }
 }

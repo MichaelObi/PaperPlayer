@@ -55,6 +55,12 @@ public interface QueueManager {
 
     boolean hasSongs();
 
+    /**
+     * Toggle queue shuffle state.
+     * Return true if shuffled and false otherwise
+     */
+    boolean toggleShuffle();
+
 
     interface QueueActionListener {
 

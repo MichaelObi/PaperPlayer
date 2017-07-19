@@ -87,7 +87,6 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         musicLibraryPresenter = new MusicLibraryPresenter();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -106,7 +105,6 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
                 .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(listener)
                 .check();
-
     }
 
     @Override
@@ -124,7 +122,7 @@ public class MusicLibraryActivity extends AppCompatActivity implements MusicLibr
                         fab.setImageResource(R.drawable.ic_pause_white_24dp);
                     }
                 });
-      bus.post(new RequestPlaybackState());
+        bus.post(new RequestPlaybackState());
     }
 
     @Override

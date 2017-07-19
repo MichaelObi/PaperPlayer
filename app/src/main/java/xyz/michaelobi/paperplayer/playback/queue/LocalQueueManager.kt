@@ -30,6 +30,7 @@ import java.util.*
 
 class LocalQueueManager : QueueManager {
 
+
     /**
      * Now Playing Queue
      */
@@ -39,6 +40,8 @@ class LocalQueueManager : QueueManager {
 
     private var queueActionListener: QueueManager.QueueActionListener? = null
     private var title: String? = null
+
+    private var shuffled = false
 
     init {
         currentIndex = 0
@@ -99,6 +102,27 @@ class LocalQueueManager : QueueManager {
     }
 
     override fun hasSongs() = playingQueue.size > 0
+
+    override fun toggleShuffle(): Boolean {
+        if (!shuffled) {
+            val random = Random()
+            for (i in playingQueue.size - 1 downTo 1) {
+                // Get Pseudo-random number
+                val index = random.nextInt(i + 1)
+                // Dont swap playing track
+                if (playingQueue[i].isPlaying || playingQueue[index].isPlaying) {
+                    continue
+                }
+                // Swap out the tracks for one another
+                playingQueue[index] = playingQueue.set(i, playingQueue[index])
+            }
+            shuffled = true
+        } else {
+            shuffled = false
+        }
+        return shuffled
+    }
+
 
     fun setQueueActionListener(queueActionListener: QueueManager.QueueActionListener) {
         this.queueActionListener = queueActionListener
