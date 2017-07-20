@@ -61,6 +61,8 @@ public interface QueueManager {
      */
     boolean toggleShuffle();
 
+    boolean isShuffled();
+
 
     interface QueueActionListener {
 

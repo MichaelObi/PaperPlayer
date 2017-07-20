@@ -30,12 +30,11 @@ import java.util.*
 
 class LocalQueueManager : QueueManager {
 
-
     /**
      * Now Playing Queue
      */
-    private val playingQueue: MutableList<QueueItem> = Collections.synchronizedList(ArrayList<QueueItem>())
-
+    private var playingQueue = mutableListOf<QueueItem>()
+    private var originalQueue = mutableListOf<QueueItem>()
     private var currentIndex: Int = 0
 
     private var queueActionListener: QueueManager.QueueActionListener? = null
@@ -49,7 +48,6 @@ class LocalQueueManager : QueueManager {
     }
 
     override fun getCurrentIndex() = currentIndex
-
 
     override fun setCurrentIndex(index: Int) {
         if (index >= 0 && index < playingQueue.size) {
@@ -65,7 +63,7 @@ class LocalQueueManager : QueueManager {
         if (startSongId != 0L) firstSongId = startSongId
         playingQueue.clear()
         songs.forEach { song ->
-            val item = QueueItem(song, song.id == firstSongId)
+            val item = QueueItem(song)
             playingQueue.add(item)
             if (song.id == startSongId) {
                 currentIndex = playingQueue.lastIndexOf(item)
@@ -105,26 +103,48 @@ class LocalQueueManager : QueueManager {
 
     override fun toggleShuffle(): Boolean {
         if (!shuffled) {
-            val random = Random()
-            for (i in playingQueue.size - 1 downTo 1) {
-                // Get Pseudo-random number
-                val index = random.nextInt(i + 1)
-                // Dont swap playing track
-                if (playingQueue[i].isPlaying || playingQueue[index].isPlaying) {
-                    continue
-                }
-                // Swap out the tracks for one another
-                playingQueue[index] = playingQueue.set(i, playingQueue[index])
-            }
-            shuffled = true
+            shuffle()
         } else {
-            shuffled = false
+            unshuffle()
         }
         return shuffled
     }
 
+    override fun isShuffled() = shuffled
+
+    private fun shuffle() {
+        val currentSongId = currentSong?.id
+        originalQueue = playingQueue.toMutableList()
+        val random = Random()
+        for (i in playingQueue.size - 1 downTo 0) {
+            // Get Pseudo-random number
+            val index = random.nextInt(i + 1)
+            if (playingQueue[index].song.id == currentSongId || playingQueue[i].song.id == currentSongId) {
+                // Dont swap playing track
+                continue
+            }
+            // Swap out the tracks for one another
+            playingQueue[index] = playingQueue.set(i, playingQueue[index])
+        }
+        shuffled = true
+    }
+
+    private fun unshuffle() {
+        val currentSongId = currentSong?.id ?: -1L
+        if (currentSongId != -1L) {
+            playingQueue = originalQueue.toMutableList()
+            for (i in playingQueue.size - 1 downTo 0) {
+                val queueItem = playingQueue[i]
+                if (queueItem.song.id == currentSongId) {
+                    currentIndex = i
+                }
+            }
+        }
+        shuffled = false
+    }
 
     fun setQueueActionListener(queueActionListener: QueueManager.QueueActionListener) {
         this.queueActionListener = queueActionListener
     }
+
 }

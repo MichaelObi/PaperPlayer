@@ -35,6 +35,8 @@ import android.os.PowerManager;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
 import xyz.michaelobi.paperplayer.event.EventBus;
@@ -160,6 +162,7 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                     int duration = player.isPlaying() ? player.getDuration() : 0;
                     PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
                             player.isPlaying(), duration, player.getCurrentPosition());
+                    eventBus.post(new ShuffleState(queueManager.isShuffled()));
                     if (queueManager.hasSongs()) {
                         eventBus.post(playbackState);
                     }
@@ -182,6 +185,8 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
 
     private void playPreviousSong() {
         pauseMusic();
+        List<String> list = new ArrayList<>();
+
         if (player.getCurrentPosition() > 3) {
             songSeek = 0;
             if (queueManager.previous() != null) {

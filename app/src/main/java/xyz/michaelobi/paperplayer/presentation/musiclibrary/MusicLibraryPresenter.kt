@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-package xyz.michaelobi.paperplayer.presentation.musiclibrary;
+package xyz.michaelobi.paperplayer.presentation.musiclibrary
 
-import xyz.michaelobi.paperplayer.event.EventBus;
-import xyz.michaelobi.paperplayer.injection.Injector;
-import xyz.michaelobi.paperplayer.mvp.BasePresenter;
-import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback;
+import xyz.michaelobi.paperplayer.event.EventBus
+import xyz.michaelobi.paperplayer.injection.Injector
+import xyz.michaelobi.paperplayer.mvp.BasePresenter
+import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback
 
 /**
  * PaperPlayer
@@ -35,27 +35,20 @@ import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback;
  * 15 10 2016 3:45 PM
  */
 
-class MusicLibraryPresenter extends BasePresenter<MusicLibraryContract.View> implements
-        MusicLibraryContract.Presenter {
-    private EventBus bus;
+internal class MusicLibraryPresenter : BasePresenter<MusicLibraryContract.View>(), MusicLibraryContract.Presenter {
+    private val bus: EventBus = Injector.provideEventBus()
 
-    public MusicLibraryPresenter() {
-        bus = Injector.provideEventBus();
+    override fun attachView(view: MusicLibraryContract.View) {
+        super.attachView(view)
+        initialize()
     }
 
-    @Override
-    public void attachView(MusicLibraryContract.View view) {
-        super.attachView(view);
-        initialize();
+    override fun initialize() {
+        checkViewAttached()
+        viewOrThrow.initializeViewPager()
     }
 
-    public void initialize() {
-        checkViewAttached();
-        getViewOrThrow().initializeViewPager();
-    }
-
-    @Override
-    public void onFabClick() {
-        bus.post(new TogglePlayback());
+    override fun onFabClick() {
+        bus.post(TogglePlayback())
     }
 }

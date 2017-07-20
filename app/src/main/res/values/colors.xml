@@ -32,4 +32,6 @@
     <color name="colorPrimaryText">#212121</color>
     <color name="colorPrimaryTextInverse">#eeeeee</color>
     <color name="colorSecondaryTextInverse">#e0e0e0</color>
+    <color name="activeWhite">#eeeeee</color>
+    <color name="inactiveWhite">#969696</color>
 </resources>
