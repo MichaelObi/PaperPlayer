@@ -44,6 +44,7 @@ import xyz.michaelobi.paperplayer.R
 import xyz.michaelobi.paperplayer.databinding.PlayerActivityBinding
 import xyz.michaelobi.paperplayer.injection.Injector
 import xyz.michaelobi.paperplayer.playback.events.PlaybackState
+import xyz.michaelobi.paperplayer.playback.events.RepeatState
 import xyz.michaelobi.paperplayer.playback.events.action.Seek
 import xyz.michaelobi.paperplayer.presentation.player.playlist.PlaylistFragment
 import java.io.File
@@ -58,12 +59,9 @@ import java.util.concurrent.TimeUnit
  */
 
 class PlayerActivity : AppCompatActivity(), PlayerContract.View {
-
-
     private val TAG: String = ".PlayerActivity"
     private lateinit var viewBinding: PlayerActivityBinding
     private var presenter: PlayerContract.Presenter? = null
-    private var timer: Timer? = null
     private val eventBus = Injector.provideEventBus()
 
     private var seekBarScrubSubscription: Subscription? = null
@@ -201,9 +199,26 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
 
     override fun setShuffled(shuffled: Boolean) {
         if (shuffled) {
-            viewBinding.btnShuffle.drawable.setColorFilter(ContextCompat.getColor(this, R.color.activeWhite), PorterDuff.Mode.SRC_ATOP)
+            viewBinding.btnShuffle.drawable.setColorFilter(ContextCompat.getColor(this, R.color.activeTint), PorterDuff.Mode.SRC_ATOP)
             return
         }
-        viewBinding.btnShuffle.drawable.setColorFilter(ContextCompat.getColor(this, R.color.inactiveWhite), PorterDuff.Mode.SRC_ATOP)
+        viewBinding.btnShuffle.drawable.setColorFilter(ContextCompat.getColor(this, R.color.inactiveTint), PorterDuff.Mode.SRC_ATOP)
+    }
+
+    override fun setRepeatState(repeatType: Long) {
+        when (repeatType) {
+            RepeatState.REPEAT_NONE -> {
+                viewBinding.btnRepeat.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_repeat_24dp))
+                viewBinding.btnRepeat.drawable.setColorFilter(ContextCompat.getColor(this, R.color.inactiveTint), PorterDuff.Mode.SRC_ATOP)
+            }
+            RepeatState.REPEAT_ONE -> {
+                viewBinding.btnRepeat.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_repeat_one_24dp))
+                viewBinding.btnRepeat.drawable.setColorFilter(ContextCompat.getColor(this, R.color.activeTint), PorterDuff.Mode.SRC_ATOP)
+            }
+            RepeatState.REPEAT_ALL -> {
+                viewBinding.btnRepeat.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_repeat_24dp))
+                viewBinding.btnRepeat.drawable.setColorFilter(ContextCompat.getColor(this, R.color.activeTint), PorterDuff.Mode.SRC_ATOP)
+            }
+        }
     }
 }

@@ -179,7 +179,9 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/activity_vertical_margin"
                         android:layout_marginStart="@dimen/activity_vertical_margin"
-                        android:tint="@android:color/white"/>
+                        android:tint="@color/inactiveTint"
+                        app:srcCompat="@drawable/ic_repeat_24dp"
+                        android:onClick="@{() -> presenter.toggleRepeat()}"/>
 
                 <ImageView
                         android:id="@+id/btn_next"
@@ -203,7 +205,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/activity_vertical_margin"
                         android:layout_marginRight="@dimen/activity_vertical_margin"
-                        android:tint="@color/inactiveWhite"
+                        android:tint="@color/inactiveTint"
                         android:onClick="@{() -> presenter.toggleShuffle()}"
                         app:srcCompat="@drawable/ic_shuffle_white_24dp"/>
             </RelativeLayout>

@@ -35,13 +35,13 @@ import android.os.PowerManager;
 import android.util.Log;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
+import xyz.michaelobi.paperplayer.data.model.Song;
 import xyz.michaelobi.paperplayer.event.EventBus;
 import xyz.michaelobi.paperplayer.injection.Injector;
 import xyz.michaelobi.paperplayer.playback.events.PlaybackState;
+import xyz.michaelobi.paperplayer.playback.events.RepeatState;
 import xyz.michaelobi.paperplayer.playback.events.ShuffleState;
 import xyz.michaelobi.paperplayer.playback.events.action.NextSong;
 import xyz.michaelobi.paperplayer.playback.events.action.PlayAllSongs;
@@ -49,6 +49,7 @@ import xyz.michaelobi.paperplayer.playback.events.action.PreviousSong;
 import xyz.michaelobi.paperplayer.playback.events.action.RequestPlaybackState;
 import xyz.michaelobi.paperplayer.playback.events.action.Seek;
 import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback;
+import xyz.michaelobi.paperplayer.playback.events.action.ToggleRepeat;
 import xyz.michaelobi.paperplayer.playback.events.action.ToggleShuffle;
 import xyz.michaelobi.paperplayer.playback.queue.QueueManager;
 
@@ -163,11 +164,12 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
                     PlaybackState playbackState = new PlaybackState(queueManager.getCurrentSong(),
                             player.isPlaying(), duration, player.getCurrentPosition());
                     eventBus.post(new ShuffleState(queueManager.isShuffled()));
+                    eventBus.post(new RepeatState(queueManager.getRepeatState()));
                     if (queueManager.hasSongs()) {
                         eventBus.post(playbackState);
                     }
                 });
-        eventBus.observe(NextSong.class).subscribe(nextSong -> playNextSong());
+        eventBus.observe(NextSong.class).subscribe(nextSong -> playNextSong(true));
 
         eventBus.observe(PreviousSong.class).subscribe(nextSong -> playPreviousSong());
 
@@ -181,12 +183,13 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
             boolean isShuffled = queueManager.toggleShuffle();
             eventBus.post(new ShuffleState(isShuffled));
         });
+        eventBus.observe(ToggleRepeat.class).subscribe(toggleRepeat -> {
+            eventBus.post(new RepeatState(queueManager.toggleRepeat()));
+        });
     }
 
     private void playPreviousSong() {
         pauseMusic();
-        List<String> list = new ArrayList<>();
-
         if (player.getCurrentPosition() > 3) {
             songSeek = 0;
             if (queueManager.previous() != null) {
@@ -223,12 +226,12 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         Log.d(TAG, "Song Play complete");
-        playNextSong();
+        playNextSong(false);
     }
 
-    private void playNextSong() {
+    private void playNextSong(boolean ignoreRepeatOnce) {
         pauseMusic();
-        if (queueManager.next() != null) {
+        if (queueManager.next(ignoreRepeatOnce) != null) {
             songSeek = 0;
             playMusic();
         }

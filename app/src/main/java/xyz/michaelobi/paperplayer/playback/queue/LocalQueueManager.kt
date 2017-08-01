@@ -26,6 +26,7 @@ package xyz.michaelobi.paperplayer.playback.queue
 
 import rx.Observable
 import xyz.michaelobi.paperplayer.data.model.Song
+import xyz.michaelobi.paperplayer.playback.events.RepeatState
 import java.util.*
 
 class LocalQueueManager : QueueManager {
@@ -36,11 +37,10 @@ class LocalQueueManager : QueueManager {
     private var playingQueue = mutableListOf<QueueItem>()
     private var originalQueue = mutableListOf<QueueItem>()
     private var currentIndex: Int = 0
-
     private var queueActionListener: QueueManager.QueueActionListener? = null
     private var title: String? = null
-
     private var shuffled = false
+    private var repeatState = RepeatState.REPEAT_NONE
 
     init {
         currentIndex = 0
@@ -82,12 +82,29 @@ class LocalQueueManager : QueueManager {
         return playingQueue[currentIndex].song
     }
 
-    override fun next(): Song? {
+    override fun next(ignoreRepeatOnce: Boolean): Song? {
+        // return current song if repeat one is activated and not ignored
+        if ((!ignoreRepeatOnce) and (repeatState == RepeatState.REPEAT_ONE)) {
+            return playingQueue[currentIndex].song
+        }
+
+        // If repeat one  and its ignore flag turn out to be false, increment the index
         currentIndex++
+
+        // If we've come to the end of the queue, reset to the beginning.
         if (currentIndex >= playingQueue.size) {
             currentIndex = 0
+
+            // If repeat all is activated return the song at index 0 so playback can restart
+            if (repeatState == RepeatState.REPEAT_ALL) {
+                return playingQueue[currentIndex].song
+            }
+
+            // If repeat all isn't activated, return null to stop playback
             return null
         }
+
+        // Fallback for all conditions condition
         return playingQueue[currentIndex].song
     }
 
@@ -143,8 +160,21 @@ class LocalQueueManager : QueueManager {
         shuffled = false
     }
 
+    override fun toggleRepeat(): Long {
+        if (repeatState < RepeatState.REPEAT_ONE) {
+            repeatState++
+        } else {
+            repeatState = 0
+        }
+
+        return repeatState
+    }
+
+    override fun getRepeatState(): Long {
+        return repeatState
+    }
+
     fun setQueueActionListener(queueActionListener: QueueManager.QueueActionListener) {
         this.queueActionListener = queueActionListener
     }
-
 }

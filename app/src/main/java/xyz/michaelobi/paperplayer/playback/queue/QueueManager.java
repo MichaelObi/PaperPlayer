@@ -28,6 +28,8 @@ import java.util.List;
 
 import rx.Observable;
 import xyz.michaelobi.paperplayer.data.model.Song;
+import xyz.michaelobi.paperplayer.playback.events.RepeatState;
+import xyz.michaelobi.paperplayer.playback.events.RepeatState.RepeatType;
 
 /**
  * PaperPlayer Michael Obi 13 01 2017 7:06 AM
@@ -45,7 +47,7 @@ public interface QueueManager {
 
     Song getCurrentSong();
 
-    Song next();
+    Song next(boolean ignoreRepeatOnce);
 
     Song previous();
 
@@ -62,6 +64,10 @@ public interface QueueManager {
     boolean toggleShuffle();
 
     boolean isShuffled();
+
+    @RepeatType long toggleRepeat();
+
+    @RepeatType long getRepeatState();
 
 
     interface QueueActionListener {

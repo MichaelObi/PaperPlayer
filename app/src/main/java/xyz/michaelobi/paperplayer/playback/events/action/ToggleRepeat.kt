@@ -22,34 +22,11 @@
  * SOFTWARE.
  */
 
-package xyz.michaelobi.paperplayer.presentation.player
-
-import xyz.michaelobi.paperplayer.mvp.Mvp
-import xyz.michaelobi.paperplayer.playback.events.PlaybackState
-import xyz.michaelobi.paperplayer.playback.events.RepeatState
-import xyz.michaelobi.paperplayer.playback.events.RepeatState.RepeatType
+package xyz.michaelobi.paperplayer.playback.events.action
 
 /**
  * PaperPlayer
  * Michael Obi
- * 06 05 2017 11:29 PM
+ * 01 08 2017 11:22 AM
  */
-interface PlayerContract {
-
-    interface View : Mvp.View {
-        fun updatePlaybackState(playbackState: PlaybackState)
-        fun updateTitleAndArtist(playbackState: PlaybackState)
-        fun updateSongArt(uri: String?)
-        fun updateSeeker(playbackState: PlaybackState)
-        fun setShuffled(shuffled: Boolean)
-        fun setRepeatState(@RepeatType repeatType: Long)
-    }
-
-    interface Presenter : Mvp.Presenter<View> {
-        fun playPauseToggle()
-        fun next()
-        fun previous()
-        fun toggleShuffle()
-        fun toggleRepeat()
-    }
-}
+class ToggleRepeat

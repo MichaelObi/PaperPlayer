@@ -22,34 +22,25 @@
  * SOFTWARE.
  */
 
-package xyz.michaelobi.paperplayer.presentation.player
+package xyz.michaelobi.paperplayer.playback.events
 
-import xyz.michaelobi.paperplayer.mvp.Mvp
-import xyz.michaelobi.paperplayer.playback.events.PlaybackState
-import xyz.michaelobi.paperplayer.playback.events.RepeatState
-import xyz.michaelobi.paperplayer.playback.events.RepeatState.RepeatType
+import android.support.annotation.IntDef
+
 
 /**
  * PaperPlayer
  * Michael Obi
- * 06 05 2017 11:29 PM
+ * 01 08 2017 11:58 AM
  */
-interface PlayerContract {
+class RepeatState(@RepeatType val repeatType: Long = RepeatState.REPEAT_NONE) {
 
-    interface View : Mvp.View {
-        fun updatePlaybackState(playbackState: PlaybackState)
-        fun updateTitleAndArtist(playbackState: PlaybackState)
-        fun updateSongArt(uri: String?)
-        fun updateSeeker(playbackState: PlaybackState)
-        fun setShuffled(shuffled: Boolean)
-        fun setRepeatState(@RepeatType repeatType: Long)
-    }
+    @IntDef(REPEAT_NONE, REPEAT_ONE, REPEAT_ALL)
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class RepeatType
 
-    interface Presenter : Mvp.Presenter<View> {
-        fun playPauseToggle()
-        fun next()
-        fun previous()
-        fun toggleShuffle()
-        fun toggleRepeat()
+    companion object {
+        const val REPEAT_NONE: Long = 0
+        const val REPEAT_ALL: Long = 1
+        const val REPEAT_ONE: Long = 2
     }
 }

@@ -31,6 +31,7 @@ import xyz.michaelobi.paperplayer.data.model.Album
 import xyz.michaelobi.paperplayer.injection.Injector
 import xyz.michaelobi.paperplayer.mvp.BasePresenter
 import xyz.michaelobi.paperplayer.playback.events.PlaybackState
+import xyz.michaelobi.paperplayer.playback.events.RepeatState
 import xyz.michaelobi.paperplayer.playback.events.ShuffleState
 import xyz.michaelobi.paperplayer.playback.events.action.*
 import xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.miniplayer.MiniPlayerPresenter
@@ -62,6 +63,12 @@ class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePrese
                 getView()?.setShuffled(shuffleState.isShuffled)
             }
         }
+        bus.observe(RepeatState::class.java).subscribe {
+            repeatState ->
+            run {
+                getView()?.setRepeatState(repeatType = repeatState.repeatType)
+            }
+        }
         bus.post(RequestPlaybackState())
     }
 
@@ -84,6 +91,10 @@ class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePrese
 
     override fun toggleShuffle() {
         bus.post(ToggleShuffle())
+    }
+
+    override fun toggleRepeat() {
+        bus.post(ToggleRepeat())
     }
 
     private fun getAlbumArtUri(albumId: Long) {

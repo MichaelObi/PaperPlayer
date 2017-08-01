@@ -72,7 +72,6 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
         setUpEventBus()
     }
 
-
     override fun onPause() {
         super.onPause()
     }
