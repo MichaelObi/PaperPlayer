@@ -1,6 +1,6 @@
-### Checkout the develop branch for the latest code
 
 # PaperPlayer
+[![CircleCI](https://circleci.com/gh/MichaelObi/PaperPlayer.svg?style=svg)](https://circleci.com/gh/MichaelObi/PaperPlayer)
 
 Yea! Horrible name. I know.
 
