@@ -37,7 +37,6 @@ import android.util.Log;
 import java.io.IOException;
 
 import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
-import xyz.michaelobi.paperplayer.data.model.Song;
 import xyz.michaelobi.paperplayer.event.EventBus;
 import xyz.michaelobi.paperplayer.injection.Injector;
 import xyz.michaelobi.paperplayer.playback.events.PlaybackState;
@@ -189,11 +188,14 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     }
 
     private void playPreviousSong() {
+        boolean playing = player.isPlaying();
         pauseMusic();
         if (player.getCurrentPosition() > 3) {
             songSeek = 0;
             if (queueManager.previous() != null) {
-                playMusic();
+                if (playing) {
+                    playMusic();
+                }
             }
         } else {
             songSeek = 0;
@@ -230,12 +232,15 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
     }
 
     private void playNextSong(boolean ignoreRepeatOnce) {
+        boolean playing = player.isPlaying();
         pauseMusic();
         if (queueManager.next(ignoreRepeatOnce) != null) {
             songSeek = 0;
-            playMusic();
+            if (playing) {
+                playMusic();
+            }
         }
-        eventBus.post(RequestPlaybackState.class);
+        eventBus.post(new RequestPlaybackState());
     }
 
     @Override

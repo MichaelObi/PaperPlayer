@@ -39,8 +39,8 @@ class RepeatState(@RepeatType val repeatType: Long = RepeatState.REPEAT_NONE) {
     annotation class RepeatType
 
     companion object {
-        const val REPEAT_NONE: Long = 0
-        const val REPEAT_ALL: Long = 1
-        const val REPEAT_ONE: Long = 2
+        const val REPEAT_NONE = 0L
+        const val REPEAT_ALL = 1L
+        const val REPEAT_ONE = 2L
     }
 }

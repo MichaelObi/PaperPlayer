@@ -53,7 +53,6 @@ public class MusicRepository implements MusicRepositoryInterface {
                             }
                             return Observable.error(o);
                         })
-
                 );
     }
 
