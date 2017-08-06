@@ -32,16 +32,4 @@ import java.util.*
  * 22 10 2016 2:57 AM
  */
 
-class SongList(songs: List<Song>) {
-
-    var songs: List<Song>? = null
-        private set
-
-    init {
-        this.songs = songs
-    }
-
-    fun setSongs(songs: ArrayList<Song>) {
-        this.songs = songs
-    }
-}
+class SongList(var songs: List<Song>)
