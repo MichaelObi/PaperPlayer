@@ -22,31 +22,16 @@
  * SOFTWARE.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package xyz.michaelobi.paperplayer
 
-buildscript {
-    ext.kotlin_version = '1.1.3'
-    ext.android_plugin_version = '2.3.1'
-    repositories {
-        jcenter()
-        google()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-beta4'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
+/**
+ * PaperPlayer
+ * Michael Obi
+ * 07 09 2017 10:30 PM
+ */
+public class Constants {
 
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven { url "https://jitpack.io" }
-        google()
+    companion object {
+        const val KEY_ALBUM_ID = "KEY_ALBUM_ID"
     }
 }
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-

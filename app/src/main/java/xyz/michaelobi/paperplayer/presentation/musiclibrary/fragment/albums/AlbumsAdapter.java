@@ -25,6 +25,7 @@
 package xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.albums;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -36,10 +37,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
+import xyz.michaelobi.paperplayer.Constants;
 import xyz.michaelobi.paperplayer.R;
 import xyz.michaelobi.paperplayer.data.model.Album;
-
-import java.util.List;
+import xyz.michaelobi.paperplayer.presentation.album.AlbumActivity;
 
 /**
  * PaperPlayer
@@ -52,8 +55,8 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsViewHolder> {
     private final Context context;
     private List<Album> albums;
 
-    AlbumsAdapter(List<Album> albums, Context context) {
 
+    AlbumsAdapter(List<Album> albums, Context context) {
         this.albums = albums;
         this.context = context;
     }
@@ -75,6 +78,12 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsViewHolder> {
                 .config(Bitmap.Config.ARGB_8888)
                 .resize(200, 200)
                 .into(holder.albumArt);
+        holder.itemView.setOnClickListener(v -> {
+            Context c = v.getContext();
+            Intent intent = new Intent(c, AlbumActivity.class);
+            intent.putExtra(Constants.KEY_ALBUM_ID, albums.get(position).getId());
+            c.startActivity(intent);
+        });
     }
 
     @Override
@@ -94,7 +103,6 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsViewHolder> {
 
 
 class AlbumsViewHolder extends RecyclerView.ViewHolder {
-
 
     final ImageView albumArt;
     final TextView name;

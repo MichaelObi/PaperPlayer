@@ -22,31 +22,29 @@
  * SOFTWARE.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package xyz.michaelobi.paperplayer.presentation.album
 
-buildscript {
-    ext.kotlin_version = '1.1.3'
-    ext.android_plugin_version = '2.3.1'
-    repositories {
-        jcenter()
-        google()
+import xyz.michaelobi.paperplayer.data.model.Album
+import xyz.michaelobi.paperplayer.mvp.Mvp
+import java.io.File
+
+/**
+ * PaperPlayer
+ * Michael Obi
+ * 06 09 2017 7:37 PM
+ */
+interface AlbumContract {
+    interface View : Mvp.View {
+        fun showAlbumArt(albumArt: File)
+
+        fun showLoading()
+
+        fun hideLoading()
+
+        fun showError(message: String)
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-beta4'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+    interface Presenter : Mvp.Presenter<View> {
+        fun loadAlbum(albumId: Long)
     }
 }
-
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven { url "https://jitpack.io" }
-        google()
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-

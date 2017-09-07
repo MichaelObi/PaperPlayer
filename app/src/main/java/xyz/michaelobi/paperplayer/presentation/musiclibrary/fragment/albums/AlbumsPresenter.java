@@ -48,7 +48,6 @@ public class AlbumsPresenter extends BasePresenter<ListViewContract.View> implem
     private static final String TAG = "AlbumsPresenter";
     private final Scheduler ioScheduler;
     private final Scheduler mainScheduler;
-
     private MusicRepositoryInterface musicRepository;
 
     public AlbumsPresenter(MusicRepositoryInterface musicRepository, Scheduler ioScheduler, Scheduler

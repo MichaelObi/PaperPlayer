@@ -51,9 +51,9 @@ class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePrese
         bus.observe(PlaybackState::class.java).subscribe {
             playbackState ->
             run {
-                getView()?.updatePlaybackState(playbackState)
-                getView()?.updateTitleAndArtist(playbackState)
-                getView()?.updateSeeker(playbackState)
+                getView().updatePlaybackState(playbackState)
+                getView().updateTitleAndArtist(playbackState)
+                getView().updateSeeker(playbackState)
                 playbackState.song?.albumId?.let { getAlbumArtUri(it) }
             }
         }

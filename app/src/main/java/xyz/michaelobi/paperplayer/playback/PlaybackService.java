@@ -59,8 +59,8 @@ public class PlaybackService extends Service implements MediaPlayer.OnErrorListe
         .OnAudioFocusChangeListener, MediaPlayer.OnCompletionListener, MediaPlayer
         .OnPreparedListener {
     private static final String TAG = "PlaybackService";
-    QueueManager queueManager;
-    MusicRepositoryInterface musicRepository;
+    private QueueManager queueManager;
+    private MusicRepositoryInterface musicRepository;
     private EventBus eventBus;
     private MediaPlayer player;
     private int songSeek = 0;

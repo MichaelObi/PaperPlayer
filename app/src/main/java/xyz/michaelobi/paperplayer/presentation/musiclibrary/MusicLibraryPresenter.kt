@@ -45,7 +45,7 @@ internal class MusicLibraryPresenter : BasePresenter<MusicLibraryContract.View>(
 
     override fun initialize() {
         checkViewAttached()
-        viewOrThrow.initializeViewPager()
+        view.initializeViewPager()
     }
 
     override fun onFabClick() {

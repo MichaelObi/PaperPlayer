@@ -32,7 +32,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public abstract class BasePresenter<T extends Mvp.View> implements Mvp.Presenter<T> {
 
-    protected T view;
+    private T view;
 
     private CompositeSubscription compositeSubscription = new CompositeSubscription();
 
@@ -47,13 +47,8 @@ public abstract class BasePresenter<T extends Mvp.View> implements Mvp.Presenter
         this.view = null;
     }
 
-    @Nullable
-    public T getView() {
-        return this.view;
-    }
-
     @NonNull
-    public T getViewOrThrow() {
+    public T getView() {
         checkViewAttached();
         return this.view;
     }

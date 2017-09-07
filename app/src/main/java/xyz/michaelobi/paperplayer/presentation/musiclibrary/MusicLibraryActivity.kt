@@ -84,7 +84,7 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
         fab = findViewById(R.id.fab) as FloatingActionButton
-        fab!!.setOnClickListener(this)
+        fab?.setOnClickListener(this)
         val listener = CompositePermissionListener(this,
                 DialogOnDeniedPermissionListener.Builder
                         .withContext(this)

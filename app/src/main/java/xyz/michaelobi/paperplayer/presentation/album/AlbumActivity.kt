@@ -1,0 +1,87 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 MIchael Obi
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package xyz.michaelobi.paperplayer.presentation.album
+
+import android.databinding.DataBindingUtil
+import android.graphics.Bitmap
+import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
+import com.squareup.picasso.Picasso
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
+import xyz.michaelobi.paperplayer.Constants
+import xyz.michaelobi.paperplayer.R
+import xyz.michaelobi.paperplayer.databinding.AlbumActivityBinding
+import xyz.michaelobi.paperplayer.injection.Injector
+import java.io.File
+
+
+/**
+ * PaperPlayer
+ * Michael Obi
+ * 06 09 2017 7:37 PM
+ */
+
+class AlbumActivity : AppCompatActivity(), AlbumContract.View {
+    private lateinit var presenter: AlbumContract.Presenter
+    private lateinit var viewBinding: AlbumActivityBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val albumId = intent.getLongExtra(Constants.KEY_ALBUM_ID, 0)
+        viewBinding = DataBindingUtil.setContentView(this, R.layout.album_activity)
+
+        presenter = AlbumPresenter(Injector.provideMusicRepository(this), Schedulers.io(),
+                AndroidSchedulers.mainThread())
+        presenter.attachView(this)
+        presenter.loadAlbum(albumId)
+    }
+
+
+    override fun showAlbumArt(albumArt: File) {
+        try {
+            Picasso.with(this).load(albumArt)
+                    .config(Bitmap.Config.RGB_565)
+                    .error(R.drawable.default_artwork_dark)
+                    .into(viewBinding.albumArt)
+        } catch (e: NullPointerException) {
+            Picasso.with(this).load(R.drawable.default_artwork_dark).into(viewBinding.albumArt)
+        }
+
+    }
+
+    override fun showLoading() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun hideLoading() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+}

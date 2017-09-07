@@ -49,6 +49,7 @@
         <activity
                 android:name=".presentation.player.PlayerActivity"
                 android:theme="@style/Player"/>
+        <activity android:name=".presentation.album.AlbumActivity"/>
 
         <service
                 android:name=".playback.PlaybackService"
