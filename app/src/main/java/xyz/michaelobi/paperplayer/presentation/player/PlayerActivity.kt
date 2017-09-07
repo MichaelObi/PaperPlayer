@@ -48,7 +48,6 @@ import xyz.michaelobi.paperplayer.playback.events.RepeatState
 import xyz.michaelobi.paperplayer.playback.events.action.Seek
 import xyz.michaelobi.paperplayer.presentation.player.playlist.PlaylistFragment
 import java.io.File
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -61,7 +60,7 @@ import java.util.concurrent.TimeUnit
 class PlayerActivity : AppCompatActivity(), PlayerContract.View {
     private val TAG: String = ".PlayerActivity"
     private lateinit var viewBinding: PlayerActivityBinding
-    private var presenter: PlayerContract.Presenter? = null
+    private lateinit var presenter: PlayerContract.Presenter
     private val eventBus = Injector.provideEventBus()
 
     private var seekBarScrubSubscription: Subscription? = null
@@ -71,7 +70,7 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
         super.onCreate(savedInstanceState)
         viewBinding = DataBindingUtil.setContentView(this, R.layout.player_activity)
         presenter = PlayerPresenter(Injector.provideMusicRepository(this))
-        presenter?.attachView(this)
+        presenter.attachView(this)
         viewBinding.presenter = presenter
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
@@ -136,7 +135,7 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter?.detachView()
+        presenter.detachView()
     }
 
     override fun updatePlaybackState(playbackState: PlaybackState) {
