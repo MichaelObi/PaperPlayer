@@ -53,13 +53,13 @@ class AlbumActivity : AppCompatActivity(), AlbumContract.View {
         super.onCreate(savedInstanceState)
         val albumId = intent.getLongExtra(Constants.KEY_ALBUM_ID, 0)
         viewBinding = DataBindingUtil.setContentView(this, R.layout.album_activity)
-
+        viewBinding.toolbar.setNavigationIcon(R.drawable.ic_close_24dp)
+        setSupportActionBar(viewBinding.toolbar)
         presenter = AlbumPresenter(Injector.provideMusicRepository(this), Schedulers.io(),
                 AndroidSchedulers.mainThread())
         presenter.attachView(this)
         presenter.loadAlbum(albumId)
     }
-
 
     override fun showAlbumArt(albumArt: File) {
         try {
@@ -70,7 +70,6 @@ class AlbumActivity : AppCompatActivity(), AlbumContract.View {
         } catch (e: NullPointerException) {
             Picasso.with(this).load(R.drawable.default_artwork_dark).into(viewBinding.albumArt)
         }
-
     }
 
     override fun showLoading() {

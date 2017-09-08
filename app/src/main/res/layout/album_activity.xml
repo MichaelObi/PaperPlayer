@@ -28,8 +28,7 @@
                                                      xmlns:app="http://schemas.android.com/apk/res-auto"
                                                      android:layout_width="match_parent"
                                                      android:layout_height="match_parent"
-                                                     android:fitsSystemWindows="true"
-            >
+                                                     android:fitsSystemWindows="true">
 
         <android.support.design.widget.AppBarLayout
                 android:id="@+id/app_bar"
@@ -44,12 +43,14 @@
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
                     app:contentScrim="?attr/colorPrimary"
+                    app:expandedTitleMarginStart="48dp"
+                    app:expandedTitleMarginEnd="64dp"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-                <ImageView
+                <xyz.michaelobi.paperplayer.widget.SquareImageView
                         android:id="@+id/album_art"
                         android:layout_width="match_parent"
-                        android:layout_height="296dp"
+                        android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:fitsSystemWindows="true"
                         android:scaleType="centerCrop"
@@ -62,6 +63,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
                         app:layout_collapseMode="pin"
+                        app:navigationIcon="@drawable/ic_close_24dp"
+                        android:theme="@style/ThemeOverlay.AppCompat.Dark"
                         app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
             </android.support.design.widget.CollapsingToolbarLayout>
