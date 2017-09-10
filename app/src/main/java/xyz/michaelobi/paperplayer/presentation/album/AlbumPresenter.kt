@@ -42,7 +42,7 @@ class AlbumPresenter(private val musicRepository: MusicRepositoryInterface,
 
     override fun loadAlbum(albumId: Long) {
 
-        addSubscription(musicRepository.getAlbum(albumId)
+        addSubscription(musicRepository.getAlbumWithSongs(albumId)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribe(
@@ -52,7 +52,6 @@ class AlbumPresenter(private val musicRepository: MusicRepositoryInterface,
                             }
 
                             override fun onError(e: Throwable) {
-//                                view.hideLoading()
                                 Log.e(TAG, e.localizedMessage, e)
                                 e.message?.let {
                                     view.showError(it)
@@ -60,11 +59,17 @@ class AlbumPresenter(private val musicRepository: MusicRepositoryInterface,
                             }
 
                             override fun onNext(album: Album) {
-//                                view.hideLoading()
+                                view.showSongCount(album.numberOfSongs)
+                                album.songs?.let {
+                                    view.showAlbumSongList(it)
+                                    it.firstOrNull { song -> song.year.isNotEmpty() }?.let {
+                                        view.showReleaseYear(it.year)
+                                    }
+                                }
                                 album.art?.let {
                                     view.showAlbumArt(it)
                                 }
-
+                                view.showAlbumMetaData(album)
                             }
                         }
                 )
@@ -74,5 +79,4 @@ class AlbumPresenter(private val musicRepository: MusicRepositoryInterface,
     companion object {
         const val TAG = ".AlbumPresenter"
     }
-
 }

@@ -39,6 +39,8 @@ data class Album @JvmOverloads constructor(val id: Long, val title: String, val 
     val art: File?
         get() = artPath?.let { File(it) }
 
+     var songs: List<Song>? = null
+
     companion object {
 
         fun from(cursor: Cursor): Album {

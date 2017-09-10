@@ -29,16 +29,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import rx.Observable;
 import rx.schedulers.Schedulers;
 import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
 import xyz.michaelobi.paperplayer.data.library.LibraryManager;
-import xyz.michaelobi.paperplayer.data.library.local.MockLocalLibraryManager;
-import xyz.michaelobi.paperplayer.data.model.Song;
+
 import xyz.michaelobi.paperplayer.injection.Injector;
 import xyz.michaelobi.paperplayer.mvp.ListViewContract;
 

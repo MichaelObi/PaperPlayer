@@ -47,13 +47,13 @@ import java.util.List;
  * PaperPlayer Michael Obi 23 10 2016 11:02 AM
  */
 
-class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHolder> {
+public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHolder> {
     private final Context context;
     private List<Song> songs;
 
     private EventBus bus;
 
-    SongsAdapter(List<Song> songs, Context context) {
+    public SongsAdapter(List<Song> songs, Context context) {
         super();
         bus = Injector.provideEventBus();
         this.songs = songs;
@@ -96,7 +96,7 @@ class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHolder> {
         return songs.size();
     }
 
-    void setSongs(List<Song> songs) {
+    public void setSongs(List<Song> songs) {
         this.songs = songs;
         notifyDataSetChanged();
     }

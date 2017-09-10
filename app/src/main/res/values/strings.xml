@@ -232,4 +232,5 @@
     <string name="go_to_album">Go to album</string>
     <string name="view_artist">View artist</string>
     <string name="schedule">Schedule</string>
+    <string name="released">Released</string>
 </resources>

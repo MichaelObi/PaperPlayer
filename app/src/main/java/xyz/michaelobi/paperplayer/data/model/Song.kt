@@ -43,16 +43,16 @@ data class Song(val id: Long, val title: String, val album: String, val artist: 
             val pathColumn = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
             val albumIdColumn = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)
             val albumColumn = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
-            val song = Song(
+            val yearColumn = cursor.getColumnIndex(MediaStore.Audio.Media.YEAR)
+            return Song(
                     cursor.getLong(idColumn),
                     cursor.getString(titleColumn),
                     cursor.getString(albumColumn),
                     cursor.getString(artistColumn),
-                    "",
+                    cursor.getString(yearColumn),
                     cursor.getString(pathColumn),
                     cursor.getLong(albumIdColumn)
             )
-            return song
         }
     }
 }

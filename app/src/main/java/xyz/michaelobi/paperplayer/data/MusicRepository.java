@@ -81,6 +81,14 @@ public class MusicRepository implements MusicRepositoryInterface {
     }
 
     @Override
+    public Observable<Album> getAlbumWithSongs(long albumId) {
+        return getAlbum(albumId)
+                .flatMap(album -> libraryManager.fetchSongsForAlbum(albumId)
+                        .first()
+                        .doOnNext(album::setSongs).map(songs -> album));
+    }
+
+    @Override
     public Observable<List<Artist>> getAllArtists() {
         return Observable.defer(() -> libraryManager.fetchAllArtists())
                 .retryWhen(observable -> observable.flatMap(o -> {

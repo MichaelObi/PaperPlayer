@@ -28,16 +28,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
-import xyz.michaelobi.paperplayer.data.library.LibraryManager;
-import xyz.michaelobi.paperplayer.data.model.Album;
-import xyz.michaelobi.paperplayer.data.model.Artist;
-import xyz.michaelobi.paperplayer.data.model.Song;
-
 import java.util.List;
 import java.util.Locale;
 
 import rx.Observable;
+import xyz.michaelobi.paperplayer.data.library.LibraryManager;
 import xyz.michaelobi.paperplayer.data.model.Album;
+import xyz.michaelobi.paperplayer.data.model.Artist;
 import xyz.michaelobi.paperplayer.data.model.Song;
 
 /**
@@ -83,9 +80,16 @@ public class LocalLibraryManager implements LibraryManager {
 
     @Override
     public Observable<List<Song>> fetchSongsForAlbum(long id) {
-        return null;
-    }
+        QueryBuilder builder = new QueryBuilder(context, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
+                .where(String.format(Locale.getDefault(), "%s=%d", MediaStore.Audio.Media.ALBUM_ID, id))
+                .orderBy(MediaStore.Audio.Media.TITLE);
+        Cursor cursor = builder.query();
 
+        return create(cursor)
+                .map(Song.Companion::from)
+                .doOnCompleted(cursor::close)
+                .toList();
+    }
 
     @Override
     public Observable<List<Album>> fetchAllAlbums() {

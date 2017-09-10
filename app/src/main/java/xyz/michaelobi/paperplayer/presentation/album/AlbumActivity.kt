@@ -27,15 +27,21 @@ package xyz.michaelobi.paperplayer.presentation.album
 import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import android.widget.Toast
 import com.squareup.picasso.Picasso
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import xyz.michaelobi.paperplayer.Constants
 import xyz.michaelobi.paperplayer.R
+import xyz.michaelobi.paperplayer.data.model.Album
+import xyz.michaelobi.paperplayer.data.model.Song
 import xyz.michaelobi.paperplayer.databinding.AlbumActivityBinding
 import xyz.michaelobi.paperplayer.injection.Injector
+import xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.songs.SongsAdapter
 import java.io.File
 
 
@@ -46,30 +52,54 @@ import java.io.File
  */
 
 class AlbumActivity : AppCompatActivity(), AlbumContract.View {
+
     private lateinit var presenter: AlbumContract.Presenter
     private lateinit var viewBinding: AlbumActivityBinding
-
+    private lateinit var songsAdapter: SongsAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val albumId = intent.getLongExtra(Constants.KEY_ALBUM_ID, 0)
         viewBinding = DataBindingUtil.setContentView(this, R.layout.album_activity)
         viewBinding.toolbar.setNavigationIcon(R.drawable.ic_close_24dp)
         setSupportActionBar(viewBinding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         presenter = AlbumPresenter(Injector.provideMusicRepository(this), Schedulers.io(),
                 AndroidSchedulers.mainThread())
         presenter.attachView(this)
+        songsAdapter = SongsAdapter(null, this)
+        viewBinding.rvSongs.adapter = songsAdapter
+        viewBinding.rvSongs.layoutManager = LinearLayoutManager(this)
+//        viewBinding.rvSongs.setHasFixedSize(true)
+        viewBinding.rvSongs.isNestedScrollingEnabled = false
         presenter.loadAlbum(albumId)
     }
 
     override fun showAlbumArt(albumArt: File) {
-        try {
-            Picasso.with(this).load(albumArt)
-                    .config(Bitmap.Config.RGB_565)
-                    .error(R.drawable.default_artwork_dark)
-                    .into(viewBinding.albumArt)
-        } catch (e: NullPointerException) {
-            Picasso.with(this).load(R.drawable.default_artwork_dark).into(viewBinding.albumArt)
-        }
+        Picasso.with(this).load(albumArt)
+                .config(Bitmap.Config.RGB_565)
+                .error(R.drawable.default_artwork_dark)
+                .into(viewBinding.albumArt)
+    }
+
+    override fun showAlbumMetaData(album: Album) {
+
+    }
+
+    override fun showReleaseYear(year: String?) {
+        viewBinding.year.visibility = View.VISIBLE
+        viewBinding.year.text = "${getString(R.string.released)} $year"
+    }
+
+    override fun showSongCount(numberOfSongs: Int) {
+        viewBinding.songCount.visibility = View.VISIBLE
+        viewBinding.songCount.text = "$numberOfSongs ${getString(R.string.songs)}"
+    }
+
+
+
+    override fun showAlbumSongList(songs: List<Song>) {
+        viewBinding.rvSongs.visibility = View.VISIBLE
+        songsAdapter.setSongs(songs)
     }
 
     override fun showLoading() {
