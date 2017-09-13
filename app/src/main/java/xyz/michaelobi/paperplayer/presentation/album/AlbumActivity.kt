@@ -27,7 +27,6 @@ package xyz.michaelobi.paperplayer.presentation.album
 import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -87,15 +86,13 @@ class AlbumActivity : AppCompatActivity(), AlbumContract.View {
 
     override fun showReleaseYear(year: String?) {
         viewBinding.year.visibility = View.VISIBLE
-        viewBinding.year.text = "${getString(R.string.released)} $year"
+        viewBinding.year.text = getString(R.string.year_released, year)
     }
 
     override fun showSongCount(numberOfSongs: Int) {
         viewBinding.songCount.visibility = View.VISIBLE
-        viewBinding.songCount.text = "$numberOfSongs ${getString(R.string.songs)}"
+        viewBinding.songCount.text = getString(R.string.songs, numberOfSongs)
     }
-
-
 
     override fun showAlbumSongList(songs: List<Song>) {
         viewBinding.rvSongs.visibility = View.VISIBLE
