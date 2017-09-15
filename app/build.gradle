@@ -53,11 +53,11 @@ android {
     productFlavors {
         prod {
             dimension "build"
-            applicationId "xyz.michaelobi.paperplayer"
+
         }
         mock {
             dimension "build"
-            applicationId "xyz.michaelobi.paperplayer.mock"
+
         }
     }
     compileOptions {
