@@ -35,6 +35,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import xyz.michaelobi.paperplayer.R
 import xyz.michaelobi.paperplayer.data.model.Album
 import xyz.michaelobi.paperplayer.injection.Injector
 import xyz.michaelobi.paperplayer.mvp.ListViewContract
@@ -58,8 +59,8 @@ class AlbumsFragment : Fragment(), ListViewContract.View<Album> {
                 AndroidSchedulers.mainThread())
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater!!.inflate(xyz.michaelobi.paperplayer.R.layout.fragment_albums, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val v = inflater.inflate(R.layout.fragment_albums, container, false)
         recyclerViewAlbums = v.findViewById(xyz.michaelobi.paperplayer.R.id.rv_albums_grid) as RecyclerView
         progressBar = v.findViewById(xyz.michaelobi.paperplayer.R.id.progressbar_loading) as ProgressBar
         presenter.attachView(this)
@@ -80,8 +81,8 @@ class AlbumsFragment : Fragment(), ListViewContract.View<Album> {
     }
 
     override fun onDestroyView() {
-        presenter.detachView()
         super.onDestroyView()
+        presenter.detachView()
     }
 
     override fun showList(albums: List<Album>) {

@@ -71,10 +71,10 @@ public class ArtistsFragment extends Fragment implements ListViewContract.View<A
         View v = inflater.inflate(xyz.michaelobi.paperplayer.R.layout.fragment_artists, container, false);
         recyclerViewArtists = (RecyclerView) v.findViewById(xyz.michaelobi.paperplayer.R.id.rv_artists);
         progressBar = (ProgressBar) v.findViewById(xyz.michaelobi.paperplayer.R.id.progressbar_loading);
-        presenter.attachView(this);
         recyclerViewArtists.setHasFixedSize(true);
         recyclerViewArtists.setLayoutManager(new LinearLayoutManager(context));
         artistsAdapter = new ArtistsAdapter(context);
+        presenter.attachView(this);
         recyclerViewArtists.setAdapter(artistsAdapter);
         presenter.getAll();
         return v;
@@ -104,7 +104,7 @@ public class ArtistsFragment extends Fragment implements ListViewContract.View<A
 
     @Override
     public void onDestroyView() {
-        presenter.detachView();
         super.onDestroyView();
+        presenter.detachView();
     }
 }

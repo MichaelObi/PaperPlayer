@@ -68,19 +68,15 @@ public class SongsFragment extends Fragment implements ListViewContract.View<Son
         context = getActivity();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        presenter.attachView(this);
         View v = inflater.inflate(xyz.michaelobi.paperplayer.R.layout.fragment_songs, container, false);
         recyclerViewSongs = (RecyclerView) v.findViewById(xyz.michaelobi.paperplayer.R.id.rv_songs);
         progressBar = (ProgressBar) v.findViewById(xyz.michaelobi.paperplayer.R.id.progressbar_loading);
         recyclerViewSongs.setLayoutManager(new LinearLayoutManager(context));
         songsAdapter = new SongsAdapter(null, context);
+        presenter.attachView(this);
         recyclerViewSongs.setAdapter(songsAdapter);
         presenter.getAll();
         return v;
@@ -109,13 +105,8 @@ public class SongsFragment extends Fragment implements ListViewContract.View<Son
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        presenter.detachView();
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
+        presenter.detachView();
     }
 }

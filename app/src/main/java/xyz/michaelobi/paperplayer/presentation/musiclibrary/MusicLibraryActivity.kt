@@ -67,14 +67,6 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
 
     private var fab: FloatingActionButton? = null
 
-    override fun onResume() {
-        super.onResume()
-        setUpEventBus()
-    }
-
-    override fun onPause() {
-        super.onPause()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_NoActionBar)
@@ -100,6 +92,11 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
                 .check()
     }
 
+    override fun onResume() {
+        super.onResume()
+        setUpEventBus()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         bus = null
@@ -123,20 +120,12 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
         viewPagerAdapter.addFragment(SongsFragment(), resources.getString(R.string.songs))
         viewPagerAdapter.addFragment(AlbumsFragment(), resources.getString(R.string.albums))
         viewPagerAdapter.addFragment(ArtistsFragment(), resources.getString(R.string.artists))
-        if (mViewPager != null) {
-            mViewPager.adapter = viewPagerAdapter
-            mViewPager.currentItem = 0
-        }
+        mViewPager.adapter = viewPagerAdapter
+        mViewPager.currentItem = 0
 
         val tabLayout = findViewById(R.id.main_tablayout) as TabLayout
-        if (tabLayout != null) {
-            tabLayout.tabMode = TabLayout.MODE_FIXED
-            tabLayout.setupWithViewPager(mViewPager)
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        tabLayout.tabMode = TabLayout.MODE_FIXED
+        tabLayout.setupWithViewPager(mViewPager)
     }
 
     override fun onClick(v: View) {
