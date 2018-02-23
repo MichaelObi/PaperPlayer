@@ -1,12 +1,9 @@
 
 # PaperPlayer
-[![CircleCI](https://circleci.com/gh/MichaelObi/PaperPlayer.svg?style=svg)](https://circleci.com/gh/MichaelObi/PaperPlayer)
 
 Yea! Horrible name. I know.
 
 A simple Android music player meant to be the base platform for some ideas that are centered around making listening to music a more enjoyable activity.
-
-For now, The base player has to be built and built well too.
 
 Any contributions will be appreciated.
 
