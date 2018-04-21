@@ -37,6 +37,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import xyz.michaelobi.paperplayer.R
 import xyz.michaelobi.paperplayer.event.EventBus
 import xyz.michaelobi.paperplayer.injection.Injector
@@ -44,8 +46,6 @@ import xyz.michaelobi.paperplayer.playback.events.PlaybackState
 import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback
 import xyz.michaelobi.paperplayer.presentation.player.PlayerActivity
 import xyz.michaelobi.paperplayer.widget.PlayPauseButton
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 /**
  * PaperPlayer
@@ -62,8 +62,8 @@ class MiniPlayerFragment : Fragment(), MiniPlayerContract.View, View.OnClickList
     var playPauseButton: PlayPauseButton? = null
     var miniPlayer: View? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view: View = inflater!!.inflate(R.layout.mini_player, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view: View = inflater.inflate(R.layout.mini_player, container, false)
         presenter = MiniPlayerPresenter(Injector.provideMusicRepository(activity), Schedulers.io(),
                 AndroidSchedulers.mainThread())
         presenter?.attachView(this)
@@ -101,7 +101,8 @@ class MiniPlayerFragment : Fragment(), MiniPlayerContract.View, View.OnClickList
 
     override fun updateSongArt(uri: String?) {
         if (uri.isNullOrEmpty()) {
-            val defaultAlbumArt: Drawable = ContextCompat.getDrawable(activity, R.drawable.default_artwork_dark)
+            val defaultAlbumArt: Drawable? = ContextCompat.getDrawable(requireActivity(), R.drawable
+                    .default_artwork_dark)
             miniAlbumArt?.setImageDrawable(defaultAlbumArt)
             return
         }

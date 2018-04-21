@@ -65,9 +65,9 @@ public interface QueueManager {
 
     boolean isShuffled();
 
-    @RepeatType long toggleRepeat();
+    @RepeatType int toggleRepeat();
 
-    @RepeatType long getRepeatState();
+    @RepeatType int getRepeatState();
 
 
     interface QueueActionListener {

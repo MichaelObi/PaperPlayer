@@ -26,13 +26,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 android {
-    compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "xyz.michaelobi.paperplayer"
-        minSdkVersion 16
-        targetSdkVersion 25
+        minSdkVersion 18
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
@@ -73,7 +73,7 @@ android {
     }
 }
 
-final SUPPORT_LIB_VERSION = "25.3.1"
+final SUPPORT_LIB_VERSION = "27.+"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -120,7 +120,7 @@ dependencies {
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
     }
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support.constraint:constraint-layout:1.1.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile 'com.karumi:dexter:4.0.0'
 

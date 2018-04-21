@@ -204,7 +204,7 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
         viewBinding.btnShuffle.drawable.setColorFilter(ContextCompat.getColor(this, R.color.inactiveTint), PorterDuff.Mode.SRC_ATOP)
     }
 
-    override fun setRepeatState(repeatType: Long) {
+    override fun setRepeatState(repeatType: Int) {
         when (repeatType) {
             RepeatState.REPEAT_NONE -> {
                 viewBinding.btnRepeat.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_repeat_24dp))

@@ -46,11 +46,11 @@ class PlayPauseButton : AppCompatImageButton {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     fun play() {
-        changeState(ContextCompat.getDrawable(context, R.drawable.ic_play_arrow_white_24dp))
+        ContextCompat.getDrawable(context, R.drawable.ic_play_arrow_white_24dp)?.let { changeState(it) }
     }
 
     fun pause() {
-        changeState(ContextCompat.getDrawable(context, R.drawable.ic_pause_white_24dp))
+        ContextCompat.getDrawable(context, R.drawable.ic_pause_white_24dp)?.let { changeState(it) }
     }
 
     private fun changeState(drawable: Drawable) {

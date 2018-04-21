@@ -75,7 +75,7 @@ class AlbumsFragment : Fragment(), ListViewContract.View<Album> {
     }
 
     private fun calculateNoOfColumns(): Int {
-        val displayMetrics = activity.resources.displayMetrics
+        val displayMetrics = requireActivity().resources.displayMetrics
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
         return (dpWidth / 180).toInt()
     }

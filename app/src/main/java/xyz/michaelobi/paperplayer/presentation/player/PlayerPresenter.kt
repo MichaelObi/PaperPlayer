@@ -66,7 +66,7 @@ class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePrese
         bus.observe(RepeatState::class.java).subscribe {
             repeatState ->
             run {
-                getView()?.setRepeatState(repeatType = repeatState.repeatType)
+                getView().setRepeatState(repeatType = repeatState.repeatType)
             }
         }
         bus.post(RequestPlaybackState())

@@ -42,7 +42,7 @@ interface PlayerContract {
         fun updateSongArt(uri: String?)
         fun updateSeeker(playbackState: PlaybackState)
         fun setShuffled(shuffled: Boolean)
-        fun setRepeatState(@RepeatType repeatType: Long)
+        fun setRepeatState(@RepeatType repeatType: Int)
     }
 
     interface Presenter : Mvp.Presenter<View> {

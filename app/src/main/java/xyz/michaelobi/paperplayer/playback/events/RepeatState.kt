@@ -32,15 +32,15 @@ import android.support.annotation.IntDef
  * Michael Obi
  * 01 08 2017 11:58 AM
  */
-class RepeatState(@RepeatType val repeatType: Long = RepeatState.REPEAT_NONE) {
+class RepeatState(@RepeatType val repeatType: Int = RepeatState.REPEAT_NONE) {
 
     @IntDef(REPEAT_NONE, REPEAT_ONE, REPEAT_ALL)
     @Retention(AnnotationRetention.SOURCE)
     annotation class RepeatType
 
     companion object {
-        const val REPEAT_NONE = 0L
-        const val REPEAT_ALL = 1L
-        const val REPEAT_ONE = 2L
+        const val REPEAT_NONE = 0
+        const val REPEAT_ALL = 1
+        const val REPEAT_ONE = 2
     }
 }

@@ -160,7 +160,7 @@ class LocalQueueManager : QueueManager {
         shuffled = false
     }
 
-    override fun toggleRepeat(): Long {
+    override fun toggleRepeat(): Int {
         if (repeatState < RepeatState.REPEAT_ONE) {
             repeatState++
         } else {
@@ -170,7 +170,7 @@ class LocalQueueManager : QueueManager {
         return repeatState
     }
 
-    override fun getRepeatState(): Long {
+    override fun getRepeatState(): Int {
         return repeatState
     }
 
