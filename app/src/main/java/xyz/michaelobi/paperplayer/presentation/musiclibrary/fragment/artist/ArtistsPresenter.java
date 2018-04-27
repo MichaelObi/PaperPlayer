@@ -58,7 +58,7 @@ public class ArtistsPresenter extends BasePresenter<ListViewContract.View> imple
 
     @Override
     public void getAll() {
-        checkViewAttached();
+
         getView().showLoading();
         addSubscription(musicRepository.getAllArtists()
                 .subscribeOn(ioScheduler)

@@ -60,7 +60,7 @@ public class AlbumsPresenter extends BasePresenter<ListViewContract.View> implem
 
     @Override
     public void getAll() {
-        checkViewAttached();
+
         getView().showLoading();
         addSubscription(musicRepository.getAllAlbums()
                 .subscribeOn(ioScheduler)

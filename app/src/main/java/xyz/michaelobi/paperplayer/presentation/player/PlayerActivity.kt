@@ -58,7 +58,6 @@ import java.util.concurrent.TimeUnit
  */
 
 class PlayerActivity : AppCompatActivity(), PlayerContract.View {
-    private val TAG: String = ".PlayerActivity"
     private lateinit var viewBinding: PlayerActivityBinding
     private lateinit var presenter: PlayerContract.Presenter
     private val eventBus = Injector.provideEventBus()
@@ -141,32 +140,30 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
     override fun updatePlaybackState(playbackState: PlaybackState) {
         updateSeeker(playbackState)
         updateCurrentTime(playbackState.currentDuration)
-        if (playbackState.playing) viewBinding.playPause?.pause() else viewBinding.playPause?.play()
+        if (playbackState.playing) viewBinding.playPause.pause() else viewBinding.playPause.play()
     }
 
 
     override fun updateSeeker(playbackState: PlaybackState) {
-        viewBinding.playerSeekbar?.max = playbackState.songDuration
-        viewBinding.playerSeekbar?.progress = playbackState.currentDuration
+        viewBinding.playerSeekbar.max = playbackState.songDuration
+        viewBinding.playerSeekbar.progress = playbackState.currentDuration
         val strDuration = String.format("%s:%s", String.format("%02d", playbackState.songDuration / 1000 / 60), String
                 .format("%02d", playbackState.songDuration / 1000 % 60))
-        viewBinding.duration?.text = strDuration
+        viewBinding.duration.text = strDuration
         seekBarProgressSubscription?.unsubscribe()
         seekBarProgressSubscription = Observable.interval(100, 100, TimeUnit.MILLISECONDS)
                 .onBackpressureLatest()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     if (playbackState.playing) {
-                        val progress = viewBinding.playerSeekbar?.progress
-                        if (progress != null) {
-                            if (progress < playbackState.songDuration) {
-                                viewBinding.playerSeekbar?.progress = progress.plus(100)
-                            } else {
-                                viewBinding.playerSeekbar?.progress = 0
-                            }
-                            updateCurrentTime(progress)
+                        val progress = viewBinding.playerSeekbar.progress
+                        if (progress < playbackState.songDuration) {
+                            viewBinding.playerSeekbar.progress = progress.plus(100)
+                        } else {
+                            viewBinding.playerSeekbar.progress = 0
                         }
-                        viewBinding.playerSeekbar?.progress
+                        updateCurrentTime(progress)
+                        viewBinding.playerSeekbar.progress
                     }
                 })
     }
@@ -174,13 +171,13 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
     private fun updateCurrentTime(progress: Int) {
         val min = String.format("%02d", progress / 1000 / 60)
         val sec = String.format("%02d", progress / 1000 % 60)
-        viewBinding.currentTime?.text = String.format("%s:%s", min, sec)
+        viewBinding.currentTime.text = String.format("%s:%s", min, sec)
     }
 
     override fun updateTitleAndArtist(playbackState: PlaybackState) {
         val song = playbackState.song
-        viewBinding.songName?.text = song?.title
-        viewBinding.albumArtist?.text = song?.artist
+        viewBinding.songName.text = song?.title
+        viewBinding.albumArtist.text = song?.artist
     }
 
     override fun updateSongArt(uri: String?) {
@@ -191,7 +188,7 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
                     .into(viewBinding.albumArt)
         } catch (e: Exception) {
             Log.e(TAG, e.message, e)
-            viewBinding.albumArt?.setImageDrawable(ContextCompat.getDrawable(
+            viewBinding.albumArt.setImageDrawable(ContextCompat.getDrawable(
                     this, R.drawable.default_artwork_dark))
         }
     }
@@ -219,5 +216,10 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
                 viewBinding.btnRepeat.drawable.setColorFilter(ContextCompat.getColor(this, R.color.activeTint), PorterDuff.Mode.SRC_ATOP)
             }
         }
+    }
+
+
+    companion object {
+        private const val TAG: String = ".PlayerActivity"
     }
 }

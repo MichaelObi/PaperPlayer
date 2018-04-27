@@ -60,7 +60,7 @@ class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePrese
         bus.observe(ShuffleState::class.java).subscribe {
             shuffleState ->
             run {
-                getView()?.setShuffled(shuffleState.isShuffled)
+                view.setShuffled(shuffleState.isShuffled)
             }
         }
         bus.observe(RepeatState::class.java).subscribe {
@@ -107,7 +107,7 @@ class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePrese
             }
 
             override fun onNext(album: Album) {
-                getView()?.updateSongArt(album.artPath)
+                view.updateSongArt(album.artPath)
             }
         }))
     }

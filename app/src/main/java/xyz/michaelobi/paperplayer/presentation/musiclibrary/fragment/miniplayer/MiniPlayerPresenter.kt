@@ -41,7 +41,7 @@ import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback
  * Michael Obi
  * 08 04 2017 10:50 AM
  */
-class MiniPlayerPresenter(val musicRepository: MusicRepositoryInterface, val ioScheduler: Scheduler, val mainScheduler: Scheduler) : BasePresenter<MiniPlayerContract.View>(), MiniPlayerContract.Presenter {
+class MiniPlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePresenter<MiniPlayerContract.View>(), MiniPlayerContract.Presenter {
 
     private var bus: EventBus = Injector.provideEventBus()
 
@@ -49,12 +49,10 @@ class MiniPlayerPresenter(val musicRepository: MusicRepositoryInterface, val ioS
     }
 
     override fun initialize() {
-        checkViewAttached()
-        bus.observe(PlaybackState::class.java).subscribe {
-            playbackState ->
+        bus.observe(PlaybackState::class.java).subscribe { playbackState ->
             run {
-                getView()?.updatePlayPauseButton(playbackState.playing)
-                getView()?.updateTitleAndArtist(playbackState)
+                view.updatePlayPauseButton(playbackState.playing)
+                view.updateTitleAndArtist(playbackState)
                 playbackState.song?.albumId?.let { getAlbumArtUri(it) }
             }
         }
@@ -68,11 +66,11 @@ class MiniPlayerPresenter(val musicRepository: MusicRepositoryInterface, val ioS
 
             override fun onError(e: Throwable) {
                 Log.e(Companion.TAG, e.localizedMessage, e)
-                getView()?.updateSongArt(null)
+                view.updateSongArt(null)
             }
 
             override fun onNext(album: Album) {
-                getView()?.updateSongArt(album.artPath)
+                view.updateSongArt(album.artPath)
             }
         }))
     }

@@ -44,28 +44,27 @@ class PlaylistPresenter : BasePresenter<ListViewContract.View<Any>>(), ListViewC
     val queueManager: QueueManager = Injector.provideQueueManager()
 
     override fun getAll() {
-        checkViewAttached()
-        getView()!!.showLoading()
+        view.showLoading()
         addSubscription(queueManager.queue.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : Subscriber<List<QueueItem>>() {
                     override fun onCompleted() {}
 
                     override fun onError(e: Throwable) {
-                        getView()!!.hideLoading()
+                        view.hideLoading()
                         Log.e(TAG, e.localizedMessage, e)
-                        getView()?.showError(e.message)
+                        view.showError(e.message)
                     }
 
                     override fun onNext(queueItems: List<QueueItem>) {
-                        getView()?.hideLoading()
-                        getView()?.showList(queueItems)
+                        view.hideLoading()
+                        view.showList(queueItems)
                     }
                 }))
     }
 
     companion object {
-        val TAG = ".PlaylistPresenter"
+        const val TAG = ".PlaylistPresenter"
     }
 
 }
