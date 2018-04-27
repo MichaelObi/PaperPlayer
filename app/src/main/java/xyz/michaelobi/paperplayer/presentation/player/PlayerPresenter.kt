@@ -103,7 +103,7 @@ class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePrese
 
             override fun onError(e: Throwable) {
                 Log.e(MiniPlayerPresenter.TAG, e.localizedMessage, e)
-                getView()?.updateSongArt(null)
+                view.updateSongArt(null)
             }
 
             override fun onNext(album: Album) {

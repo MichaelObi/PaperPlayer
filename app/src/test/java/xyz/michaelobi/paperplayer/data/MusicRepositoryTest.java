@@ -104,7 +104,6 @@ public class MusicRepositoryTest {
     }
 
     private List<Album> albumList() {
-
         Album song = new Album(1, albumName, albumArtist, false, albumArtPath, 3);
 
         List<Album> albums = new ArrayList<>();

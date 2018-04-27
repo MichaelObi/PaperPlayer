@@ -48,18 +48,14 @@ public abstract class BasePresenter<T extends Mvp.View> implements Mvp.Presenter
     }
 
     @NonNull
-    public T getView() {
-        checkViewAttached();
-        return this.view;
-    }
-
-    protected void checkViewAttached() {
+    public final T getView() {
         if (!isViewAttached()) {
             throw new MvpViewNotAttachedException();
         }
+        return view;
     }
 
-    private boolean isViewAttached() {
+    protected final boolean isViewAttached() {
         return view != null;
     }
 

@@ -76,54 +76,52 @@ android {
 final SUPPORT_LIB_VERSION = "27.+"
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:support-vector-drawable:${SUPPORT_LIB_VERSION}"
-    compile 'com.annimon:paperstyle:1.1.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
+    implementation "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+    implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
+    implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    implementation "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
+    implementation "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+    implementation "com.android.support:support-vector-drawable:${SUPPORT_LIB_VERSION}"
+    implementation 'com.annimon:paperstyle:1.1.0'
 
     // RxJava
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.3.0'
+    implementation 'io.reactivex:rxandroid:1.2.1'
+    implementation 'io.reactivex:rxjava:1.3.0'
 
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 
     // Unit Testing
-    testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-all:1.10.19"
-    testCompile "org.hamcrest:hamcrest-all:1.3"
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.mockito:mockito-all:1.10.19"
+    testImplementation "org.hamcrest:hamcrest-all:1.3"
 
     //Dependencies for Espresso
-    androidTestCompile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    androidTestCompile("com.android.support.test:runner:0.5") {
+    androidTestImplementation("com.android.support.test:runner:0.5") {
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
     }
-    androidTestCompile("com.android.support.test:rules:0.5") {
+    androidTestImplementation("com.android.support.test:rules:0.5") {
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
     }
-    androidTestCompile("com.android.support.test.espresso:espresso-intents:2.2.2") {
+    androidTestImplementation("com.android.support.test.espresso:espresso-intents:2.2.2") {
         exclude module: 'recyclerview-v7'
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
     }
-    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.1') {
+    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:2.2.1') {
         exclude module: 'recyclerview-v7'
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
     }
-    compile 'com.android.support.constraint:constraint-layout:1.1.0'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    compile 'com.karumi:dexter:4.0.0'
-
-    kapt "com.android.databinding:compiler:$android_plugin_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.karumi:dexter:4.0.0'
 }
 apply plugin: 'kotlin-kapt'
