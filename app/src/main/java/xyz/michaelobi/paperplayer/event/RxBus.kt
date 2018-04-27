@@ -51,5 +51,6 @@ class RxBus : EventBus {
                 .cast(eventClass) // Cast it for easier usage
     }
 
-    override fun cleanup() {}
+    override fun cleanup() {
+    }
 }

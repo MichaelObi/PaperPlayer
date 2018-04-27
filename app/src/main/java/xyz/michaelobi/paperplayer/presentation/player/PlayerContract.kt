@@ -51,6 +51,7 @@ interface PlayerContract {
         fun previous()
         fun toggleShuffle()
         fun toggleRepeat()
-        fun showPlayerState();
+        fun showPlayerState()
+        fun seek(progress: Int)
     }
 }

@@ -25,7 +25,9 @@
 package xyz.michaelobi.paperplayer.mvp;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;

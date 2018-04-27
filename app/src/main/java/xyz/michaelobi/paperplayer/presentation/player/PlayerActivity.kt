@@ -60,7 +60,6 @@ import java.util.concurrent.TimeUnit
 class PlayerActivity : AppCompatActivity(), PlayerContract.View {
     private lateinit var viewBinding: PlayerActivityBinding
     private lateinit var presenter: PlayerContract.Presenter
-    private val eventBus = Injector.provideEventBus()
 
     private var seekBarScrubSubscription: Subscription? = null
     private var seekBarProgressSubscription: Subscription? = null
@@ -123,7 +122,7 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     val progress = it.progress
-                    eventBus.post(Seek(progress))
+                    presenter.seek(progress)
                 })
     }
 
