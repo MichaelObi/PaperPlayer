@@ -33,7 +33,8 @@ import android.provider.MediaStore
  * 15 10 2016 3:23 PM
  */
 
-data class Song(val id: Long, val title: String, val album: String, val artist: String, val year: String, val songUri: String, val albumId: Long) {
+data class Song(val id: Long, val title: String, val album: String, val artist: String,
+                val year: String, val songUri: String, val albumId: Long) {
 
     companion object {
         fun from(cursor: Cursor): Song {
@@ -46,10 +47,10 @@ data class Song(val id: Long, val title: String, val album: String, val artist: 
             val yearColumn = cursor.getColumnIndex(MediaStore.Audio.Media.YEAR)
             return Song(
                     cursor.getLong(idColumn),
-                    cursor.getString(titleColumn),
-                    cursor.getString(albumColumn),
-                    cursor.getString(artistColumn),
-                    cursor.getString(yearColumn),
+                    cursor.getString(titleColumn)?: "",
+                    cursor.getString(albumColumn)?: "",
+                    cursor.getString(artistColumn)?: "",
+                    cursor.getString(yearColumn) ?: "",
                     cursor.getString(pathColumn),
                     cursor.getLong(albumIdColumn)
             )
