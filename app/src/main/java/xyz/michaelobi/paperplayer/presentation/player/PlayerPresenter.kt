@@ -43,39 +43,29 @@ import xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.miniplayer.
  */
 
 class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePresenter<PlayerContract.View>(), PlayerContract.Presenter {
-
-    internal var bus = Injector.provideEventBus()
-
-    override fun attachView(view: PlayerContract.View) {
-        super.attachView(view)
-        bus.observe(PlaybackState::class.java).subscribe {
-            playbackState ->
+    override fun showPlayerState() {
+        bus.observe(PlaybackState::class.java).subscribe { playbackState ->
             run {
-                getView().updatePlaybackState(playbackState)
-                getView().updateTitleAndArtist(playbackState)
-                getView().updateSeeker(playbackState)
+                view.updatePlaybackState(playbackState)
+                view.updateTitleAndArtist(playbackState)
+                view.updateSeeker(playbackState)
                 playbackState.song?.albumId?.let { getAlbumArtUri(it) }
             }
         }
-        bus.observe(ShuffleState::class.java).subscribe {
-            shuffleState ->
+        bus.observe(ShuffleState::class.java).subscribe { shuffleState ->
             run {
                 view.setShuffled(shuffleState.isShuffled)
             }
         }
-        bus.observe(RepeatState::class.java).subscribe {
-            repeatState ->
+        bus.observe(RepeatState::class.java).subscribe { repeatState ->
             run {
-                getView().setRepeatState(repeatType = repeatState.repeatType)
+                view.setRepeatState(repeatType = repeatState.repeatType)
             }
         }
         bus.post(RequestPlaybackState())
     }
 
-    override fun detachView() {
-        bus = null
-        super.detachView()
-    }
+    private var bus = Injector.provideEventBus()
 
     override fun next() {
         bus.post(NextSong())

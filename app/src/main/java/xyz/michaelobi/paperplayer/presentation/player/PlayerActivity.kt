@@ -67,11 +67,11 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewBinding = DataBindingUtil.setContentView(this, R.layout.player_activity)
         presenter = PlayerPresenter(Injector.provideMusicRepository(this))
         presenter.attachView(this)
+        viewBinding = DataBindingUtil.setContentView(this, R.layout.player_activity)
         viewBinding.presenter = presenter
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
