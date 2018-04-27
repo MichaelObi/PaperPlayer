@@ -71,6 +71,7 @@ class PlayerActivity : AppCompatActivity(), PlayerContract.View {
         presenter.attachView(this)
         viewBinding = DataBindingUtil.setContentView(this, R.layout.player_activity)
         viewBinding.presenter = presenter
+        presenter.showPlayerState()
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setHomeButtonEnabled(true)
