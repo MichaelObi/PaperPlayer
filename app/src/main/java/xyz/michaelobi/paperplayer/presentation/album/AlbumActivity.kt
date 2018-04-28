@@ -34,7 +34,6 @@ import android.widget.Toast
 import com.squareup.picasso.Picasso
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import xyz.michaelobi.paperplayer.Constants
 import xyz.michaelobi.paperplayer.R
 import xyz.michaelobi.paperplayer.data.model.Album
 import xyz.michaelobi.paperplayer.data.model.Song
@@ -55,9 +54,10 @@ class AlbumActivity : AppCompatActivity(), AlbumContract.View {
     private lateinit var presenter: AlbumContract.Presenter
     private lateinit var viewBinding: AlbumActivityBinding
     private lateinit var songsAdapter: SongsAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val albumId = intent.getLongExtra(Constants.KEY_ALBUM_ID, 0)
+        val albumId = intent.getLongExtra(KEY_ALBUM_ID, 0)
         viewBinding = DataBindingUtil.setContentView(this, R.layout.album_activity)
         viewBinding.toolbar.setNavigationIcon(R.drawable.ic_close_24dp)
         setSupportActionBar(viewBinding.toolbar)
@@ -109,5 +109,10 @@ class AlbumActivity : AppCompatActivity(), AlbumContract.View {
 
     override fun showError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        const val KEY_ALBUM_ID = "ALBUM_ID"
+
     }
 }

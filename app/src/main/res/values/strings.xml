@@ -233,5 +233,5 @@
     <string name="view_artist">View artist</string>
     <string name="schedule">Schedule</string>
     <string name="year_released">Released %s</string>
-    <string name="songs">Songs</string>
+    <string name="songs">%d Songs</string>
 </resources>

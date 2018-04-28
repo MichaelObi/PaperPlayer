@@ -39,7 +39,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import xyz.michaelobi.paperplayer.Constants;
 import xyz.michaelobi.paperplayer.R;
 import xyz.michaelobi.paperplayer.data.model.Album;
 import xyz.michaelobi.paperplayer.presentation.album.AlbumActivity;
@@ -81,7 +80,7 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsViewHolder> {
         holder.itemView.setOnClickListener(v -> {
             Context c = v.getContext();
             Intent intent = new Intent(c, AlbumActivity.class);
-            intent.putExtra(Constants.KEY_ALBUM_ID, albums.get(position).getId());
+            intent.putExtra(AlbumActivity.KEY_ALBUM_ID, albums.get(position).getId());
             c.startActivity(intent);
         });
     }

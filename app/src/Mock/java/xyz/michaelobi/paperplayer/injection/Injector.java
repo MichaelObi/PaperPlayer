@@ -6,7 +6,6 @@ import xyz.michaelobi.paperplayer.data.MusicRepository;
 import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
 import xyz.michaelobi.paperplayer.data.library.LibraryManager;
 import xyz.michaelobi.paperplayer.data.library.local.MockLocalLibraryManager;
-import xyz.michaelobi.paperplayer.event.EventBus;
 import xyz.michaelobi.paperplayer.event.RxBus;
 import xyz.michaelobi.paperplayer.playback.queue.LocalQueueManager;
 import xyz.michaelobi.paperplayer.playback.queue.QueueManager;
@@ -19,9 +18,9 @@ import xyz.michaelobi.paperplayer.playback.queue.QueueManager;
 
 public class Injector {
 
-    public static EventBus eventBus;
+    public static RxBus eventBus;
 
-    public static EventBus provideEventBus() {
+    public static RxBus provideEventBus() {
         if (eventBus == null) {
             eventBus = new RxBus();
         }
