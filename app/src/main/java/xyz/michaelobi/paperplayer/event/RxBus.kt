@@ -25,7 +25,6 @@
 package xyz.michaelobi.paperplayer.event
 
 import rx.Observable
-import rx.Subscriber
 import rx.functions.Action1
 import rx.subjects.PublishSubject
 import rx.subjects.SerializedSubject
@@ -55,22 +54,22 @@ class RxBus {
                 .cast(eventClass)
     }
 
-    fun <T> subscribe(eventClass: Class<T>, eventLifecycle: Any, action: Action1<T>) {
+    fun <T> subscribe(eventClass: Class<T>, subscriptionAnchor: Any, action: Action1<T>) {
         val subscription = observe(eventClass).subscribe(action)
-        getCompositeSubscription(eventLifecycle).add(subscription)
+        getCompositeSubscription(subscriptionAnchor).add(subscription)
     }
 
-    private fun getCompositeSubscription(eventLifecycle: Any): CompositeSubscription {
-        var compositeSubscription = subscriptionMap[eventLifecycle]
+    private fun getCompositeSubscription(subscriptionAnchor: Any): CompositeSubscription {
+        var compositeSubscription = subscriptionMap[subscriptionAnchor]
         if (compositeSubscription == null) {
             compositeSubscription = CompositeSubscription()
-            subscriptionMap[eventLifecycle] = compositeSubscription
+            subscriptionMap[subscriptionAnchor] = compositeSubscription
         }
         return compositeSubscription
     }
 
-    fun cleanup(eventLifecycle: Any) {
-        val compositeSubscription = subscriptionMap.remove(eventLifecycle)
+    fun cleanup(subscriptionAnchor: Any) {
+        val compositeSubscription = subscriptionMap.remove(subscriptionAnchor)
         compositeSubscription?.clear()
     }
 }

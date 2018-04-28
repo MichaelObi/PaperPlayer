@@ -57,7 +57,7 @@ public abstract class BasePresenter<T extends Mvp.View> implements Mvp.Presenter
         return view;
     }
 
-    protected final boolean isViewAttached() {
+    private boolean isViewAttached() {
         return view != null;
     }
 
