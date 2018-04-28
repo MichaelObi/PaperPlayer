@@ -67,7 +67,8 @@ public abstract class BasePresenter<T extends Mvp.View> implements Mvp.Presenter
 
     public static class MvpViewNotAttachedException extends IllegalStateException {
         public MvpViewNotAttachedException() {
-            super("Please call Presenter.attachView(MvpView) before requesting data to the Presenter");
+            super("Please call Presenter.attachView(Mvp.View) before requesting data to the " +
+                    "Presenter");
         }
     }
 }
