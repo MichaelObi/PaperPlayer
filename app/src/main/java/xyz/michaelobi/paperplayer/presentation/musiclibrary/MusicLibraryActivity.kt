@@ -42,9 +42,10 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.CompositePermissionListener
 import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener
 import com.karumi.dexter.listener.single.PermissionListener
+import rx.functions.Action1
 
 import xyz.michaelobi.paperplayer.R
-import xyz.michaelobi.paperplayer.event.EventBus
+import xyz.michaelobi.paperplayer.event.RxBus
 import xyz.michaelobi.paperplayer.injection.Injector
 import xyz.michaelobi.paperplayer.playback.PlaybackService
 import xyz.michaelobi.paperplayer.playback.events.PlaybackState
@@ -63,9 +64,9 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
 
     lateinit var musicLibraryPresenter: MusicLibraryContract.Presenter
 
-    private var bus: EventBus? = Injector.provideEventBus()
+    private var bus: RxBus = Injector.provideEventBus()
 
-    private var fab: FloatingActionButton? = null
+    private lateinit var fab: FloatingActionButton
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,8 +76,8 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
         musicLibraryPresenter = MusicLibraryPresenter()
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
-        fab = findViewById(R.id.fab) as FloatingActionButton
-        fab?.setOnClickListener(this)
+        fab = findViewById(R.id.fab)
+        fab.setOnClickListener(this)
         val listener = CompositePermissionListener(this,
                 DialogOnDeniedPermissionListener.Builder
                         .withContext(this)
@@ -94,24 +95,19 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
 
     override fun onResume() {
         super.onResume()
-        setUpEventBus()
+        setUpRxBus()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        bus = null
-    }
-
-    private fun setUpEventBus() {
-        bus!!.observe(PlaybackState::class.java)
-                .subscribe { playbackState ->
+    private fun setUpRxBus() {
+        bus.subscribe(PlaybackState::class.java, this,
+                Action1 { playbackState ->
                     if (playbackState.playing) {
-                        fab!!.setImageResource(R.drawable.ic_play_arrow_white_24dp)
+                        fab.setImageResource(R.drawable.ic_play_arrow_white_24dp)
                     } else {
-                        fab!!.setImageResource(R.drawable.ic_pause_white_24dp)
+                        fab.setImageResource(R.drawable.ic_pause_white_24dp)
                     }
-                }
-        bus!!.post(RequestPlaybackState())
+                })
+        bus.post(RequestPlaybackState())
     }
 
     override fun initializeViewPager() {

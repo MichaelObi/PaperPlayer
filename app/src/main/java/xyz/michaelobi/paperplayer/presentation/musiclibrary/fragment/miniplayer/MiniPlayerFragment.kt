@@ -38,7 +38,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import xyz.michaelobi.paperplayer.R
-import xyz.michaelobi.paperplayer.event.EventBus
+import xyz.michaelobi.paperplayer.event.RxBus
 import xyz.michaelobi.paperplayer.injection.Injector
 import xyz.michaelobi.paperplayer.playback.events.PlaybackState
 import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback
@@ -52,7 +52,7 @@ import xyz.michaelobi.paperplayer.widget.PlayPauseButton
  */
 class MiniPlayerFragment : Fragment(), MiniPlayerContract.View, View.OnClickListener {
 
-    var bus: EventBus? = Injector.provideEventBus()
+    var bus: RxBus = Injector.provideEventBus()
     lateinit var presenter: MiniPlayerPresenter
     var miniPlayerSongName: TextView? = null
     var miniPlayerSongArtist: TextView? = null
@@ -83,12 +83,12 @@ class MiniPlayerFragment : Fragment(), MiniPlayerContract.View, View.OnClickList
     override fun onDestroyView() {
         super.onDestroyView()
         presenter.detachView()
-        bus = null
+        bus.cleanup(this)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.play_pause -> bus?.post(TogglePlayback())
+            R.id.play_pause -> bus.post(TogglePlayback())
             else -> {
                 val intent = Intent(activity, PlayerActivity::class.java)
                 startActivity(intent)

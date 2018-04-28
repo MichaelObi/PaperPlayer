@@ -26,7 +26,7 @@ package xyz.michaelobi.paperplayer.presentation.player
 
 import android.util.Log
 import rx.Subscriber
-import rx.Subscription
+import rx.functions.Action1
 import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface
 import xyz.michaelobi.paperplayer.data.model.Album
 import xyz.michaelobi.paperplayer.injection.Injector
@@ -45,41 +45,32 @@ import xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.miniplayer.
 
 class PlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePresenter<PlayerContract.View>(), PlayerContract.Presenter {
     private var bus = Injector.provideEventBus()
-    lateinit var repeatStateSubcription: Subscription
-    lateinit var shuffleStateSubcription: Subscription
-    lateinit var playbackStateSubscription: Subscription
 
     override fun seek(progress: Int) {
         bus.post(Seek(progress))
     }
 
     override fun showPlayerState() {
-        playbackStateSubscription = bus.observe(PlaybackState::class.java).subscribe { playbackState ->
-            run {
-                view.updatePlaybackState(playbackState)
-                view.updateTitleAndArtist(playbackState)
-                view.updateSeeker(playbackState)
-                playbackState.song?.albumId?.let { getAlbumArtUri(it) }
-            }
-        }
-        shuffleStateSubcription = bus.observe(ShuffleState::class.java).subscribe { shuffleState ->
-            run {
-                view.setShuffled(shuffleState.isShuffled)
-            }
-        }
-        repeatStateSubcription = bus.observe(RepeatState::class.java).subscribe { repeatState ->
-            run {
-                view.setRepeatState(repeatType = repeatState.repeatType)
-            }
-        }
+        bus.subscribe(PlaybackState::class.java, this,
+                Action1 { playbackState ->
+                    view.updatePlaybackState(playbackState)
+                    view.updateTitleAndArtist(playbackState)
+                    view.updateSeeker(playbackState)
+                    playbackState.song?.albumId?.let { getAlbumArtUri(it) }
+                })
+        bus.subscribe(ShuffleState::class.java, this,
+                Action1 { shuffleState ->
+                    view.setShuffled(shuffleState.isShuffled)
+                })
+        bus.subscribe(RepeatState::class.java, this, Action1 { repeatState ->
+            view.setRepeatState(repeatType = repeatState.repeatType)
+        })
         bus.post(RequestPlaybackState())
     }
 
     override fun detachView() {
         super.detachView()
-        repeatStateSubcription.unsubscribe()
-        playbackStateSubscription.unsubscribe()
-        shuffleStateSubcription.unsubscribe()
+        bus.cleanup(this)
     }
 
     override fun next() {

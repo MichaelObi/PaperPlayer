@@ -25,11 +25,11 @@
 package xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.miniplayer
 
 import android.util.Log
-import rx.Scheduler
 import rx.Subscriber
+import rx.functions.Action1
 import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface
 import xyz.michaelobi.paperplayer.data.model.Album
-import xyz.michaelobi.paperplayer.event.EventBus
+import xyz.michaelobi.paperplayer.event.RxBus
 import xyz.michaelobi.paperplayer.injection.Injector
 import xyz.michaelobi.paperplayer.mvp.BasePresenter
 import xyz.michaelobi.paperplayer.playback.events.PlaybackState
@@ -41,21 +41,20 @@ import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback
  * Michael Obi
  * 08 04 2017 10:50 AM
  */
-class MiniPlayerPresenter(val musicRepository: MusicRepositoryInterface) : BasePresenter<MiniPlayerContract.View>(), MiniPlayerContract.Presenter {
+class MiniPlayerPresenter(private val musicRepository: MusicRepositoryInterface) : BasePresenter<MiniPlayerContract.View>(), MiniPlayerContract.Presenter {
 
-    private var bus: EventBus = Injector.provideEventBus()
+    private var bus: RxBus = Injector.provideEventBus()
 
     override fun onPlayerStateUpdate() {
     }
 
     override fun initialize() {
-        bus.observe(PlaybackState::class.java).subscribe { playbackState ->
-            run {
-                view.updatePlayPauseButton(playbackState.playing)
-                view.updateTitleAndArtist(playbackState)
-                playbackState.song?.albumId?.let { getAlbumArtUri(it) }
-            }
-        }
+        bus.subscribe(PlaybackState::class.java, this,
+                Action1 { playbackState ->
+                    view.updatePlayPauseButton(playbackState.playing)
+                    view.updateTitleAndArtist(playbackState)
+                    playbackState.song?.albumId?.let { getAlbumArtUri(it) }
+                })
         bus.post(RequestPlaybackState())
     }
 

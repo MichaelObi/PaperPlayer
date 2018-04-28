@@ -24,7 +24,7 @@
 
 package xyz.michaelobi.paperplayer.presentation.musiclibrary
 
-import xyz.michaelobi.paperplayer.event.EventBus
+import xyz.michaelobi.paperplayer.event.RxBus
 import xyz.michaelobi.paperplayer.injection.Injector
 import xyz.michaelobi.paperplayer.mvp.BasePresenter
 import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback
@@ -36,7 +36,7 @@ import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback
  */
 
 internal class MusicLibraryPresenter : BasePresenter<MusicLibraryContract.View>(), MusicLibraryContract.Presenter {
-    private val bus: EventBus = Injector.provideEventBus()
+    private val bus: RxBus = Injector.provideEventBus()
 
     override fun attachView(view: MusicLibraryContract.View) {
         super.attachView(view)

@@ -37,7 +37,7 @@ import android.widget.Toast;
 
 import xyz.michaelobi.paperplayer.R;
 import xyz.michaelobi.paperplayer.data.model.Song;
-import xyz.michaelobi.paperplayer.event.EventBus;
+import xyz.michaelobi.paperplayer.event.RxBus;
 import xyz.michaelobi.paperplayer.injection.Injector;
 import xyz.michaelobi.paperplayer.playback.events.action.PlayAllSongs;
 
@@ -51,7 +51,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
     private final Context context;
     private List<Song> songs;
 
-    private EventBus bus;
+    private RxBus bus;
 
     public SongsAdapter(List<Song> songs, Context context) {
         super();

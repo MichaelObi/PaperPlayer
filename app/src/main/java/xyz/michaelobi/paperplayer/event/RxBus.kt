@@ -25,32 +25,52 @@
 package xyz.michaelobi.paperplayer.event
 
 import rx.Observable
-import rx.functions.Func1
+import rx.Subscriber
+import rx.functions.Action1
 import rx.subjects.PublishSubject
 import rx.subjects.SerializedSubject
-import rx.subjects.Subject
+import rx.subscriptions.CompositeSubscription
+
 
 /**
  * PaperPlayer Michael Obi 12 01 2017 12:06 AM
  */
 
-class RxBus : EventBus {
+class RxBus {
 
     private val bus = SerializedSubject(PublishSubject.create<Any>())
 
-    override fun post(event: Any) {
+    private val subscriptionMap = HashMap<Any, CompositeSubscription>()
+
+    fun post(event: Any) {
         if (this.bus.hasObservers()) {
             this.bus.onNext(event)
         }
     }
 
-    override fun <T> observe(eventClass: Class<T>): Observable<T> {
+    private fun <T> observe(eventClass: Class<T>): Observable<T> {
         return this.bus
-                .filter { o -> o != null } // Filter out null objects, better safe than sorry
-                .filter({ eventClass.isInstance(it) }) // We're only interested in a specific event class
-                .cast(eventClass) // Cast it for easier usage
+                .filter { o -> o != null }
+                .filter({ eventClass.isInstance(it) })
+                .cast(eventClass)
     }
 
-    override fun cleanup() {
+    fun <T> subscribe(eventClass: Class<T>, eventLifecycle: Any, action: Action1<T>) {
+        val subscription = observe(eventClass).subscribe(action)
+        getCompositeSubscription(eventLifecycle).add(subscription)
+    }
+
+    private fun getCompositeSubscription(eventLifecycle: Any): CompositeSubscription {
+        var compositeSubscription = subscriptionMap[eventLifecycle]
+        if (compositeSubscription == null) {
+            compositeSubscription = CompositeSubscription()
+            subscriptionMap[eventLifecycle] = compositeSubscription
+        }
+        return compositeSubscription
+    }
+
+    fun cleanup(eventLifecycle: Any) {
+        val compositeSubscription = subscriptionMap.remove(eventLifecycle)
+        compositeSubscription?.clear()
     }
 }
