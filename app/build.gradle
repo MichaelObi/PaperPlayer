@@ -48,22 +48,29 @@ android {
         }
     }
 
-    flavorDimensions "build"
+    flavorDimensions "datasource"
 
     productFlavors {
         prod {
-            dimension "build"
-
+            dimension "datasource"
         }
         mock {
-            dimension "build"
-
+            dimension "datasource"
+            applicationIdSuffix ".mock"
         }
     }
+
+    android.variantFilter { variant ->
+        if(variant.buildType.name == 'release' && variant.getFlavors().get(0).name == 'mock') {
+            variant.setIgnore(true);
+        }
+    }
+
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+
     dexOptions {
         javaMaxHeapSize "4G"
         preDexLibraries = true
