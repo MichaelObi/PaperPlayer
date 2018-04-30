@@ -29,7 +29,6 @@ import android.util.Log;
 import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
 import xyz.michaelobi.paperplayer.data.model.Album;
 import xyz.michaelobi.paperplayer.mvp.BasePresenter;
-import xyz.michaelobi.paperplayer.mvp.ListViewContract;
 
 import java.util.List;
 
@@ -42,8 +41,7 @@ import rx.Subscriber;
  * 15 10 2016 3:45 PM
  */
 
-public class AlbumsPresenter extends BasePresenter<ListViewContract.View> implements
-        ListViewContract.Presenter {
+public class AlbumsPresenter extends BasePresenter<AlbumsView> {
 
     private static final String TAG = "AlbumsPresenter";
     private final Scheduler ioScheduler;
@@ -58,7 +56,6 @@ public class AlbumsPresenter extends BasePresenter<ListViewContract.View> implem
         this.musicRepository = musicRepository;
     }
 
-    @Override
     public void getAll() {
 
         getView().showLoading();

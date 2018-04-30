@@ -26,6 +26,7 @@ package xyz.michaelobi.paperplayer.presentation.album
 
 import xyz.michaelobi.paperplayer.data.model.Album
 import xyz.michaelobi.paperplayer.data.model.Song
+import xyz.michaelobi.paperplayer.mvp.DataView
 import xyz.michaelobi.paperplayer.mvp.Mvp
 import java.io.File
 
@@ -35,16 +36,11 @@ import java.io.File
  * 06 09 2017 7:37 PM
  */
 interface AlbumContract {
-    interface View : Mvp.View {
+    interface View : DataView {
         fun showAlbumArt(albumArt: File)
 
         fun showAlbumSongList(songs: List<Song>)
 
-        fun showLoading()
-
-        fun hideLoading()
-
-        fun showError(message: String)
         fun showReleaseYear(year: String?)
 
         fun showSongCount(numberOfSongs: Int)

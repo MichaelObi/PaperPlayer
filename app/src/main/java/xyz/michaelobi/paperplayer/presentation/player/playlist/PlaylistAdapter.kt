@@ -38,7 +38,7 @@ import xyz.michaelobi.paperplayer.playback.queue.QueueItem
  */
 
 class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
-    private var queue: List<QueueItem> = ArrayList()
+    private var queue: List<QueueItem> = emptyList()
 
     fun setQueueItems(queue: List<QueueItem>) {
         this.queue = queue

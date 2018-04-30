@@ -22,31 +22,39 @@
  * SOFTWARE.
  */
 
-package xyz.michaelobi.paperplayer.mvp;
+package xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.songs
 
-import java.util.List;
+import android.util.Log
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
+import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface
+import xyz.michaelobi.paperplayer.data.model.Song
+import xyz.michaelobi.paperplayer.mvp.BasePresenter
 
 /**
  * PaperPlayer
  * Michael Obi
- * 15 10 2016 3:39 PM
- *
+ * 15 10 2016 3:45 PM
  */
 
+class SongsPresenter(private val musicRepository: MusicRepositoryInterface) :
+        BasePresenter<SongsView>() {
 
-public interface ListViewContract {
-
-    interface View<T> extends Mvp.View {
-        void showList(List<T> items);
-
-        void showLoading();
-
-        void hideLoading();
-
-        void showError(String message);
+    fun getAll() {
+        view.showLoading()
+        addSubscription(musicRepository.allSongs
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ songs: MutableList<Song>? ->
+                    view.hideLoading()
+                    songs?.let { view.showList(it) }
+                }, { t ->
+                    Log.e(TAG, t.message)
+                    t.message?.let { view.showError(it) }
+                }))
     }
 
-    interface Presenter extends Mvp.Presenter<View> {
-        void getAll();
+    companion object {
+        const val TAG = ".SongsPresenter"
     }
 }

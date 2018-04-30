@@ -42,9 +42,7 @@ interface MiniPlayerContract {
 
     interface Presenter : Mvp.Presenter<View> {
         fun initialize()
-
         fun onPlayButtonClicked()
-
         fun onPlayerStateUpdate()
     }
 }

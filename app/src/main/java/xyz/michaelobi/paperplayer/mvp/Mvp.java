@@ -33,6 +33,7 @@ package xyz.michaelobi.paperplayer.mvp;
 public interface Mvp {
 
     public interface View {
+
     }
 
     public interface Presenter<V extends View> {

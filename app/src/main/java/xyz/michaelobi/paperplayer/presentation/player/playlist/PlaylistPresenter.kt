@@ -30,7 +30,6 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import xyz.michaelobi.paperplayer.injection.Injector
 import xyz.michaelobi.paperplayer.mvp.BasePresenter
-import xyz.michaelobi.paperplayer.mvp.ListViewContract
 import xyz.michaelobi.paperplayer.playback.queue.QueueItem
 import xyz.michaelobi.paperplayer.playback.queue.QueueManager
 
@@ -39,24 +38,24 @@ import xyz.michaelobi.paperplayer.playback.queue.QueueManager
  * Michael Obi
  * 29 05 2017 10:54 AM
  */
-class PlaylistPresenter : BasePresenter<ListViewContract.View<Any>>(), ListViewContract.Presenter {
+class PlaylistPresenter : BasePresenter<PlaylistView>() {
 
     val queueManager: QueueManager = Injector.provideQueueManager()
 
-    override fun getAll() {
+    fun getAll() {
         view.showLoading()
         addSubscription(queueManager.queue.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<List<QueueItem>>() {
+                .subscribe(object : Subscriber<MutableList<QueueItem>>() {
                     override fun onCompleted() {}
 
                     override fun onError(e: Throwable) {
                         view.hideLoading()
                         Log.e(TAG, e.localizedMessage, e)
-                        view.showError(e.message)
+                        e.message?.let { view.showError(it) }
                     }
 
-                    override fun onNext(queueItems: List<QueueItem>) {
+                    override fun onNext(queueItems: MutableList<QueueItem>) {
                         view.hideLoading()
                         view.showList(queueItems)
                     }

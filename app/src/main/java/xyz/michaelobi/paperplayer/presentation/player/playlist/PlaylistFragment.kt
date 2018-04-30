@@ -35,7 +35,6 @@ import android.view.View
 import android.widget.Toast
 import xyz.michaelobi.paperplayer.R
 import xyz.michaelobi.paperplayer.injection.Injector
-import xyz.michaelobi.paperplayer.mvp.ListViewContract
 import xyz.michaelobi.paperplayer.playback.queue.QueueItem
 import xyz.michaelobi.paperplayer.playback.queue.QueueManager
 
@@ -45,11 +44,11 @@ import xyz.michaelobi.paperplayer.playback.queue.QueueManager
  * Michael Obi
  * 22 05 2017 1:04 AM
  */
-class PlaylistFragment : BottomSheetDialogFragment(), ListViewContract.View<QueueItem> {
+class PlaylistFragment : BottomSheetDialogFragment(), PlaylistView {
     lateinit var playlistAdapter: PlaylistAdapter
     lateinit var rvPlaylist: RecyclerView
     val queueManager: QueueManager = Injector.provideQueueManager()
-    val presenter: ListViewContract.Presenter = PlaylistPresenter()
+    val presenter = PlaylistPresenter()
 
     override fun showList(items: MutableList<QueueItem>) {
         setUpPlaylist()
@@ -60,7 +59,7 @@ class PlaylistFragment : BottomSheetDialogFragment(), ListViewContract.View<Queu
 
     override fun hideLoading() {}
 
-    override fun showError(message: String?) {
+    override fun showError(message: String) {
         Toast.makeText(activity, "An error occurred", Toast.LENGTH_SHORT).show()
     }
 

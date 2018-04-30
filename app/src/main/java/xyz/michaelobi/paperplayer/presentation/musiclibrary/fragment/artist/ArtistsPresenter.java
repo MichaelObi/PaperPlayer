@@ -28,41 +28,34 @@ import android.util.Log;
 
 import java.util.List;
 
-import rx.Scheduler;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import xyz.michaelobi.paperplayer.data.MusicRepositoryInterface;
 import xyz.michaelobi.paperplayer.data.model.Artist;
 import xyz.michaelobi.paperplayer.mvp.BasePresenter;
-import xyz.michaelobi.paperplayer.mvp.ListViewContract;
 
 /**
  * PaperPlayer Michael Obi 15 10 2016 3:45 PM
  */
 
-public class ArtistsPresenter extends BasePresenter<ListViewContract.View> implements
-        ListViewContract.Presenter {
+public class ArtistsPresenter extends BasePresenter<ArtistsView> {
 
     private static final String TAG = "ArtistsPresenter";
-    private final Scheduler ioScheduler;
-    private final Scheduler mainScheduler;
 
     private MusicRepositoryInterface musicRepository;
 
-    public ArtistsPresenter(MusicRepositoryInterface musicRepository, Scheduler ioScheduler, Scheduler
-            mainScheduler) {
+    ArtistsPresenter(MusicRepositoryInterface musicRepository) {
         super();
-        this.ioScheduler = ioScheduler;
-        this.mainScheduler = mainScheduler;
         this.musicRepository = musicRepository;
     }
 
-    @Override
     public void getAll() {
 
         getView().showLoading();
         addSubscription(musicRepository.getAllArtists()
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<Artist>>() {
                                @Override
                                public void onCompleted() {

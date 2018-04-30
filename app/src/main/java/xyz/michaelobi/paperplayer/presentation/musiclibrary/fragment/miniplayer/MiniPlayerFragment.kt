@@ -38,10 +38,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import xyz.michaelobi.paperplayer.R
-import xyz.michaelobi.paperplayer.event.RxBus
 import xyz.michaelobi.paperplayer.injection.Injector
 import xyz.michaelobi.paperplayer.playback.events.PlaybackState
-import xyz.michaelobi.paperplayer.playback.events.action.TogglePlayback
 import xyz.michaelobi.paperplayer.presentation.player.PlayerActivity
 import xyz.michaelobi.paperplayer.widget.PlayPauseButton
 

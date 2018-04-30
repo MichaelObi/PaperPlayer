@@ -38,7 +38,6 @@ import rx.schedulers.Schedulers
 import xyz.michaelobi.paperplayer.R
 import xyz.michaelobi.paperplayer.data.model.Album
 import xyz.michaelobi.paperplayer.injection.Injector
-import xyz.michaelobi.paperplayer.mvp.ListViewContract
 
 /**
  * PaperPlayer
@@ -46,12 +45,12 @@ import xyz.michaelobi.paperplayer.mvp.ListViewContract
  * 23 10 2016 4:00 PM
  */
 
-class AlbumsFragment : Fragment(), ListViewContract.View<Album> {
+class AlbumsFragment : Fragment(), AlbumsView {
 
-    lateinit var presenter: ListViewContract.Presenter
-    lateinit private var albumsAdapter: AlbumsAdapter
-    lateinit private var recyclerViewAlbums: RecyclerView
-    lateinit private var progressBar: ProgressBar
+    lateinit var presenter: AlbumsPresenter
+    private lateinit var albumsAdapter: AlbumsAdapter
+    private lateinit var recyclerViewAlbums: RecyclerView
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
