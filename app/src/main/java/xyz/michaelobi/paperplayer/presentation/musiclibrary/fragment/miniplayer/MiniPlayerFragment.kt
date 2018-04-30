@@ -52,7 +52,6 @@ import xyz.michaelobi.paperplayer.widget.PlayPauseButton
  */
 class MiniPlayerFragment : Fragment(), MiniPlayerContract.View, View.OnClickListener {
 
-    var bus: RxBus = Injector.provideEventBus()
     lateinit var presenter: MiniPlayerPresenter
     var miniPlayerSongName: TextView? = null
     var miniPlayerSongArtist: TextView? = null
@@ -76,19 +75,17 @@ class MiniPlayerFragment : Fragment(), MiniPlayerContract.View, View.OnClickList
 
     override fun onResume() {
         super.onResume()
-        presenter.attachView(this)
         presenter.initialize()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         presenter.detachView()
-        bus.cleanup(this)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.play_pause -> bus.post(TogglePlayback())
+            R.id.play_pause -> presenter.onPlayButtonClicked()
             else -> {
                 val intent = Intent(activity, PlayerActivity::class.java)
                 startActivity(intent)

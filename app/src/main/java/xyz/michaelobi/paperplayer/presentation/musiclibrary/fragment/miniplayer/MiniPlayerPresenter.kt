@@ -59,12 +59,11 @@ class MiniPlayerPresenter(private val musicRepository: MusicRepositoryInterface)
     }
 
     fun getAlbumArtUri(albumId: Long) {
-
         addSubscription(musicRepository.getAlbum(albumId).subscribe(object : Subscriber<Album>() {
             override fun onCompleted() {}
 
             override fun onError(e: Throwable) {
-                Log.e(Companion.TAG, e.localizedMessage, e)
+                Log.e(TAG, e.localizedMessage, e)
                 view.updateSongArt(null)
             }
 
@@ -76,7 +75,12 @@ class MiniPlayerPresenter(private val musicRepository: MusicRepositoryInterface)
 
     override fun onPlayButtonClicked() = bus.post(TogglePlayback())
 
+    override fun detachView() {
+        super.detachView()
+        bus.cleanup(this)
+    }
+
     companion object {
-        val TAG: String = ".MiniPlayerPresenter"
+        const val TAG: String = ".MiniPlayerPresenter"
     }
 }
