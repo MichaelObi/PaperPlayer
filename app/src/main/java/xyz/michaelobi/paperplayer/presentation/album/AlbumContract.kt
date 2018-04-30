@@ -38,8 +38,6 @@ interface AlbumContract {
     interface View : Mvp.View {
         fun showAlbumArt(albumArt: File)
 
-        fun showAlbumMetaData(album: Album)
-
         fun showAlbumSongList(songs: List<Song>)
 
         fun showLoading()

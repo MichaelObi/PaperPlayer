@@ -29,13 +29,13 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.squareup.picasso.Picasso
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import xyz.michaelobi.paperplayer.R
-import xyz.michaelobi.paperplayer.data.model.Album
 import xyz.michaelobi.paperplayer.data.model.Song
 import xyz.michaelobi.paperplayer.databinding.AlbumActivityBinding
 import xyz.michaelobi.paperplayer.injection.Injector
@@ -60,6 +60,7 @@ class AlbumActivity : AppCompatActivity(), AlbumContract.View {
         val albumId = intent.getLongExtra(KEY_ALBUM_ID, 0)
         viewBinding = DataBindingUtil.setContentView(this, R.layout.album_activity)
         viewBinding.toolbar.setNavigationIcon(R.drawable.ic_close_24dp)
+        viewBinding.toolbar.title = ""
         setSupportActionBar(viewBinding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         presenter = AlbumPresenter(Injector.provideMusicRepository(this), Schedulers.io(),
@@ -72,15 +73,25 @@ class AlbumActivity : AppCompatActivity(), AlbumContract.View {
         presenter.loadAlbum(albumId)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detachView()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        item?.let {
+            if (item.itemId == android.R.id.home) {
+                onBackPressed()
+            }
+        }
+        return true
+    }
+
     override fun showAlbumArt(albumArt: File) {
         Picasso.with(this).load(albumArt)
                 .config(Bitmap.Config.RGB_565)
                 .error(R.drawable.default_artwork_dark)
                 .into(viewBinding.albumArt)
-    }
-
-    override fun showAlbumMetaData(album: Album) {
-
     }
 
     override fun showReleaseYear(year: String?) {
@@ -112,6 +123,5 @@ class AlbumActivity : AppCompatActivity(), AlbumContract.View {
 
     companion object {
         const val KEY_ALBUM_ID = "ALBUM_ID"
-
     }
 }

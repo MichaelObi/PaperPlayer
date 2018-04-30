@@ -69,7 +69,6 @@ class AlbumPresenter(private val musicRepository: MusicRepositoryInterface,
                                 album.art?.let {
                                     view.showAlbumArt(it)
                                 }
-                                view.showAlbumMetaData(album)
                             }
                         }
                 )
