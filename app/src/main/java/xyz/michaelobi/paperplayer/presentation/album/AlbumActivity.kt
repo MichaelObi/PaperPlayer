@@ -66,7 +66,7 @@ class AlbumActivity : AppCompatActivity(), AlbumContract.View {
         presenter = AlbumPresenter(Injector.provideMusicRepository(this), Schedulers.io(),
                 AndroidSchedulers.mainThread())
         presenter.attachView(this)
-        songsAdapter = SongsAdapter(null, this)
+        songsAdapter = SongsAdapter()
         viewBinding.rvSongs.adapter = songsAdapter
         viewBinding.rvSongs.layoutManager = LinearLayoutManager(this)
         viewBinding.rvSongs.isNestedScrollingEnabled = false
