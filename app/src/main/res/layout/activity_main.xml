@@ -28,7 +28,6 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".presentation.musiclibrary.MusicLibraryActivity">
 
     <LinearLayout
@@ -46,11 +45,12 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize"
-                android:fitsSystemWindows="true"
-                app:title="@string/my_music"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                android:fitsSystemWindows="true"
+                app:title="@string/my_music" />
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/main_tablayout"

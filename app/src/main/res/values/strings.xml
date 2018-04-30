@@ -236,4 +236,6 @@
     <string name="song_count">%d Songs</string>
     <string name="songs">Songs</string>
     <string name="my_music">My Music</string>
+    <string name="storage_permission_details">Permission to access your storage is needed to play music</string>
+    <string name="storage_permission">Storage permission</string>
 </resources>

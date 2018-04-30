@@ -62,7 +62,7 @@ import xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.songs.Songs
 
 class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, View.OnClickListener, PermissionListener {
 
-    lateinit var musicLibraryPresenter: MusicLibraryContract.Presenter
+    private lateinit var musicLibraryPresenter: MusicLibraryContract.Presenter
 
     private var bus: RxBus = Injector.provideEventBus()
 
@@ -74,15 +74,15 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         musicLibraryPresenter = MusicLibraryPresenter()
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         fab = findViewById(R.id.fab)
         fab.setOnClickListener(this)
         val listener = CompositePermissionListener(this,
                 DialogOnDeniedPermissionListener.Builder
                         .withContext(this)
-                        .withTitle("Storage permission")
-                        .withMessage("Permission to access your storage is needed to play music")
+                        .withTitle(getString(R.string.storage_permission))
+                        .withMessage(getString(R.string.storage_permission_details))
                         .withButtonText(android.R.string.ok)
                         .withIcon(R.mipmap.ic_player)
                         .build())
@@ -111,7 +111,7 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
     }
 
     override fun initializeViewPager() {
-        val mViewPager = findViewById(R.id.container) as ViewPager
+        val mViewPager = findViewById<ViewPager>(R.id.container)
         val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
         viewPagerAdapter.addFragment(SongsFragment(), resources.getString(R.string.songs))
         viewPagerAdapter.addFragment(AlbumsFragment(), resources.getString(R.string.albums))
@@ -119,7 +119,7 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
         mViewPager.adapter = viewPagerAdapter
         mViewPager.currentItem = 0
 
-        val tabLayout = findViewById(R.id.main_tablayout) as TabLayout
+        val tabLayout = findViewById<TabLayout>(R.id.main_tablayout)
         tabLayout.tabMode = TabLayout.MODE_FIXED
         tabLayout.setupWithViewPager(mViewPager)
     }
@@ -141,5 +141,10 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
 
     override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest, token: PermissionToken) {
         token.continuePermissionRequest()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        musicLibraryPresenter.detachView()
     }
 }

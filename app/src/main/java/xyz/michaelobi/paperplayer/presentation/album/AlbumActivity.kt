@@ -68,7 +68,6 @@ class AlbumActivity : AppCompatActivity(), AlbumContract.View {
         songsAdapter = SongsAdapter(null, this)
         viewBinding.rvSongs.adapter = songsAdapter
         viewBinding.rvSongs.layoutManager = LinearLayoutManager(this)
-//        viewBinding.rvSongs.setHasFixedSize(true)
         viewBinding.rvSongs.isNestedScrollingEnabled = false
         presenter.loadAlbum(albumId)
     }
