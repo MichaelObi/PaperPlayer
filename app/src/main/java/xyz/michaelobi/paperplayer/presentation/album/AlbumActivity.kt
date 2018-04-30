@@ -91,7 +91,7 @@ class AlbumActivity : AppCompatActivity(), AlbumContract.View {
 
     override fun showSongCount(numberOfSongs: Int) {
         viewBinding.songCount.visibility = View.VISIBLE
-        viewBinding.songCount.text = getString(R.string.songs, numberOfSongs)
+        viewBinding.songCount.text = getString(R.string.song_count, numberOfSongs)
     }
 
     override fun showAlbumSongList(songs: List<Song>) {

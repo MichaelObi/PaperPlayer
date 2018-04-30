@@ -73,7 +73,6 @@ android {
 
     dexOptions {
         javaMaxHeapSize "4G"
-        preDexLibraries = true
     }
     dataBinding {
         enabled = true
