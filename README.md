@@ -20,4 +20,4 @@ All you have to do is fork it, make a change, send your PR and we'll consider an
 We can talk about your ideas too. Just open up an issue and we'll discuss it.
 
 ### Contributors
-Launcher Icon designed by Ander Méndez (@mendezand)
+Launcher Icon designed by [Ander Méndez](https://github.com/mendezand)
