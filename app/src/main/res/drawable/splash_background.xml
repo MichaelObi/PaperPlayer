@@ -30,7 +30,7 @@
     <item>
         <bitmap
                 android:gravity="center"
-                android:src="@mipmap/ic_player"/>
+                android:src="@mipmap/ic_launcher"/>
     </item>
 
 </layer-list>

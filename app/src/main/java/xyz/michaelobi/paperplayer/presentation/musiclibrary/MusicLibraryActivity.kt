@@ -84,7 +84,7 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
                         .withTitle(getString(R.string.storage_permission))
                         .withMessage(getString(R.string.storage_permission_details))
                         .withButtonText(android.R.string.ok)
-                        .withIcon(R.mipmap.ic_player)
+                        .withIcon(R.mipmap.ic_launcher)
                         .build())
 
         Dexter.withActivity(this)
