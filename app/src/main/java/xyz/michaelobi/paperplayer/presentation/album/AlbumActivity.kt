@@ -24,11 +24,11 @@
 
 package xyz.michaelobi.paperplayer.presentation.album
 
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -68,7 +68,7 @@ class AlbumActivity : AppCompatActivity(), AlbumContract.View {
         presenter.attachView(this)
         songsAdapter = SongsAdapter()
         viewBinding.rvSongs.adapter = songsAdapter
-        viewBinding.rvSongs.layoutManager = LinearLayoutManager(this)
+        viewBinding.rvSongs.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         viewBinding.rvSongs.isNestedScrollingEnabled = false
         presenter.loadAlbum(albumId)
     }

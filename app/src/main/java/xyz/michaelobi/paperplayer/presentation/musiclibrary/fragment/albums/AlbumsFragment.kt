@@ -25,9 +25,9 @@
 package xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.albums
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,11 +45,11 @@ import xyz.michaelobi.paperplayer.injection.Injector
  * 23 10 2016 4:00 PM
  */
 
-class AlbumsFragment : Fragment(), AlbumsView {
+class AlbumsFragment : androidx.fragment.app.Fragment(), AlbumsView {
 
     lateinit var presenter: AlbumsPresenter
     private lateinit var albumsAdapter: AlbumsAdapter
-    private lateinit var recyclerViewAlbums: RecyclerView
+    private lateinit var recyclerViewAlbums: androidx.recyclerview.widget.RecyclerView
     private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,12 +60,12 @@ class AlbumsFragment : Fragment(), AlbumsView {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_albums, container, false)
-        recyclerViewAlbums = v.findViewById(xyz.michaelobi.paperplayer.R.id.rv_albums_grid) as RecyclerView
+        recyclerViewAlbums = v.findViewById(xyz.michaelobi.paperplayer.R.id.rv_albums_grid) as androidx.recyclerview.widget.RecyclerView
         progressBar = v.findViewById(xyz.michaelobi.paperplayer.R.id.progressbar_loading) as ProgressBar
         presenter.attachView(this)
         albumsAdapter = AlbumsAdapter(null, activity)
         with(recyclerViewAlbums) {
-            layoutManager = GridLayoutManager(context, calculateNoOfColumns())
+            layoutManager = androidx.recyclerview.widget.GridLayoutManager(context, calculateNoOfColumns())
             setHasFixedSize(true)
             adapter = albumsAdapter
         }

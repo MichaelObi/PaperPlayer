@@ -27,11 +27,11 @@ package xyz.michaelobi.paperplayer.presentation.musiclibrary
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import android.view.View
 
 import com.karumi.dexter.Dexter
@@ -66,7 +66,7 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
 
     private var bus: RxBus = Injector.provideEventBus()
 
-    private lateinit var fab: FloatingActionButton
+    private lateinit var fab: com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,7 +111,7 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
     }
 
     override fun initializeViewPager() {
-        val mViewPager = findViewById<ViewPager>(R.id.container)
+        val mViewPager = findViewById<androidx.viewpager.widget.ViewPager>(R.id.container)
         val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
         viewPagerAdapter.addFragment(SongsFragment(), resources.getString(R.string.songs))
         viewPagerAdapter.addFragment(AlbumsFragment(), resources.getString(R.string.albums))
@@ -119,8 +119,8 @@ class MusicLibraryActivity : AppCompatActivity(), MusicLibraryContract.View, Vie
         mViewPager.adapter = viewPagerAdapter
         mViewPager.currentItem = 0
 
-        val tabLayout = findViewById<TabLayout>(R.id.main_tablayout)
-        tabLayout.tabMode = TabLayout.MODE_FIXED
+        val tabLayout = findViewById<com.google.android.material.tabs.TabLayout>(R.id.main_tablayout)
+        tabLayout.tabMode = com.google.android.material.tabs.TabLayout.MODE_FIXED
         tabLayout.setupWithViewPager(mViewPager)
     }
 

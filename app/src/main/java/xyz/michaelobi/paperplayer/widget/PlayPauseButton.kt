@@ -26,8 +26,8 @@ package xyz.michaelobi.paperplayer.widget
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.AppCompatImageButton
+import androidx.core.content.ContextCompat
+import androidx.appcompat.widget.AppCompatImageButton
 import android.util.AttributeSet
 import xyz.michaelobi.paperplayer.R
 

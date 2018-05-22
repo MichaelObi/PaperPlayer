@@ -24,8 +24,8 @@
 
 package xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.songs
 
-import android.support.v7.widget.PopupMenu
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.widget.PopupMenu
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,7 +43,7 @@ import xyz.michaelobi.paperplayer.playback.events.action.PlayAllSongs
  */
 
 class SongsAdapter(private val songs: MutableList<Song> = mutableListOf()) :
-        RecyclerView.Adapter<SongsAdapter.SongViewHolder>() {
+        androidx.recyclerview.widget.RecyclerView.Adapter<SongsAdapter.SongViewHolder>() {
 
     private val bus: RxBus = Injector.provideEventBus()
 
@@ -82,7 +82,7 @@ class SongsAdapter(private val songs: MutableList<Song> = mutableListOf()) :
     }
 
 
-    inner class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class SongViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val title: TextView = itemView.findViewById(R.id.song_item_name)
         val artist: TextView = itemView.findViewById(R.id.song_item_desc)
         val menu: ImageView = itemView.findViewById(R.id.song_item_menu)

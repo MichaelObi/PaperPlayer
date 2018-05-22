@@ -24,7 +24,7 @@
 
 package xyz.michaelobi.paperplayer.playback.events
 
-import android.support.annotation.IntDef
+import androidx.annotation.IntDef
 
 
 /**

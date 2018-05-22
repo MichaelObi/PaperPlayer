@@ -27,7 +27,7 @@ package xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.albums;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;

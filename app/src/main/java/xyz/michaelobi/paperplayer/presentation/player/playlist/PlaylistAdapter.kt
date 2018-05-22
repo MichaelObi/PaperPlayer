@@ -24,7 +24,7 @@
 
 package xyz.michaelobi.paperplayer.presentation.player.playlist
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.widget.TextView
 import xyz.michaelobi.paperplayer.R
@@ -37,7 +37,7 @@ import xyz.michaelobi.paperplayer.playback.queue.QueueItem
  * 22 05 2017 11:19 PM
  */
 
-class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
+class PlaylistAdapter : androidx.recyclerview.widget.RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
     private var queue: List<QueueItem> = emptyList()
 
     fun setQueueItems(queue: List<QueueItem>) {
@@ -57,7 +57,7 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = queue.size
 
-    class ViewHolder(itemView: android.view.View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: android.view.View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var title = itemView.findViewById(R.id.song_item_title) as TextView
         var artist = itemView.findViewById(R.id.song_item_artist) as TextView
     }

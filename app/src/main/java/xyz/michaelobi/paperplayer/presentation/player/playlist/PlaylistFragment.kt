@@ -25,12 +25,12 @@
 package xyz.michaelobi.paperplayer.presentation.player.playlist
 
 import android.app.Dialog
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.BottomSheetDialogFragment
-import android.support.design.widget.CoordinatorLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.view.View
 import android.widget.Toast
 import xyz.michaelobi.paperplayer.R
@@ -44,9 +44,9 @@ import xyz.michaelobi.paperplayer.playback.queue.QueueManager
  * Michael Obi
  * 22 05 2017 1:04 AM
  */
-class PlaylistFragment : BottomSheetDialogFragment(), PlaylistView {
+class PlaylistFragment : com.google.android.material.bottomsheet.BottomSheetDialogFragment(), PlaylistView {
     lateinit var playlistAdapter: PlaylistAdapter
-    lateinit var rvPlaylist: RecyclerView
+    lateinit var rvPlaylist: androidx.recyclerview.widget.RecyclerView
     val queueManager: QueueManager = Injector.provideQueueManager()
     val presenter = PlaylistPresenter()
 
@@ -67,16 +67,16 @@ class PlaylistFragment : BottomSheetDialogFragment(), PlaylistView {
         val view = View.inflate(activity, R.layout.bottomsheet_playlist, null)
         dialog?.setContentView(view)
         val toolbar = view.findViewById(R.id.toolbar) as Toolbar
-        rvPlaylist = view.findViewById(R.id.rv_playlist) as RecyclerView
+        rvPlaylist = view.findViewById(R.id.rv_playlist) as androidx.recyclerview.widget.RecyclerView
         toolbar.setNavigationOnClickListener { dismiss() }
         toolbar.setTitle(R.string.playlist)
-        val params = (view.parent as View).layoutParams as CoordinatorLayout.LayoutParams
+        val params = (view.parent as View).layoutParams as androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams
         val behavior = params.behavior
-        (behavior as BottomSheetBehavior<*>).state = BottomSheetBehavior.STATE_EXPANDED
-        behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        (behavior as com.google.android.material.bottomsheet.BottomSheetBehavior<*>).state = com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+        behavior.setBottomSheetCallback(object : com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
-                    BottomSheetBehavior.STATE_COLLAPSED, BottomSheetBehavior.STATE_HIDDEN -> {
+                    com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED, com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN -> {
                         dismiss()
                     }
                 }
@@ -91,7 +91,7 @@ class PlaylistFragment : BottomSheetDialogFragment(), PlaylistView {
     private fun setUpPlaylist() {
         playlistAdapter = PlaylistAdapter()
         val currentPlayingIndex = queueManager.currentIndex
-        val linearLayoutManager = LinearLayoutManager(activity)
+        val linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         linearLayoutManager.scrollToPositionWithOffset(currentPlayingIndex, 20)
 
         with(rvPlaylist) {

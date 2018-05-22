@@ -25,8 +25,8 @@
 package xyz.michaelobi.paperplayer.presentation.musiclibrary.fragment.songs
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,7 +42,7 @@ import xyz.michaelobi.paperplayer.injection.Injector
  * 19 10 2016 6:15 PM
  */
 
-class SongsFragment : Fragment(), SongsView {
+class SongsFragment : androidx.fragment.app.Fragment(), SongsView {
 
     lateinit var presenter: SongsPresenter
     lateinit var songsAdapter: SongsAdapter
@@ -59,7 +59,7 @@ class SongsFragment : Fragment(), SongsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         songsAdapter = SongsAdapter()
-        rv_songs.layoutManager = LinearLayoutManager(context)
+        rv_songs.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         rv_songs.adapter = songsAdapter
         presenter.attachView(this)
         presenter.getAll()
